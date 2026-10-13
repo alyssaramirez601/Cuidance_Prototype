@@ -112,7 +112,7 @@ Cuidance is designed for everyone, from very deep to very light skin tones and a
 Team 03
 
 - **Alyssa Ramirez:** research synthesis, validation, Figma artifacts
-- **Esme:** design system, tokens and visual identity
+- **Esme Bobadilla:** design system, tokens and visual identity
 
 ## AI use
 
