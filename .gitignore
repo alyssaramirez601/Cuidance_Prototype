@@ -1,0 +1,43 @@
+# Cuidance .gitignore for Expo (React Native + TypeScript)
+
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Generated native folders (Expo builds these for us)
+/ios
+/android
+
+# Native signing files (never commit these)
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Metro bundler
+.metro-health-check*
+
+# Debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Environment files (Supabase keys live here, never commit them)
+.env
+.env*.local
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# macOS
+.DS_Store
