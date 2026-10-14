@@ -6,6 +6,10 @@ Cuidance is a mobile app that helps people figure out what may fit their hair, s
 
 > Cuidance offers guidance, not medical advice. If something on your skin, scalp or nails keeps bothering you, please talk to a dermatologist or doctor.
 
+### Our HMW
+
+**How might we help someone understand their own beauty attributes and find guidance that actually fits them, so they stop guessing whether advice applies to them?**
+
 ---
 
 ## Status
@@ -32,10 +36,22 @@ Cuidance is a mobile app that helps people figure out what may fit their hair, s
 ## Tech stack
 
 - [Expo](https://expo.dev/) and [React Native](https://reactnative.dev/) for the mobile app
+- [TypeScript](https://www.typescriptlang.org/) (strict) for all app code
 - [Supabase](https://supabase.com/) for the database and authentication
 - Expo Go for the beta review path
 
 > This stack is planned. We will update this section if it changes during the build.
+
+## How we work
+
+These rules apply to everyone, even with a team of two.
+
+1. **Main always runs.** Nothing goes into `main` unless the app still starts and works.
+2. **One branch per feature.** Start a new branch for each feature or fix, named for what it does (for example `quiz-progress-bar` or `fix-saved-empty-state`).
+3. **Every merge goes through a pull request.** Open a pull request into `main` and fill in the template: what changed, why, and screenshots.
+4. **One review before merging.** The other teammate reviews and approves every pull request before it is merged.
+5. **Clean up after.** Delete the branch once its pull request is merged.
+6. **Leave `gh-pages` alone.** It hosts the clickable prototype that testers use.
 
 ## Getting started
 
@@ -52,8 +68,8 @@ Cuidance is a mobile app that helps people figure out what may fit their hair, s
 
 ```bash
 # 1. Clone the repo
-git clone <repo-url>
-cd <repo-folder>
+git clone https://github.com/alyssaramirez601/Cuidance_Prototype.git
+cd Cuidance_Prototype
 
 # 2. Install dependencies
 npm install
