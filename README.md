@@ -51,7 +51,7 @@ These rules apply to everyone, even with a team of two.
 3. **Every merge goes through a pull request.** Open a pull request into `main` and fill in the template: what changed, why, and screenshots.
 4. **One review before merging.** The other teammate reviews and approves every pull request before it is merged.
 5. **Clean up after.** Delete the branch once its pull request is merged.
-6. **Leave `gh-pages` alone.** It hosts the clickable prototype that testers use.
+6. **Update `gh-pages` only through a reviewed pull request.** It hosts the clickable prototype that testers use.
 
 ## Getting started
 
