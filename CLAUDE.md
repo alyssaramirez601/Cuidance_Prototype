@@ -58,7 +58,7 @@ components/          # shared UI, PascalCase: Button.tsx, Chip.tsx, ListRow.tsx,
 data/                # quiz.ts, answerCards.ts, rules.ts, delivery.ts, resultNames.ts, safety.ts, skinTone.ts
 lib/                 # supabase.ts, buildResult.ts, helpers
 hooks/               # useAuth.ts, useQuiz.ts, useSaved.ts
-theme/               # colors.ts, spacing.ts, typography.ts
+constants/           # tokens.ts: the only source of color, type, spacing and radius
 assets/              # images, fonts, logo
 docs/prototype/      # reference prototype (do not edit for the app build)
 ```
@@ -86,7 +86,7 @@ docs/prototype/      # reference prototype (do not edit for the app build)
 
 ## Styling and design system
 
-- Style with `StyleSheet.create` and tokens from `theme/`. Never hard-code a color, size or spacing value in a screen.
+- Style with `StyleSheet.create` and tokens from `constants/tokens.ts`, which is the only place colors, type, spacing and radius come from. Never hard-code a color, size, spacing or radius value in a screen.
 - **Colors:** Esme's accessible palette from the Week 7 identity system. It replaces the older Catskill White and Holly palette. The identity board is still in team review, so check with Esme before changing roles.
 
 | Token | Name | Value | Use |
@@ -201,7 +201,7 @@ Follow the Quiz Outcomes Board. In short:
 
 - Do not convert the project away from Expo, or to another framework or engine.
 - Do not add a second version of a component that already exists.
-- Do not hard-code colors, sizes or spacing outside `theme/`.
+- Do not hard-code colors, type, spacing or radius outside `constants/tokens.ts`.
 - Do not add photo or face analysis, diagnosis language or brand recommendations in guidance.
 - Do not pre-fill user data, sample accounts or the sample name in the real app.
 - Do not edit `docs/prototype/` or anything Esme built in Figma. New Figma work goes in separate frames or files.
