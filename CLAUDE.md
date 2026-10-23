@@ -204,7 +204,8 @@ Follow the Quiz Outcomes Board. In short:
 - Do not hard-code colors, sizes or spacing outside `theme/`.
 - Do not add photo or face analysis, diagnosis language or brand recommendations in guidance.
 - Do not pre-fill user data, sample accounts or the sample name in the real app.
-- Do not edit `docs/prototype/`, the `gh-pages` branch, or anything Esme built in Figma. New Figma work goes in separate frames or files.
+- Do not edit `docs/prototype/` or anything Esme built in Figma. New Figma work goes in separate frames or files.
+- Do not push straight to the `gh-pages` branch. Update it only through a reviewed pull request.
 - Do not redraw or restyle the logo.
 - Do not commit secrets. Supabase keys go in `.env`, never in code.
 
