@@ -2,7 +2,7 @@
 
 Rules for any Claude agent working in this repo. Follow them on every task. If something here conflicts with a request, ask before going ahead.
 
-_Last updated: Oct 13, 2026 (end of Week 7: logo picked, accessible palette, peer validation results, quiz outcome library)._
+_Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts`; before that, end of Week 7: logo picked, accessible palette, peer validation results, quiz outcome library)._
 
 ## Project context
 
@@ -58,7 +58,7 @@ components/          # shared UI, PascalCase: Button.tsx, Chip.tsx, ListRow.tsx,
 data/                # quiz.ts, answerCards.ts, rules.ts, delivery.ts, resultNames.ts, safety.ts, skinTone.ts
 lib/                 # supabase.ts, buildResult.ts, helpers
 hooks/               # useAuth.ts, useQuiz.ts, useSaved.ts
-theme/               # colors.ts, spacing.ts, typography.ts
+constants/           # tokens.ts: the only source of color, type, spacing and radius
 assets/              # images, fonts, logo
 docs/prototype/      # reference prototype (do not edit for the app build)
 ```
@@ -86,29 +86,36 @@ docs/prototype/      # reference prototype (do not edit for the app build)
 
 ## Styling and design system
 
-- Style with `StyleSheet.create` and tokens from `theme/`. Never hard-code a color, size or spacing value in a screen.
-- **Colors:** Esme's accessible palette from the Week 7 identity system. It replaces the older Catskill White and Holly palette. The identity board is still in team review, so check with Esme before changing roles.
+- Style with `StyleSheet.create` and tokens from `constants/tokens.ts`, which is the only place colors, type, spacing and radius come from. Never hard-code a color, size, spacing or radius value in a screen.
+- **Colors:** Esme's accessible palette, as color roles in `colors` (names mirror the Figma variables). v1 ships Light mode (`colors.light`). Dark values stay in the file to match Figma, but dark screens are not built in v1. If a value changes, change it in Figma first, then in `tokens.ts`. If this table and `tokens.ts` ever differ, `tokens.ts` wins. Check with Esme before changing roles.
 
-| Token | Name | Value | Use |
+| Role | Name | Light value | Use |
 |---|---|---|---|
-| `ink` | Guidance Ink | `#111111` | Text, icons, borders, essential information |
-| `paper` | Quiet Paper | `#F4F2EC` | Main background and surfaces |
-| `warm` | Warm Care | `#F3E6D3` | Supportive backgrounds and care moments |
-| `green` | Grounded Green | `#21332B` | Brand anchor, dark surfaces, reversed logo |
-| `blue` | Compass Blue | `#1F3FD1` | Links, navigation, active controls, focus |
-| `terracotta` | Care Terracotta | `#A8432A` | Selected states, emphasis, featured content |
-| `orange` | Wayfinding Orange | `#A94E00` | Alerts, notices, things that need attention |
-| `olive` | Steady Olive | `#5E6B3D` | Illustrations, patterns, secondary accents |
-| `clay` | Soft Clay | `#E3A27C` | Illustrations, patterns, decorative surfaces only |
+| `background` | Quiet Paper | `#F4F2EC` | App background |
+| `surface` | | `#FFFFFF` | Cards, sheets, inputs |
+| `surfaceWarm` | Warm Care | `#F3E6D3` | Supportive backgrounds and care moments |
+| `ink` | Guidance Ink | `#111111` | Main text and icons |
+| `inkMuted` | | `#57534B` | Secondary and helper text |
+| `accent` | Compass Blue | `#1F3FD1` | Links, primary buttons, focus (`onAccent` `#FFFFFF` for text on it) |
+| `brand` | Grounded Green | `#21332B` | Brand anchor, dark surfaces, reversed logo (`onBrand` `#F4F2EC` on it) |
+| `selected` | Compass Blue | `#1F3FD1` | Selected answers, chips, active tab (`selectedSurface` `#E6EAFB` behind) |
+| `highlight` | Care Terracotta | `#A8432A` | Eyebrow labels only |
+| `alert` | Wayfinding Orange | `#A94E00` | Alerts and notices (`alertSurface` `#F9E8D7`) |
+| `success` | Steady Olive | `#5E6B3D` | Saved and success (`successSurface` `#E9ECDD`) |
+| `error`, `info` | | `#70000E`, `#5A1391` | Error and info states, each with its own `Surface` role |
+| `partner` | | `#671253` | Partner and sponsored labels only (`partnerSurface` `#F7E6F1`) |
+| `border`, `borderStrong` | | `#DDD7CB`, `#7C766B` | Dividers, and input and control outlines |
+| `disabledSurface`, `disabledInk` | | `#E6E2D9`, `#8B867C` | Disabled controls |
 
-- Contrast on Quiet Paper: Ink 16.87:1, Green 11.92:1, Blue 6.97:1, Terracotta 5.36:1. **Never use Soft Clay or Warm Care for text**, and never use any color as the only signal. Pair it with a label, icon or shape.
-- **Type:** Newsreader for headlines only, Archivo for everything else. The custom "Cuidance" lettering is for the logo only and is never typed as text. Use sentence case, never all caps, except partner labels.
+- Illustration and collage colors live in `graphic` and are never used for meaning or for text.
+- Contrast on Quiet Paper: Ink 16.87:1, Green 11.92:1, Blue 6.97:1, Terracotta 5.36:1. **Never use `surfaceWarm` or any `graphic` color for text**, and never use any color as the only signal. Pair it with a label, icon or shape.
+- **Type:** use the `type` styles (display 40/46, heading 28/34, title 20/26, body 16/24, label 15/20, caption 13/18). Newsreader (`fontFamily.display`) for display and headings only, Archivo (`fontFamily.body`) for everything else. The custom "Cuidance" lettering is for the logo only and is never typed as text. Use sentence case, never all caps, except partner labels.
 - **Logo:** Logo version 4: the circle-over-bowl mark (Logo Mark B) with Wordmark Style B. Use the files in `assets/logo/` only. Never redraw, recolor outside the palette, stretch or rotate it.
   - Clear space around the logo equals the height of the circle in the mark.
   - Minimum sizes: full lockup 160 px wide, stacked lockup 96 px, symbol only 24 px.
 - **Illustrations and textures:** use the brand elements sheet (v03): flat screen-print shapes, one curved cut per shape, no outlines or gradients. Textures are accents only and **never sit behind body text, forms or warnings.**
-- **Spacing:** 4-point scale (4, 8, 12, 16, 20, 24, 32, 40). Screen side padding is 20 or 24.
-- **Shape:** rounded cards (12 to 16 radius) and pill chips. Keep shadows soft or don't use them.
+- **Spacing:** only the `space` steps: 4, 8, 12, 16, 24, 32, 48. Never a value in between. Screen side padding is 24 (`layout.screenEdge`) and padding inside a component is 16 (`layout.insideComponent`).
+- **Shape:** `radius.small` (8) for inputs, checkboxes, tags and icon tiles, `radius.medium` (16) for cards, sheets and answer options, and `radius.pill` for buttons and chips. Strokes are `stroke.default` (1) and `stroke.strong` (2, for focus and selected). Keep shadows soft or don't use them.
 - Feel: warm, calm, honest and supportive. A wellness feel, never clinical and never a glossy makeup app.
 
 ## Images, forms, data, loading and errors
@@ -201,7 +208,7 @@ Follow the Quiz Outcomes Board. In short:
 
 - Do not convert the project away from Expo, or to another framework or engine.
 - Do not add a second version of a component that already exists.
-- Do not hard-code colors, sizes or spacing outside `theme/`.
+- Do not hard-code colors, type, spacing or radius outside `constants/tokens.ts`.
 - Do not add photo or face analysis, diagnosis language or brand recommendations in guidance.
 - Do not pre-fill user data, sample accounts or the sample name in the real app.
 - Do not edit `docs/prototype/` or anything Esme built in Figma. New Figma work goes in separate frames or files.

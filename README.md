@@ -99,7 +99,7 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 /app          Screens and navigation
 /components   Reusable UI components
-/constants    Design tokens (color, type, spacing)
+/constants    tokens.ts, the only source of color, type, spacing and radius
 /lib          Supabase client and helpers
 /data         Quiz questions and outcome library
 /assets       Fonts, icons and images
