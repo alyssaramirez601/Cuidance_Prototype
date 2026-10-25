@@ -3,13 +3,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
-import { OptionRow } from '@/components/OptionRow';
+import { AnswerOption } from '@/components/AnswerOption';
 import { QuizProgress } from '@/components/QuizProgress';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, type } from '@/constants/tokens';
 import { CORE_QUESTION_COUNT, quizQuestions } from '@/data/quiz';
 import type { QuizQuestion } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
+import { useGoBack } from '@/hooks/useGoBack';
 import { useQuizAnswer } from '@/hooks/useQuizAnswer';
 
 export default function QuizQuestionScreen() {
@@ -27,14 +28,14 @@ export default function QuizQuestionScreen() {
 }
 
 function QuestionNotFound() {
-  const router = useRouter();
+  const goBack = useGoBack();
   return (
     <Screen centered>
       <Text style={styles.prompt} accessibilityRole="header">
         We couldn’t find that question
       </Text>
       <Text style={styles.helper}>It may have moved. You can head back and try again.</Text>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
+      <Button label="Back" style="secondary" onPress={goBack} />
     </Screen>
   );
 }
@@ -46,6 +47,7 @@ type QuestionContentProps = {
 
 function QuestionContent({ userId, question }: QuestionContentProps) {
   const router = useRouter();
+  const goBack = useGoBack();
   const { selected, status, message, toggle, retry } = useQuizAnswer(userId, question);
   const isSingle = question.selectionMode === 'single';
 
@@ -87,11 +89,11 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
 
       <View style={styles.options} accessibilityRole={isSingle ? 'radiogroup' : undefined}>
         {question.options.map((option) => (
-          <OptionRow
+          <AnswerOption
             key={option.id}
             label={option.label}
-            mode={question.selectionMode}
-            selected={selected.includes(option.id)}
+            indicator={isSingle ? 'radio' : 'checkbox'}
+            state={selected.includes(option.id) ? 'selected' : 'default'}
             onPress={() => toggle(option.id)}
           />
         ))}
@@ -109,15 +111,15 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
         {status === 'error' ? (
           <View style={styles.errorBox}>
             <Text style={styles.errorText}>{message}</Text>
-            <Button label="Try again" variant="secondary" onPress={retry} />
+            <Button label="Try again" style="secondary" onPress={retry} />
           </View>
         ) : null}
       </View>
 
       <View style={styles.actions}>
         {/* U4 is not built yet, so Next question stays off until it exists */}
-        <Button label="Next question" disabled onPress={() => {}} />
-        <Button label="Back" variant="secondary" onPress={() => router.back()} />
+        <Button label="Next question" state="disabled" onPress={() => {}} />
+        <Button label="Back" style="secondary" onPress={goBack} />
       </View>
     </Screen>
   );

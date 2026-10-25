@@ -18,7 +18,7 @@ export default function HomeScreen() {
       </View>
       <View style={styles.actions}>
         <Button label="Create account" onPress={() => router.push('/create-account')} />
-        <Button label="Sign in" variant="secondary" onPress={() => router.push('/sign-in')} />
+        <Button label="Sign in" style="secondary" onPress={() => router.push('/sign-in')} />
       </View>
     </Screen>
   );

@@ -1,9 +1,10 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
-import { OptionRow } from '@/components/OptionRow';
+import { AnswerOption } from '@/components/AnswerOption';
 import { Screen } from '@/components/Screen';
 import { colors, radius, space, stroke, type } from '@/constants/tokens';
 import { q1Areas } from '@/data/quiz';
@@ -26,6 +27,7 @@ type ProofQuestionProps = {
 };
 
 function ProofQuestion({ userId, email }: ProofQuestionProps) {
+  const router = useRouter();
   const { selected, status, message, toggle, retry } = useQuizAnswer(userId, q1Areas);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
@@ -57,10 +59,10 @@ function ProofQuestion({ userId, email }: ProofQuestionProps) {
 
       <View style={styles.options}>
         {q1Areas.options.map((option) => (
-          <OptionRow
+          <AnswerOption indicator="checkbox"
             key={option.id}
             label={option.label}
-            selected={selected.includes(option.id)}
+            state={selected.includes(option.id) ? 'selected' : 'default'}
             onPress={() => toggle(option.id)}
           />
         ))}
@@ -78,10 +80,13 @@ function ProofQuestion({ userId, email }: ProofQuestionProps) {
         {status === 'error' ? (
           <View style={styles.errorBox}>
             <Text style={styles.errorText}>{message}</Text>
-            <Button label="Try again" variant="secondary" onPress={retry} />
+            <Button label="Try again" style="secondary" onPress={retry} />
           </View>
         ) : null}
       </View>
+
+      {/* TEMPORARY: remove before merging */}
+      <Button label="Dev screen" style="secondary" onPress={() => router.push('/dev')} />
 
       <View style={styles.account}>
         <Text style={styles.signedInAs}>Signed in as {email}</Text>
@@ -92,7 +97,7 @@ function ProofQuestion({ userId, email }: ProofQuestionProps) {
         ) : null}
         <Button
           label={isSigningOut ? 'Signing out' : 'Sign out'}
-          variant="secondary"
+          style="secondary"
           onPress={handleSignOut}
           loading={isSigningOut}
         />

@@ -138,14 +138,16 @@ export const secondary = {
 export const fontFamily = {
   display: 'Newsreader', // display and headings
   body: 'Archivo', // everything else
+  // Same typeface as body. A loaded font file covers one weight, so the 600 weight gets its own name
+  bodySemiBold: 'Archivo_600SemiBold',
 } as const;
 
 export const type = {
   display: { fontFamily: fontFamily.display, fontSize: 40, lineHeight: 46, fontWeight: '400' },
   heading: { fontFamily: fontFamily.display, fontSize: 28, lineHeight: 34, fontWeight: '400' },
-  title: { fontFamily: fontFamily.body, fontSize: 20, lineHeight: 26, fontWeight: '600' },
+  title: { fontFamily: fontFamily.bodySemiBold, fontSize: 20, lineHeight: 26 },
   body: { fontFamily: fontFamily.body, fontSize: 16, lineHeight: 24, fontWeight: '400' },
-  label: { fontFamily: fontFamily.body, fontSize: 15, lineHeight: 20, fontWeight: '600' },
+  label: { fontFamily: fontFamily.bodySemiBold, fontSize: 15, lineHeight: 20 },
   caption: { fontFamily: fontFamily.body, fontSize: 13, lineHeight: 18, fontWeight: '400' },
 } as const;
 
@@ -173,6 +175,37 @@ export const radius = {
 export const stroke = {
   default: 1,
   strong: 2, // focus and selected
+  icon: 1.75, // icon strokes
+} as const;
+
+// ---------------------------------------------------------------------------
+// Component sizes (Figma frame sizes from docs/design-system/components.md)
+// ---------------------------------------------------------------------------
+
+export const sizes = {
+  icon: { small: 16, medium: 20, large: 24 },
+  answerOptionMinHeight: 56,
+  answerIndicator: 22,
+  answerRadioDot: 8,
+  checkboxBox: 22,
+  chipHeight: 40,
+  disclosureLabelHeight: 28,
+  progressTrackHeight: 6,
+  toastMinHeight: 56,
+  tabItemWidth: 68,
+  tabItemHeight: 56,
+  tabPillWidth: 48,
+  tabPillHeight: 32,
+  tabBarHeight: 72,
+  topBarHeight: 60,
+  productCardWidth: 164,
+  productImageWidth: 140,
+  productImageHeight: 120,
+} as const;
+
+/** Extra letter spacing for short all-caps eyebrow labels */
+export const letterSpacing = {
+  eyebrow: 1,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -186,7 +219,7 @@ export const layout = {
   minTouchTarget: 44,
 } as const;
 
-export const tokens = { colors, graphic, secondary, fontFamily, type, space, radius, stroke, layout } as const;
+export const tokens = { colors, graphic, secondary, fontFamily, type, space, radius, stroke, sizes, letterSpacing, layout } as const;
 
 export type ColorMode = keyof typeof colors;
 export type ColorRole = keyof typeof colors.light;
