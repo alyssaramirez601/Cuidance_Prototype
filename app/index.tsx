@@ -1,32 +1,43 @@
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, layout, space, type } from '@/constants/tokens';
+import { Button } from '@/components/Button';
+import { Screen } from '@/components/Screen';
+import { colors, space, type } from '@/constants/tokens';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
-    <View style={styles.screen}>
-      <Text style={styles.title} accessibilityRole="header">
-        Cuidance
-      </Text>
-      <Text style={styles.tagline}>Beauty guidance that fits you.</Text>
-    </View>
+    <Screen centered>
+      <View style={styles.intro}>
+        <Text style={styles.title} accessibilityRole="header">
+          Cuidance
+        </Text>
+        <Text style={styles.tagline}>Beauty guidance that fits you.</Text>
+      </View>
+      <View style={styles.actions}>
+        <Button label="Create account" onPress={() => router.push('/create-account')} />
+        <Button label="Sign in" variant="secondary" onPress={() => router.push('/sign-in')} />
+      </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: layout.screenEdge,
-    backgroundColor: colors.light.background,
+  intro: {
+    gap: space[8],
+    marginBottom: space[16],
   },
   title: {
     ...type.display,
     color: colors.light.ink,
-    marginBottom: space[8],
   },
   tagline: {
     ...type.body,
     color: colors.light.ink,
+  },
+  actions: {
+    gap: space[12],
   },
 });

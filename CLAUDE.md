@@ -54,6 +54,7 @@ app/                 # Expo Router screens (file name = route)
   (auth)/            # create-account, sign-in
   quiz/              # [questionId].tsx, result.tsx
   (tabs)/            # home, explore, saved, shop, profile
+  proof.tsx          # temporary test screen for sign-in and saving, replaced by quiz/
 components/          # shared UI, PascalCase: Button.tsx, Chip.tsx, ListRow.tsx, Sheet.tsx
 data/                # quiz.ts, answerCards.ts, rules.ts, delivery.ts, resultNames.ts, safety.ts, skinTone.ts
 lib/                 # supabase.ts, buildResult.ts, helpers
