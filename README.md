@@ -22,7 +22,7 @@ Cuidance is a mobile app that helps people figure out what may fit their hair, s
 | Wireframes and clickable prototype | Done, tested with 10 people |
 | Brand identity and design system | In review |
 | Quiz outcome library (results that change with each answer) | Researched, not yet built |
-| App build | Started: an empty app runs in Expo Go |
+| App build | Started: sign up, sign in and saving a quiz answer work in Expo Go |
 | Live beta (Expo Go) | Planned |
 
 ## What it does
@@ -61,7 +61,7 @@ These rules apply to everyone, even with a team of two.
 - npm
 - The Expo Go app on an iOS or Android phone (the app uses Expo SDK 58)
 - A free Expo account, signed in to both Expo Go on your phone and Expo CLI on your computer (`npx expo login`)
-- A Supabase project (not needed yet, since Supabase is not added)
+- A Supabase project (ask the team for access). Run the SQL in `supabase/migrations` once in its SQL Editor, and turn off "Confirm email" under Authentication while testing.
 
 ### Install and run
 
@@ -73,12 +73,17 @@ cd Cuidance_Prototype
 # 2. Install dependencies
 npm install
 
-# 3. Sign in to Expo (first time only)
+# 3. Add your environment variables (see below)
+cp .env.example .env
+
+# 4. Sign in to Expo (first time only)
 npx expo login
 
-# 4. Start the app
+# 5. Start the app
 npx expo start
 ```
+
+On Windows PowerShell, use `Copy-Item .env.example .env` in place of `cp`. Restart `npx expo start` after you change `.env`.
 
 Your phone and computer need to be on the same Wi-Fi. Scan the QR code with Expo Go to open the app on your phone. If Windows Firewall asks about Node.js, allow it on private networks. If your phone can't connect, run `npx expo start --tunnel` instead.
 
@@ -86,9 +91,7 @@ If `npx expo login` fails to open a browser on Windows, use `npx expo login --no
 
 ### Environment variables
 
-_Not needed yet. This section applies once Supabase is added._
-
-Create a `.env` file in the project root. Never commit real keys to the repo.
+Copy `.env.example` to `.env` in the project root and fill in both values. In the Supabase dashboard, the Project URL is under Project Settings, then Data API, and the publishable (anon) key is under Project Settings, then API Keys. Never use the secret or `service_role` key in the app. `.env` is git-ignored. Never commit real keys to the repo.
 
 ```
 EXPO_PUBLIC_SUPABASE_URL=your-supabase-url
@@ -100,19 +103,15 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 What exists today:
 
 ```
-/app          Screens and navigation (Expo Router): a layout and one home screen
+/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen
+/components   Reusable UI: Screen, Button, TextField, OptionRow, LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
+/data         Quiz questions (only Q1 so far)
+/hooks        useAuth and useQuizAnswer
+/lib          Supabase client, sign-in helpers and saving quiz answers
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype
-```
-
-Planned, not created yet:
-
-```
-/components   Reusable UI components
-/lib          Supabase client and helpers
-/data         Quiz questions and outcome library
-/hooks        Shared hooks
+/supabase     Database migrations (SQL files), in supabase/migrations
 ```
 
 ## Design

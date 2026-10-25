@@ -54,6 +54,7 @@ app/                 # Expo Router screens (file name = route)
   (auth)/            # create-account, sign-in
   quiz/              # [questionId].tsx, result.tsx
   (tabs)/            # home, explore, saved, shop, profile
+  proof.tsx          # temporary test screen for sign-in and saving, replaced by quiz/
 components/          # shared UI, PascalCase: Button.tsx, Chip.tsx, ListRow.tsx, Sheet.tsx
 data/                # quiz.ts, answerCards.ts, rules.ts, delivery.ts, resultNames.ts, safety.ts, skinTone.ts
 lib/                 # supabase.ts, buildResult.ts, helpers
@@ -61,6 +62,7 @@ hooks/               # useAuth.ts, useQuiz.ts, useSaved.ts
 constants/           # tokens.ts: the only source of color, type, spacing and radius
 assets/              # images, fonts, logo
 docs/prototype/      # reference prototype (do not edit for the app build)
+supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 ```
 
 ## Repo and branches
@@ -202,7 +204,7 @@ Follow the Quiz Outcomes Board. In short:
 ## Dependencies
 
 - Prefer Expo SDK packages. Ask before adding any new dependency, and explain why it's needed.
-- Approved so far: expo-router, expo-font, expo-image, @supabase/supabase-js, react-native-safe-area-context, react-native-reanimated (only if needed).
+- Approved so far: expo-router, expo-font, expo-image, @supabase/supabase-js, @react-native-async-storage/async-storage (keeps the sign-in session on the phone), react-native-safe-area-context, react-native-reanimated (only if needed).
 
 ## Do not
 
