@@ -24,6 +24,7 @@ _Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts
   - Home, Explore (search, product detail, ingredient lookup, education), Saved (guidance, products, owned, routines), Shop (labeled partner content) and Profile
 - The clickable prototype (`docs/prototype/index.html`) is the **reference for flows and copy**. Match it unless a task says otherwise, or unless the "Validated changes" section below says the prototype is wrong.
 - The research source is the Figma file **Cuidance Quiz Outcomes Board** (key `aJy5vMBZIB9EWJgfqoXeye`, 15 pages). It holds the answer cards, mixing rules, delivery rules, result names, safety lines and skin tone rules that the result is built from.
+- Quiz wording, answer cards, mixing rules, result names, safety lines and skin tone rules come only from docs/quiz-outcomes/. Never invent them. If something is missing, stop and ask.
 - The Week 7 working file (key `RxyA9ci4hNu3M2bd6o8JYL`) holds the validation boards, brand elements and Esme's identity system board.
 
 ## Core stack

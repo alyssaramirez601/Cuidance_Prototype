@@ -110,7 +110,7 @@ What exists today:
 /hooks        useAuth and useQuizAnswer
 /lib          Supabase client, sign-in helpers and saving quiz answers
 /assets       App icon and splash images (Expo placeholders for now)
-/docs         The clickable prototype, in docs/prototype
+/docs         The clickable prototype, in docs/prototype, and the quiz outcome library, in docs/quiz-outcomes
 /supabase     Database migrations (SQL files), in supabase/migrations
 ```
 
