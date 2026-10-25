@@ -203,7 +203,7 @@ Follow the Quiz Outcomes Board. In short:
 ## Dependencies
 
 - Prefer Expo SDK packages. Ask before adding any new dependency, and explain why it's needed.
-- Approved so far: expo-router, expo-font, expo-image, @supabase/supabase-js, react-native-safe-area-context, react-native-reanimated (only if needed).
+- Approved so far: expo-router, expo-font, expo-image, @supabase/supabase-js, @react-native-async-storage/async-storage (keeps the sign-in session on the phone), react-native-safe-area-context, react-native-reanimated (only if needed).
 
 ## Do not
 
