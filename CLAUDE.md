@@ -1,5 +1,12 @@
 # CLAUDE.md: Cuidance
 
+## Before every task (do all of these, every time)
+1. Run git fetch, switch to main and pull. Make a new branch named for the task. Never work on an old or merged branch.
+2. If the prototype, Figma or this file doesn't say how something should read, look, count or behave, stop and ask before building. Do not write your own copy, counts or button behavior. List the open questions first.
+3. Every new screen or route handles loading, error and not found.
+4. When you add a folder, update the Project structure section in README.md.
+5. End every task with a short report: branch, files changed, checks run, and decisions a teammate needs to make.
+
 Rules for any Claude agent working in this repo. Follow them on every task. If something here conflicts with a request, ask before going ahead.
 
 _Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts`; before that, end of Week 7: logo picked, accessible palette, peer validation results, quiz outcome library)._
