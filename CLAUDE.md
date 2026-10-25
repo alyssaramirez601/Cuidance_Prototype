@@ -24,6 +24,7 @@ _Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts
   - Home, Explore (search, product detail, ingredient lookup, education), Saved (guidance, products, owned, routines), Shop (labeled partner content) and Profile
 - The clickable prototype (`docs/prototype/index.html`) is the **reference for flows and copy**. Match it unless a task says otherwise, or unless the "Validated changes" section below says the prototype is wrong.
 - The research source is the Figma file **Cuidance Quiz Outcomes Board** (key `aJy5vMBZIB9EWJgfqoXeye`, 15 pages). It holds the answer cards, mixing rules, delivery rules, result names, safety lines and skin tone rules that the result is built from.
+- Component names, variants, states and icons come only from docs/design-system/. Never invent them.
 - Quiz wording, answer cards, mixing rules, result names, safety lines and skin tone rules come only from docs/quiz-outcomes/. Never invent them. If something is missing, stop and ask.
 - The Week 7 working file (key `RxyA9ci4hNu3M2bd6o8JYL`) holds the validation boards, brand elements and Esme's identity system board.
 
@@ -119,7 +120,7 @@ supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 
 - Illustration and collage colors live in `graphic` and are never used for meaning or for text.
 - Contrast on Quiet Paper: Ink 16.87:1, Green 11.92:1, Blue 6.97:1, Terracotta 5.36:1. **Never use `surfaceWarm` or any `graphic` color for text**, and never use any color as the only signal. Pair it with a label, icon or shape.
-- **Type:** use the `type` styles (display 40/46, heading 28/34, title 20/26, body 16/24, label 15/20, caption 13/18). Newsreader (`fontFamily.display`) for display and headings only, Archivo (`fontFamily.body`) for everything else. The custom "Cuidance" lettering is for the logo only and is never typed as text. Use sentence case, never all caps, except partner labels.
+- **Type:** use the `type` styles (display 40/46, heading 28/34, title 20/26, body 16/24, label 15/20, caption 13/18). Newsreader (`fontFamily.display`) for display and headings only, Archivo (`fontFamily.body`) for everything else. The custom "Cuidance" lettering is for the logo only and is never typed as text. Use sentence case, never all caps, except partner labels and short eyebrow labels. An eyebrow is written in normal case in the code and shown in caps with `textTransform: 'uppercase'` and `letterSpacing.eyebrow` from `tokens.ts`. Never type it in capitals.
 - **Logo:** Logo version 4: the circle-over-bowl mark (Logo Mark B) with Wordmark Style B. Use the files in `assets/logo/` only. Never redraw, recolor outside the palette, stretch or rotate it.
   - Clear space around the logo equals the height of the circle in the mark.
   - Minimum sizes: full lockup 160 px wide, stacked lockup 96 px, symbol only 24 px.

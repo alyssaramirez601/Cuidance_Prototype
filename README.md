@@ -103,14 +103,14 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 What exists today:
 
 ```
-/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen, and the quiz question screen in app/quiz
-/components   Reusable UI: Screen, Button, TextField, OptionRow, QuizProgress, LoadingState
+/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen, and the quiz question screen in app/quiz, plus a temporary dev screen that shows every component
+/components   Reusable UI, one file per Figma component (see docs/design-system/components.md), plus Screen and LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
 /data         Quiz questions (only U1 and U3 so far)
-/hooks        useAuth and useQuizAnswer
+/hooks        useAuth, useQuizAnswer and useGoBack
 /lib          Supabase client, sign-in helpers and saving quiz answers
 /assets       App icon and splash images (Expo placeholders for now)
-/docs         The clickable prototype, in docs/prototype, and the quiz outcome library, in docs/quiz-outcomes
+/docs         The clickable prototype, in docs/prototype, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /supabase     Database migrations (SQL files), in supabase/migrations
 ```
 

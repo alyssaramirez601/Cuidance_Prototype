@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { TextField } from '@/components/TextField';
+import { TextInput } from '@/components/TextInput';
 import { colors, layout, space, type } from '@/constants/tokens';
 import { signIn } from '@/lib/auth';
 
@@ -39,7 +39,7 @@ export default function SignInScreen() {
         <Text style={styles.subtitle}>Pick up where you left off.</Text>
       </View>
 
-      <TextField
+      <TextInput
         label="Email"
         placeholder="name@email.com"
         value={email}
@@ -50,7 +50,7 @@ export default function SignInScreen() {
         autoComplete="email"
         textContentType="emailAddress"
       />
-      <TextField
+      <TextInput
         label="Password"
         value={password}
         onChangeText={setPassword}
@@ -70,7 +70,7 @@ export default function SignInScreen() {
       <Button
         label={isSubmitting ? 'Signing in' : 'Sign in'}
         onPress={handleSubmit}
-        disabled={!isValid}
+        state={isValid ? undefined : 'disabled'}
         loading={isSubmitting}
       />
 

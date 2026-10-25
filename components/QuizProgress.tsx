@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, space, type } from '@/constants/tokens';
+import { colors, radius, sizes, space, type } from '@/constants/tokens';
 
 type QuizProgressProps = {
-  // The exact label from the quiz content doc, for example "Getting started · 3 of 4"
+  // The exact label from docs/quiz-outcomes/01-quiz-content.md, for example "Getting started · 3 of 4"
   label: string;
   current: number;
   total: number;
@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
     gap: space[8],
   },
   label: {
-    ...type.body,
+    ...type.caption,
     color: colors.light.inkMuted,
   },
   track: {
-    height: space[8],
+    height: sizes.progressTrackHeight,
     borderRadius: radius.pill,
     backgroundColor: colors.light.border,
     overflow: 'hidden',
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
   fill: {
     height: '100%',
     borderRadius: radius.pill,
-    backgroundColor: colors.light.selected,
+    backgroundColor: colors.light.accent,
   },
 });

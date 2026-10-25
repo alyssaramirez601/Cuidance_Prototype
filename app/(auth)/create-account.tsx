@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { TextField } from '@/components/TextField';
+import { TextInput } from '@/components/TextInput';
 import { colors, layout, space, type } from '@/constants/tokens';
 import { signUp } from '@/lib/auth';
 
@@ -41,7 +41,7 @@ export default function CreateAccountScreen() {
         <Text style={styles.subtitle}>Take the quiz and save your guidance.</Text>
       </View>
 
-      <TextField
+      <TextInput
         label="Name (optional)"
         placeholder="Your first name"
         value={name}
@@ -50,7 +50,7 @@ export default function CreateAccountScreen() {
         autoComplete="given-name"
         textContentType="givenName"
       />
-      <TextField
+      <TextInput
         label="Email"
         placeholder="name@email.com"
         value={email}
@@ -61,7 +61,7 @@ export default function CreateAccountScreen() {
         autoComplete="email"
         textContentType="emailAddress"
       />
-      <TextField
+      <TextInput
         label="Password"
         helper="At least 8 characters"
         value={password}
@@ -82,7 +82,7 @@ export default function CreateAccountScreen() {
       <Button
         label={isSubmitting ? 'Creating account' : 'Create account'}
         onPress={handleSubmit}
-        disabled={!isValid}
+        state={isValid ? undefined : 'disabled'}
         loading={isSubmitting}
       />
 
