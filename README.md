@@ -104,6 +104,7 @@ What exists today:
 /constants    tokens.ts, the only source of color, type, spacing and radius
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype
+/supabase     Database migrations (SQL files), in supabase/migrations
 ```
 
 Planned, not created yet:

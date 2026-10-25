@@ -61,6 +61,7 @@ hooks/               # useAuth.ts, useQuiz.ts, useSaved.ts
 constants/           # tokens.ts: the only source of color, type, spacing and radius
 assets/              # images, fonts, logo
 docs/prototype/      # reference prototype (do not edit for the app build)
+supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 ```
 
 ## Repo and branches
