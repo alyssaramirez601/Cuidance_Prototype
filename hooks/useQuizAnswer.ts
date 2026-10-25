@@ -5,7 +5,16 @@ import { loadAnswer, saveAnswer } from '@/lib/quizAnswers';
 
 export type AnswerStatus = 'loading' | 'idle' | 'saving' | 'saved' | 'error';
 
-function nextSelection(current: string[], optionId: string, exclusiveOptionId?: string): string[] {
+function nextSelection(
+  current: string[],
+  optionId: string,
+  selectionMode: QuizQuestion['selectionMode'],
+  exclusiveOptionId?: string,
+): string[] {
+  // Choose one: tapping the chosen option again keeps it, so a number can't end up unanswered
+  if (selectionMode === 'single') {
+    return [optionId];
+  }
   if (current.includes(optionId)) {
     return current.filter((id) => id !== optionId);
   }
@@ -66,12 +75,12 @@ export function useQuizAnswer(userId: string, question: QuizQuestion) {
 
   const toggle = useCallback(
     (optionId: string) => {
-      const next = nextSelection(selectedRef.current, optionId, question.exclusiveOptionId);
+      const next = nextSelection(selectedRef.current, optionId, question.selectionMode, question.exclusiveOptionId);
       selectedRef.current = next;
       setSelected(next);
       persist(next);
     },
-    [persist, question.exclusiveOptionId],
+    [persist, question.selectionMode, question.exclusiveOptionId],
   );
 
   const retry = useCallback(() => {

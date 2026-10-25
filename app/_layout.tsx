@@ -30,6 +30,7 @@ export default function RootLayout() {
         {/* Signed-in people can only reach these screens */}
         <Stack.Protected guard={!!session}>
           <Stack.Screen name="proof" />
+          <Stack.Screen name="quiz/[questionId]" />
         </Stack.Protected>
       </Stack>
     </>

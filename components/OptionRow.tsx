@@ -5,20 +5,22 @@ import { colors, layout, radius, space, stroke, type } from '@/constants/tokens'
 type OptionRowProps = {
   label: string;
   selected: boolean;
+  mode?: 'single' | 'multiple';
   onPress: () => void;
 };
 
-// A check mark and a thicker outline show the choice, so color is never the only signal
-export function OptionRow({ label, selected, onPress }: OptionRowProps) {
+// A mark and a thicker outline show the choice, so color is never the only signal
+export function OptionRow({ label, selected, onPress, mode = 'multiple' }: OptionRowProps) {
+  const isSingle = mode === 'single';
   return (
     <Pressable
       onPress={onPress}
-      accessibilityRole="checkbox"
+      accessibilityRole={isSingle ? 'radio' : 'checkbox'}
       accessibilityLabel={label}
-      accessibilityState={{ checked: selected }}
+      accessibilityState={isSingle ? { selected } : { checked: selected }}
       style={[styles.row, selected && styles.rowSelected]}
     >
-      <View style={[styles.box, selected && styles.boxSelected]}>
+      <View style={[styles.box, isSingle && styles.boxRound, selected && styles.boxSelected]}>
         {selected ? <Text style={styles.check}>✓</Text> : null}
       </View>
       <Text style={styles.label}>{label}</Text>
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
     borderWidth: stroke.default,
     borderColor: colors.light.borderStrong,
     backgroundColor: colors.light.surface,
+  },
+  boxRound: {
+    borderRadius: radius.pill,
   },
   boxSelected: {
     borderColor: colors.light.selected,

@@ -103,10 +103,10 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 What exists today:
 
 ```
-/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen
-/components   Reusable UI: Screen, Button, TextField, OptionRow, LoadingState
+/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen, and the quiz question screen in app/quiz
+/components   Reusable UI: Screen, Button, TextField, OptionRow, QuizProgress, LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
-/data         Quiz questions (only Q1 so far)
+/data         Quiz questions (only U1 and U3 so far)
 /hooks        useAuth and useQuizAnswer
 /lib          Supabase client, sign-in helpers and saving quiz answers
 /assets       App icon and splash images (Expo placeholders for now)
