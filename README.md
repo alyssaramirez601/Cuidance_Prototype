@@ -98,6 +98,17 @@ EXPO_PUBLIC_SUPABASE_URL=your-supabase-url
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
+## Web version
+
+- **App on the web:** https://alyssaramirez601.github.io/Cuidance_Prototype/app/
+- **Tester prototype (unchanged):** https://alyssaramirez601.github.io/Cuidance_Prototype/
+
+The web version is the same app running in a browser, so teammates can open it from a link on any phone, including Android, without running a dev server. It uses the same Supabase project as the phone app. Every merge to `main` rebuilds and redeploys it into the `app/` folder of the `gh-pages` branch, and the tester prototype files next to it are left alone. The phone app is still run with Expo Go.
+
+To try it on your computer, run `npm run web`. To make the same build the deploy makes, run `npm run build:web`.
+
+The deploy reads two repository Variables (Settings, then Secrets and variables, then Actions, then Variables): `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`. Use only the publishable key, never the secret or `service_role` key.
+
 ## Project structure
 
 What exists today:
@@ -112,6 +123,7 @@ What exists today:
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /supabase     Database migrations (SQL files), in supabase/migrations
+/.github      Pull request template, and the workflow that publishes the web version (workflows/deploy-app-web.yml)
 ```
 
 ## Design
