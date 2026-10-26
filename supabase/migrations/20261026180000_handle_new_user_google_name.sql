@@ -1,8 +1,10 @@
 -- Google sign-in: use the name Google sends for the new profile.
 --
 -- Email sign-ups send their name as user metadata called display_name. Google
--- sends it as full_name (and name). This keeps display_name first, then falls
--- back to the Google ones. It replaces the function from the first migration.
+-- sends given_name (first name), full_name and name. This keeps display_name
+-- first, then falls back to given_name so it matches the first-name field on
+-- email sign-up, then full_name, then name. It replaces the function from the
+-- first migration.
 -- The on_auth_user_created trigger already points at this function by name, so
 -- it does not need to be recreated.
 --
@@ -20,6 +22,7 @@ begin
     new.id,
     coalesce(
       nullif(trim(new.raw_user_meta_data ->> 'display_name'), ''),
+      nullif(trim(new.raw_user_meta_data ->> 'given_name'), ''),
       nullif(trim(new.raw_user_meta_data ->> 'full_name'), ''),
       nullif(trim(new.raw_user_meta_data ->> 'name'), '')
     )
