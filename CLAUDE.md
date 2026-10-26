@@ -22,7 +22,7 @@ _Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts
   - the guidance quiz: 4 questions for everyone, then branch questions for each area picked
   - the result screen
   - Home, Explore (search, product detail, ingredient lookup, education), Saved (guidance, products, owned, routines), Shop (labeled partner content) and Profile
-- The clickable prototype (`docs/prototype/index.html`) is the **reference for flows and copy**. Match it unless a task says otherwise, or unless the "Validated changes" section below says the prototype is wrong.
+- The clickable prototype (`docs/prototype/index.html`) is the **reference for flows and copy**. Match it unless a task says otherwise, or unless the "Validated changes" section below says the prototype is wrong. The wireframes board (`docs/wireframes/index.html`) is a separate reference for layout.
 - The research source is the Figma file **Cuidance Quiz Outcomes Board** (key `aJy5vMBZIB9EWJgfqoXeye`, 15 pages). It holds the answer cards, mixing rules, delivery rules, result names, safety lines and skin tone rules that the result is built from.
 - Component names, variants, states and icons come only from docs/design-system/. Never invent them.
 - Quiz wording, answer cards, mixing rules, result names, safety lines and skin tone rules come only from docs/quiz-outcomes/. Never invent them. If something is missing, stop and ask.
@@ -71,13 +71,14 @@ hooks/               # useAuth.ts, useQuiz.ts, useSaved.ts
 constants/           # tokens.ts: the only source of color, type, spacing and radius
 assets/              # images, fonts, logo
 docs/prototype/      # reference prototype (do not edit for the app build)
+docs/wireframes/     # reference wireframes board
 supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 ```
 
 ## Repo and branches
 
 - `main` is the default branch. Make changes on a short-lived branch and open a pull request into `main`.
-- `gh-pages` hosts the public clickable prototype that testers use. Only update gh-pages through a reviewed pull request, since testers use it.
+- `gh-pages` hosts the public clickable prototype that testers use (root), and the wireframes (`/wireframes/`). Only update gh-pages through a reviewed pull request, since testers use it.
 - Delete a patch branch only after its pull request is merged.
 - `README.md` holds the setup notes. Update its "Getting started" and "Project structure" sections whenever setup or folders change.
 
@@ -222,7 +223,7 @@ Follow the Quiz Outcomes Board. In short:
 - Do not hard-code colors, type, spacing or radius outside `constants/tokens.ts`.
 - Do not add photo or face analysis, diagnosis language or brand recommendations in guidance.
 - Do not pre-fill user data, sample accounts or the sample name in the real app.
-- Do not edit `docs/prototype/` or anything Esme built in Figma. New Figma work goes in separate frames or files.
+- Do not edit `docs/prototype/`, `docs/wireframes/` or anything Esme built in Figma. New Figma work goes in separate frames or files.
 - Do not push straight to the `gh-pages` branch. Update it only through a reviewed pull request.
 - Do not redraw or restyle the logo.
 - Do not commit secrets. Supabase keys go in `.env`, never in code.

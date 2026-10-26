@@ -51,7 +51,7 @@ These rules apply to everyone, even with a team of two.
 3. **Every merge goes through a pull request.** Open a pull request into `main` and fill in the template: what changed, why, and screenshots.
 4. **One review before merging.** The other teammate reviews and approves every pull request before it is merged.
 5. **Clean up after.** Delete the branch once its pull request is merged.
-6. **Update `gh-pages` only through a reviewed pull request.** It hosts the clickable prototype that testers use.
+6. **Update `gh-pages` only through a reviewed pull request.** It hosts the clickable prototype that testers use, and the wireframes.
 
 ## Getting started
 
@@ -110,12 +110,14 @@ What exists today:
 /hooks        useAuth, useQuizAnswer and useGoBack
 /lib          Supabase client, sign-in helpers and saving quiz answers
 /assets       App icon and splash images (Expo placeholders for now)
-/docs         The clickable prototype, in docs/prototype, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
+/docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /supabase     Database migrations (SQL files), in supabase/migrations
 ```
 
 ## Design
 
+- **Clickable prototype:** https://alyssaramirez601.github.io/Cuidance_Prototype/ (the file is in `docs/prototype/`)
+- **Wireframes:** https://alyssaramirez601.github.io/Cuidance_Prototype/wireframes/ (the file is in `docs/wireframes/`)
 - **Figma working file:** wireframes, prototype, validation boards, brand identity and design system
 - **Quiz outcome library:** every answer card, mixing rule, safety rule and source
 
