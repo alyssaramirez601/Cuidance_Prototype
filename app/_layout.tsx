@@ -10,7 +10,7 @@ import { colors, fontFamily } from '@/constants/tokens';
 import { useAuth } from '@/hooks/useAuth';
 
 // Signed-in people start on proof. Without this the web picks the first route by file name (dev), while the phone follows the screen order below
-export const unstable_settings = { initialRouteName: 'proof' };
+export const unstable_settings = { anchor: 'proof' };
 
 export default function RootLayout() {
   const { session, isLoading } = useAuth();

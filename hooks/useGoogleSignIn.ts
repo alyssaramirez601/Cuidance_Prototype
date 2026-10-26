@@ -1,6 +1,12 @@
 import { useState } from 'react';
+import { Platform } from 'react-native';
 
 import { signInWithGoogle } from '@/lib/auth';
+
+// Web only for now. In Expo Go, Supabase ignores the exp:// return address and sends the
+// in-app browser to the Site URL instead. The native path in lib/auth.ts stays in place so
+// we can turn this on again when we test with a development build.
+export const isGoogleSignInAvailable = Platform.OS === 'web';
 
 export function useGoogleSignIn() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);

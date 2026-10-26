@@ -7,7 +7,7 @@ import { OrDivider } from '@/components/OrDivider';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, space, type } from '@/constants/tokens';
-import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
+import { isGoogleSignInAvailable, useGoogleSignIn } from '@/hooks/useGoogleSignIn';
 import { signIn } from '@/lib/auth';
 
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
@@ -78,15 +78,19 @@ export default function SignInScreen() {
         loading={isSubmitting}
       />
 
-      <OrDivider />
+      {isGoogleSignInAvailable ? (
+        <>
+          <OrDivider />
 
-      <Button
-        label={isGoogleLoading ? 'Opening Google' : 'Continue with Google'}
-        onPress={startGoogleSignIn}
-        style="secondary"
-        loading={isGoogleLoading}
-        state={isSubmitting ? 'disabled' : undefined}
-      />
+          <Button
+            label={isGoogleLoading ? 'Opening Google' : 'Continue with Google'}
+            onPress={startGoogleSignIn}
+            style="secondary"
+            loading={isGoogleLoading}
+            state={isSubmitting ? 'disabled' : undefined}
+          />
+        </>
+      ) : null}
 
       <Pressable
         onPress={() => router.replace('/create-account')}

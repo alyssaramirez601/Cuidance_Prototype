@@ -119,7 +119,7 @@ The deploy reads two repository Variables (Settings, then Secrets and variables,
 
 ## Google sign-in
 
-"Continue with Google" is on the Create account and Sign in screens. It runs through Supabase Auth, so the app only uses the Supabase URL and publishable key it already has.
+"Continue with Google" is on the Create account and Sign in screens, on the web version only for now. In Expo Go, Supabase sends the in-app browser to the Site URL instead of back to the app, even though the `exp://` return address is allowed. We will revisit it with a development build, and the phone code is still in place. It runs through Supabase Auth, so the app only uses the Supabase URL and publishable key it already has.
 
 - **Where it is set up:** in the Supabase dashboard, under Authentication, then Sign In / Providers, then Google. The Google Client ID and Client secret are saved only there. They never go in the code, `.env` or this repo.
 - **Redirect URLs** (Authentication, then URL Configuration) must include `https://alyssaramirez601.github.io/Cuidance_Prototype/app/**`, `http://localhost:8081/**`, `http://localhost:8082/**` and `exp://**`.
