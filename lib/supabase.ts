@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
@@ -17,8 +17,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    // There are no web links to read a session from in a native app
-    detectSessionInUrl: false,
+    // Google sign-in sends the person back with a one-time code, exchanged for a session
+    flowType: 'pkce',
+    // On the web the app reads that code from the address bar. A phone app has no such address
+    detectSessionInUrl: Platform.OS === 'web',
   },
 });
 

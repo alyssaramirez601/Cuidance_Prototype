@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { OrDivider } from '@/components/OrDivider';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, space, type } from '@/constants/tokens';
+import { isGoogleSignInAvailable, useGoogleSignIn } from '@/hooks/useGoogleSignIn';
 import { signUp } from '@/lib/auth';
 
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
@@ -18,6 +20,8 @@ export default function CreateAccountScreen() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
+  const { isGoogleLoading, googleError, startGoogleSignIn } = useGoogleSignIn();
+  const errorMessage = formError || googleError;
 
   const isValid = EMAIL_PATTERN.test(email.trim()) && password.length >= MIN_PASSWORD_LENGTH;
 
@@ -73,9 +77,9 @@ export default function CreateAccountScreen() {
         textContentType="newPassword"
       />
 
-      {formError ? (
+      {errorMessage ? (
         <Text accessibilityLiveRegion="polite" style={styles.formError}>
-          {formError}
+          {errorMessage}
         </Text>
       ) : null}
 
@@ -85,6 +89,20 @@ export default function CreateAccountScreen() {
         state={isValid ? undefined : 'disabled'}
         loading={isSubmitting}
       />
+
+      {isGoogleSignInAvailable ? (
+        <>
+          <OrDivider />
+
+          <Button
+            label={isGoogleLoading ? 'Opening Google' : 'Continue with Google'}
+            onPress={startGoogleSignIn}
+            style="secondary"
+            loading={isGoogleLoading}
+            state={isSubmitting ? 'disabled' : undefined}
+          />
+        </>
+      ) : null}
 
       <Pressable
         onPress={() => router.replace('/sign-in')}
