@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { LoadingState } from '@/components/LoadingState';
+import { WebFrame } from '@/components/WebFrame';
 import { colors, fontFamily } from '@/constants/tokens';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -19,11 +20,15 @@ export default function RootLayout() {
 
   // If the fonts fail to load the app still opens, with the phone's default font
   if (isLoading || (!fontsLoaded && !fontError)) {
-    return <LoadingState label="Loading Cuidance" />;
+    return (
+      <WebFrame>
+        <LoadingState label="Loading Cuidance" />
+      </WebFrame>
+    );
   }
 
   return (
-    <>
+    <WebFrame>
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -44,6 +49,6 @@ export default function RootLayout() {
           <Stack.Screen name="quiz/[questionId]" />
         </Stack.Protected>
       </Stack>
-    </>
+    </WebFrame>
   );
 }

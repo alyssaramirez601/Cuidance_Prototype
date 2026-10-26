@@ -217,6 +217,7 @@ export const layout = {
   insideComponent: space[16],
   buttonHeight: 48,
   minTouchTarget: 44,
+  webMaxWidth: 430, // phone-width column when the web version opens on a wide screen
 } as const;
 
 export const tokens = { colors, graphic, secondary, fontFamily, type, space, radius, stroke, sizes, letterSpacing, layout } as const;
