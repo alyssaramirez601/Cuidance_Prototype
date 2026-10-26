@@ -117,6 +117,14 @@ To try it on your computer, run `npm run web`. To make the same build the deploy
 
 The deploy reads two repository Variables (Settings, then Secrets and variables, then Actions, then Variables): `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`. Use only the publishable key, never the secret or `service_role` key.
 
+## Google sign-in
+
+"Continue with Google" is on the Create account and Sign in screens. It runs through Supabase Auth, so the app only uses the Supabase URL and publishable key it already has.
+
+- **Where it is set up:** in the Supabase dashboard, under Authentication, then Sign In / Providers, then Google. The Google Client ID and Client secret are saved only there. They never go in the code, `.env` or this repo.
+- **Redirect URLs** (Authentication, then URL Configuration) must include `https://alyssaramirez601.github.io/Cuidance_Prototype/app/**`, `http://localhost:8081/**`, `http://localhost:8082/**` and `exp://**`.
+- **Profile name:** Google sign-ups get their display name from the name Google sends. This comes from the migration `20261026180000_handle_new_user_google_name.sql`, which runs once in the Supabase SQL Editor.
+
 ## Project structure
 
 What exists today:
