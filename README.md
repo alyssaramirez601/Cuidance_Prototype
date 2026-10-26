@@ -2,6 +2,14 @@
 
 Beauty and personal-care guidance that fits you.
 
+## Links
+
+- **Real app** (web version, open on any phone): https://alyssaramirez601.github.io/Cuidance_Prototype/app/
+- **Clickable prototype:** https://alyssaramirez601.github.io/Cuidance_Prototype/
+- **Wireframes:** https://alyssaramirez601.github.io/Cuidance_Prototype/wireframes/
+- **Admin web** (Esme's repo): https://esm3bobadilla.github.io/Cuidance_Admin/
+- **Admin repo:** https://github.com/esm3bobadilla/Cuidance_Admin
+
 Cuidance is a mobile app that helps people figure out what may fit their hair, skin, makeup and body care. You take a short quiz, and Cuidance explains what may fit you and why, ingredient by ingredient. It never diagnoses, never guesses anything about you from a photo, and never tells you something needs fixing.
 
 > Cuidance offers guidance, not medical advice. If something on your skin, scalp or nails keeps bothering you, please talk to a dermatologist or doctor.
@@ -128,6 +136,7 @@ What exists today:
 
 ## Design
 
+- **Real app (web version):** https://alyssaramirez601.github.io/Cuidance_Prototype/app/
 - **Clickable prototype:** https://alyssaramirez601.github.io/Cuidance_Prototype/ (the file is in `docs/prototype/`)
 - **Wireframes:** https://alyssaramirez601.github.io/Cuidance_Prototype/wireframes/ (the file is in `docs/wireframes/`)
 - **Figma working file:** wireframes, prototype, validation boards, brand identity and design system
