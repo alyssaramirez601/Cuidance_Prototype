@@ -123,7 +123,7 @@ The deploy reads two repository Variables (Settings, then Secrets and variables,
 
 - **Where it is set up:** in the Supabase dashboard, under Authentication, then Sign In / Providers, then Google. The Google Client ID and Client secret are saved only there. They never go in the code, `.env` or this repo.
 - **Redirect URLs** (Authentication, then URL Configuration) must include `https://alyssaramirez601.github.io/Cuidance_Prototype/app/**`, `http://localhost:8081/**`, `http://localhost:8082/**` and `exp://**`.
-- **Profile name:** Google sign-ups get their display name from the name Google sends. This comes from the migration `20261026180000_handle_new_user_google_name.sql`, which runs once in the Supabase SQL Editor.
+- **Profile name:** Google sign-ups get their display name from Google's first name, falling back to the full name. This comes from the migration `20261026180000_handle_new_user_google_name.sql`, which runs once in the Supabase SQL Editor.
 
 ## Project structure
 
