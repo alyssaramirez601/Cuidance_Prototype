@@ -5,6 +5,7 @@ Beauty and personal-care guidance that fits you.
 ## Links
 
 - **Real app** (web version, open on any phone): https://alyssaramirez601.github.io/Cuidance_Prototype/app/
+- **App preview** (the latest work-in-progress branch, for testing before review): https://alyssaramirez601.github.io/Cuidance_Prototype/app-preview/
 - **Clickable prototype:** https://alyssaramirez601.github.io/Cuidance_Prototype/
 - **Wireframes:** https://alyssaramirez601.github.io/Cuidance_Prototype/wireframes/
 - **Admin web** (Esme's repo): https://esm3bobadilla.github.io/Cuidance_Admin/
@@ -139,7 +140,7 @@ What exists today:
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /supabase     Database migrations (SQL files), in supabase/migrations
-/.github      Pull request template, and the workflow that publishes the web version (workflows/deploy-app-web.yml)
+/.github      Pull request template, and the workflows that publish the web version (workflows/deploy-app-web.yml) and the preview from work-in-progress branches (workflows/deploy-app-preview.yml)
 ```
 
 ## Design

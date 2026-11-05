@@ -78,7 +78,8 @@ supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 ## Repo and branches
 
 - `main` is the default branch. Make changes on a short-lived branch and open a pull request into `main`.
-- `gh-pages` hosts the public clickable prototype that testers use (root), and the wireframes (`/wireframes/`). Only update gh-pages through a reviewed pull request, since testers use it.
+- `gh-pages` hosts the public clickable prototype that testers use (root), and the wireframes (`/wireframes/`). Only update gh-pages through a reviewed pull request, since testers use it. The one exception is `/app-preview/`: every push to a work-in-progress branch publishes there automatically (`.github/workflows/deploy-app-preview.yml`), so Alyssa can test on her phone first.
+- Test on the preview link before opening a pull request, and fix problems on the same branch. Open one pull request per feature, not one per fix, since Esme reviews in a different time zone.
 - Delete a patch branch only after its pull request is merged.
 - `README.md` holds the setup notes. Update its "Getting started" and "Project structure" sections whenever setup or folders change.
 
