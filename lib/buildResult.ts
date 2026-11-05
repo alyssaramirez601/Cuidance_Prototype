@@ -200,7 +200,9 @@ function ingredientsFrom(cards: AnswerCard[]): Ingredient[] {
   for (const card of cards) {
     for (const line of (card.ingredients ?? []).filter(isIngredientLine)) {
       const [name, role] = line.split(': ');
-      const key = name.replace(/^Optional /, '');
+      // "Optional glycerin" becomes "Glycerin", so every row starts with a capital like the rest
+      const bare = name.replace(/^Optional /, '');
+      const key = bare.charAt(0).toUpperCase() + bare.slice(1);
       if (seen.has(key)) continue;
       seen.add(key);
       items.push({ name: key, role, code: card.code, evidence: card.evidence });
