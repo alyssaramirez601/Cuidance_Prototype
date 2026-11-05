@@ -33,8 +33,7 @@ export function useQuizNext(userId: string, question: QuizQuestion, hasAnswer: b
     if (nextId) {
       router.push(`/quiz/${nextId}`);
     } else {
-      // The result screen isn't built yet, so a finished quiz ends at the proof screen for now
-      router.replace('/proof');
+      router.replace('/quiz/result');
     }
   }, [userId, question.id, question.optional, hasAnswer, router]);
 

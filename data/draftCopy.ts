@@ -57,3 +57,30 @@ function joinList(items: string[]): string {
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
   return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
 }
+
+// Result screen labels
+export const resultLabels = {
+  screenTitle: 'Your result',
+  eyebrow: 'Your guidance',
+  close: 'Close',
+  showAll: (count: number) => `Show all ${count}`,
+  showFewer: 'Show fewer',
+  productTypes: 'Products that may fit',
+  productTypesHelper: 'Product types, not brands.',
+  ingredients: 'Ingredients that may help',
+  skinTone: 'Every skin tone',
+  labelGuide: 'How to read a label',
+  meaning: 'What this may mean',
+  areaInContext: 'This area shapes what the result shows below, rather than adding advice.',
+  evidenceLabel: (label: string) => `Evidence: ${label}`,
+  showSources: 'Show sources',
+  hideSources: 'Hide sources',
+  evidenceCount: (label: string, count: number) => `${label}: ${count} ${count === 1 ? 'point' : 'points'}`,
+  saved: 'Result saved.',
+  save: 'Save result',
+  saving: 'Saving',
+  change: 'Change my answers',
+  startOver: 'Start over',
+  loading: 'Building your result',
+  takeQuiz: 'Take the quiz',
+};

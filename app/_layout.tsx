@@ -51,6 +51,7 @@ export default function RootLayout() {
           <Stack.Screen name="proof" />
           <Stack.Screen name="dev" />
           <Stack.Screen name="quiz/[questionId]" />
+          <Stack.Screen name="quiz/result" />
         </Stack.Protected>
       </Stack>
     </WebFrame>

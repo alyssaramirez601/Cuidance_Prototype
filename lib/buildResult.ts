@@ -29,11 +29,10 @@ export type AreaResult = {
   // Rule lines first, then the card lines no rule replaced
   points: ResultPoint[];
   meanings: ResultPoint[];
-  // Products and ingredients cards change what the result shows, not the advice
-  shows: ResultPoint[];
 };
 
-export type ProductType = { text: string; why: string; code: string };
+// One card's product types, shown together under the reason from that card
+export type ProductGroup = { why: string; items: string[]; code: string; evidence?: Evidence };
 
 export type GuidanceResult = {
   name: ResultName;
@@ -42,7 +41,7 @@ export type GuidanceResult = {
   startHere: ResultPoint[];
   why: ResultPoint[];
   byArea: AreaResult[];
-  productTypes: ProductType[];
+  productGroups: ProductGroup[];
   ingredients: ResultPoint[];
   explainers: ResultPoint[];
   showLabelGuide: boolean;
@@ -86,21 +85,26 @@ export function buildResult(answers: SavedAnswers): GuidanceResult {
       area,
       points: dedupe([...ruleLines, ...cardLines]),
       meanings: dedupe(areaCards.filter((card) => card.whatItMayMean).map((card) => cardPoint(card, card.whatItMayMean as string))),
-      shows: areaCards.filter((card) => card.resultShows).map((card) => cardPoint(card, card.resultShows as string)),
     };
   });
 
-  const why = dedupe(byArea.flatMap((item) => item.points));
+  const allWhy = dedupe(byArea.flatMap((item) => item.points));
+  const startHere = pickStartHere(byArea);
+  // Start here already shows its points, so "Why these may fit" lists the rest instead of repeating them
+  const startTexts = new Set(startHere.map((point) => point.text));
+  const why = allWhy.filter((point) => !startTexts.has(point.text));
 
   return {
     name: pickName(answers, areas),
     areas,
     exploration: explorationSentence(areas),
-    startHere: pickStartHere(byArea),
+    startHere,
     why,
     byArea,
-    productTypes: productTypesFrom(cards),
-    ingredients: dedupe(cards.flatMap((card) => (card.ingredients ?? []).map((text) => cardPoint(card, text)))),
+    productGroups: productGroupsFrom(cards),
+    ingredients: dedupe(
+      cards.flatMap((card) => (card.ingredients ?? []).filter(isIngredientLine).map((text) => cardPoint(card, text))),
+    ),
     explainers: dedupe(cards.filter((card) => card.explainer).map((card) => cardPoint(card, card.explainer as string))),
     showLabelGuide: picked('p2_task', 'read_label') || picked('p3_info', 'read_label'),
     check: dedupe(cards.filter((card) => card.watchOutFor).map((card) => cardPoint(card, card.watchOutFor as string))),
@@ -111,7 +115,7 @@ export function buildResult(answers: SavedAnswers): GuidanceResult {
 }
 
 export function hasResult(result: GuidanceResult): boolean {
-  return result.why.length > 0 || result.byArea.some((item) => item.shows.length > 0);
+  return result.startHere.length > 0 || result.explainers.length > 0 || result.showLabelGuide;
 }
 
 function cardPoint(card: AnswerCard, text: string): ResultPoint {
@@ -138,18 +142,29 @@ function pickStartHere(byArea: AreaResult[]): ResultPoint[] {
   return dedupe(picks).slice(0, START_HERE_LIMIT);
 }
 
-// "Things to try" are product types, never brands. Each keeps the reason from its card
-function productTypesFrom(cards: AnswerCard[]): ProductType[] {
+// Some "Things to try" lines in the outcome library are notes to the app ("Ask which color process was used"),
+// not words for people. Until the team rewrites them, only lines that name something to try are shown
+const APP_NOTE_START =
+  /^(Ask|Explain|Show|Offer|Compare|Use the|Use a|Choose|Request|Invite|Clarify|Read|Apply the|Adjust placement using|Moisturizer matched|Optional hold only if|Look for)\b/;
+
+function isTryLine(text: string): boolean {
+  return !APP_NOTE_START.test(text);
+}
+
+// Ingredient lines read "Glycerin: Helps attract water into skin." Lines like "None by default" are notes, not advice
+function isIngredientLine(text: string): boolean {
+  return /^[A-Z][^:;]{1,60}: [A-Z][^:]*$/.test(text) && !/^(None|No|Learning|Choose|If)\b/.test(text);
+}
+
+function productGroupsFrom(cards: AnswerCard[]): ProductGroup[] {
   const seen = new Set<string>();
-  const types: ProductType[] = [];
+  const groups: ProductGroup[] = [];
   for (const card of cards) {
-    for (const text of card.thingsToTry ?? []) {
-      if (seen.has(text)) continue;
-      seen.add(text);
-      types.push({ text, why: card.whatItMayMean ?? '', code: card.code });
-    }
+    const items = (card.thingsToTry ?? []).filter((text) => isTryLine(text) && !seen.has(text));
+    items.forEach((text) => seen.add(text));
+    if (items.length) groups.push({ why: card.whatItMayMean ?? '', items, code: card.code, evidence: card.evidence });
   }
-  return types;
+  return groups;
 }
 
 function openItems(answers: SavedAnswers): string[] {
