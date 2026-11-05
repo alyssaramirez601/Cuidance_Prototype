@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[12],
-    padding: space[16],
+    paddingVertical: space[12],
+    paddingHorizontal: space[16],
     borderRadius: radius.medium,
   },
   indicator: {
