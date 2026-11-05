@@ -37,11 +37,24 @@ export function explorationSentence(areas: string[]): string {
 export const openLines = {
   skipped: (prompt: string) => `You skipped “${prompt}” That stays open, and nothing was guessed. You can answer it anytime.`,
   notSure: (prompt: string) => `You chose “I’m not sure yet” for “${prompt}” That’s a good answer, and it stays open for now.`,
-  nothingOpen: 'Nothing is left open from your answers. You can change them anytime.',
 };
 
 export const evidenceIntro =
-  'Each point shows how strong the evidence is: Strong, Moderate, Limited, or Assumption (our own design call, still being tested).';
+  'The dots next to each point show how well-studied that kind of advice is in general. They’re about the research, not about you.';
+
+// What the dots mean, in plain words. The evidence labels themselves come from the outcome library
+export const evidenceKey = {
+  Strong: { title: 'Strong', meaning: 'Backed by dermatology groups, the FDA, or several studies.' },
+  Moderate: { title: 'Moderate', meaning: 'Supported by some research or expert advice.' },
+  Limited: { title: 'Limited', meaning: 'Common advice that hasn’t been studied much yet.' },
+  Assumption: { title: 'Our idea', meaning: 'Our own idea, still being tested with people.' },
+};
+
+// "this path" in the outcome library reads as vague on its own, so the app says "your guidance" instead.
+// The docs keep the original wording until the team updates them
+export function clarify(text: string): string {
+  return text.replace(/\bthis path\b/g, 'your guidance').replace(/\bThis path\b/g, 'Your guidance');
+}
 
 export const emptyResult = {
   title: 'Your result isn’t ready yet',
@@ -63,7 +76,7 @@ export const resultLabels = {
   screenTitle: 'Your result',
   eyebrow: 'Your guidance',
   close: 'Close',
-  showAll: (count: number) => `Show all ${count}`,
+  showMore: (count: number) => `Show ${count} more`,
   showFewer: 'Show fewer',
   productTypes: 'Products that may fit',
   productTypesHelper: 'Product types, not brands.',
@@ -72,10 +85,13 @@ export const resultLabels = {
   labelGuide: 'How to read a label',
   meaning: 'What this may mean',
   areaInContext: 'This area shapes what the result shows below, rather than adding advice.',
-  evidenceLabel: (label: string) => `Evidence: ${label}`,
   showSources: 'Show sources',
   hideSources: 'Hide sources',
-  evidenceCount: (label: string, count: number) => `${label}: ${count} ${count === 1 ? 'point' : 'points'}`,
+  evidenceKeyTitle: 'What the dots mean',
+  tryTitle: 'What you could try',
+  whyTitle: 'Why it may fit',
+  watchTitle: 'Watch out for',
+  ingredientRole: 'What it does',
   saved: 'Result saved.',
   save: 'Save result',
   saving: 'Saving',

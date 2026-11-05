@@ -4,12 +4,15 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
+import { EvidenceDots } from '@/components/EvidenceDots';
 import { Icon } from '@/components/Icon';
+import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
+import { Sheet } from '@/components/Sheet';
 import { Toast } from '@/components/Toast';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels, emptyResult, evidenceIntro, resultLabels, sectionTitles } from '@/data/draftCopy';
+import { areaLabels, emptyResult, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
 import { labelGuide } from '@/data/labelGuide';
 import type { CareArea, Evidence } from '@/data/outcomeTypes';
 import { emergencyLine } from '@/data/safety';
@@ -26,6 +29,14 @@ const c = colors.light;
 // Three visible at once; the rest stay one tap deeper, never dropped
 const VISIBLE_AT_ONCE = 3;
 const evidenceOrder: Evidence[] = ['Strong', 'Moderate', 'Limited', 'Assumption'];
+
+// What a pop-up shows: a lead line, a few short lists, and how well-studied the advice is
+type SheetContent = {
+  title: string;
+  lead?: string;
+  groups: { heading: string; items: string[] }[];
+  evidence?: Evidence;
+};
 
 export default function ResultScreen() {
   const { session } = useAuth();
@@ -71,6 +82,7 @@ type ResultViewProps = { userId: string; result: GuidanceResult; answers: SavedA
 function ResultView({ userId, result, answers }: ResultViewProps) {
   const router = useRouter();
   const [activeArea, setActiveArea] = useState<CareArea>(result.areas[0]);
+  const [sheet, setSheet] = useState<SheetContent | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [actionError, setActionError] = useState('');
@@ -78,6 +90,20 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
   // Three or more areas get one tab each instead of stacked reports
   const useTabs = result.areas.length >= 3;
   const shownAreas = useTabs ? result.byArea.filter((item) => item.area === activeArea) : result.byArea;
+  const usedEvidence = evidenceOrder.filter((label) => result.evidence.some((item) => item.evidence === label));
+
+  function openPoint(point: ResultPoint, title: string) {
+    setSheet({
+      title,
+      lead: point.text,
+      groups: [
+        { heading: resultLabels.tryTitle, items: point.detail?.tries ?? [] },
+        { heading: resultLabels.whyTitle, items: point.detail?.meanings ?? [] },
+        { heading: resultLabels.watchTitle, items: point.detail?.watch ?? [] },
+      ],
+      evidence: point.evidence,
+    });
+  }
 
   async function handleSave() {
     setActionError('');
@@ -102,10 +128,6 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
     else setActionError(outcome.message);
   }
 
-  const evidenceCounts = evidenceOrder
-    .map((label) => ({ label, count: result.evidence.filter((item) => item.evidence === label).length }))
-    .filter((item) => item.count > 0);
-
   return (
     <Screen>
       <View style={styles.topBar}>
@@ -126,21 +148,23 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
           {result.name.headline}
         </Text>
         <Text style={styles.subtitle}>{result.name.subtitle}</Text>
-      </View>
-
-      <Section title={sectionTitles.exploration}>
         <Text style={styles.body}>{result.exploration}</Text>
-      </Section>
+      </View>
 
       {result.startHere.length ? (
         <Section title={sectionTitles.startHere}>
           {result.startHere.map((point, index) => (
-            <View key={point.code} style={styles.startRow}>
-              <View style={styles.startNumber}>
-                <Text style={styles.startNumberText}>{index + 1}</Text>
-              </View>
-              <Text style={[styles.body, styles.flex]}>{point.text}</Text>
-            </View>
+            <ListRow
+              key={point.code}
+              label={point.text}
+              onPress={() => openPoint(point, `${sectionTitles.startHere} · ${index + 1}`)}
+              leading={
+                <View style={styles.startNumber}>
+                  <Text style={styles.startNumberText}>{index + 1}</Text>
+                </View>
+              }
+              trailing={point.evidence ? <EvidenceDots evidence={point.evidence} /> : null}
+            />
           ))}
         </Section>
       ) : null}
@@ -151,7 +175,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         </Section>
       ) : null}
 
-      {result.byArea.length ? (
+      {result.byArea.some((item) => item.meanings.length) ? (
         <Section title={sectionTitles.byArea}>
           {useTabs ? (
             <View style={styles.tabs} accessibilityRole="tablist">
@@ -169,10 +193,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
             <View key={item.area} style={styles.card}>
               <Text style={styles.cardTitle}>{capitalize(areaLabels[item.area])}</Text>
               {item.meanings.length ? (
-                <View style={styles.subGroup}>
-                  <Text style={styles.label}>{resultLabels.meaning}</Text>
-                  <MoreList items={item.meanings} render={(point) => <Point key={point.code} point={point} />} />
-                </View>
+                <MoreList items={item.meanings} render={(point) => <Point key={point.code} point={point} />} />
               ) : (
                 <Text style={styles.helper}>{resultLabels.areaInContext}</Text>
               )}
@@ -181,41 +202,58 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         </Section>
       ) : null}
 
-      {result.productGroups.length || result.ingredients.length || result.explainers.length || result.showLabelGuide ? (
+      {result.productTypes.length || result.ingredients.length || result.explainers.length || result.showLabelGuide ? (
         <Section title={sectionTitles.inContext}>
-          {result.productGroups.length ? (
-            <View style={styles.subGroup}>
-              <Text style={styles.label}>{resultLabels.productTypes}</Text>
-              <Text style={styles.helper}>{resultLabels.productTypesHelper}</Text>
+          {result.productTypes.length ? (
+            <Group title={resultLabels.productTypes} helper={resultLabels.productTypesHelper}>
               <MoreList
-                items={result.productGroups}
-                render={(group) => (
-                  <View key={group.code} style={styles.productRow}>
-                    {group.items.map((item) => (
-                      <Text key={item} style={styles.productName}>
-                        {item}
-                      </Text>
-                    ))}
-                    {group.why ? <Text style={styles.helper}>{group.why}</Text> : null}
-                  </View>
+                items={result.productTypes}
+                render={(item) => (
+                  <ListRow
+                    key={item.text}
+                    label={item.text}
+                    onPress={() =>
+                      setSheet({
+                        title: item.text,
+                        groups: [
+                          { heading: resultLabels.whyTitle, items: item.why ? [item.why] : [] },
+                          { heading: resultLabels.watchTitle, items: item.watch ? [item.watch] : [] },
+                        ],
+                        evidence: item.evidence,
+                      })
+                    }
+                  />
                 )}
               />
-            </View>
+            </Group>
           ) : null}
           {result.ingredients.length ? (
-            <View style={styles.subGroup}>
-              <Text style={styles.label}>{resultLabels.ingredients}</Text>
-              <MoreList items={result.ingredients} render={(point) => <Point key={point.text} point={point} />} />
-            </View>
+            <Group title={resultLabels.ingredients}>
+              <MoreList
+                items={result.ingredients}
+                render={(item) => (
+                  <ListRow
+                    key={item.name}
+                    label={item.name}
+                    onPress={() =>
+                      setSheet({
+                        title: item.name,
+                        groups: [{ heading: resultLabels.ingredientRole, items: [item.role] }],
+                        evidence: item.evidence,
+                      })
+                    }
+                  />
+                )}
+              />
+            </Group>
           ) : null}
           {result.explainers.map((point) => (
             <Point key={point.code} point={point} />
           ))}
           {result.showLabelGuide ? (
-            <View style={styles.subGroup}>
-              <Text style={styles.label}>{resultLabels.labelGuide}</Text>
+            <Group title={resultLabels.labelGuide}>
               <Text style={styles.body}>{labelGuide}</Text>
-            </View>
+            </Group>
           ) : null}
         </Section>
       ) : null}
@@ -228,30 +266,39 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         </View>
         <MoreList items={result.check} render={(point) => <Point key={point.code} point={point} />} />
         {result.skinTone.length ? (
-          <View style={styles.subGroup}>
-            <Text style={styles.label}>{resultLabels.skinTone}</Text>
+          <Group title={resultLabels.skinTone}>
             {result.skinTone.map((point) => (
               <Point key={point.code} point={point} />
             ))}
-          </View>
+          </Group>
         ) : null}
       </Section>
 
-      <Section title={sectionTitles.open}>
-        {result.open.map((line) => (
-          <Text key={line} style={styles.body}>
-            {line}
-          </Text>
-        ))}
-      </Section>
+      {result.open.length ? (
+        <Section title={sectionTitles.open}>
+          {result.open.map((line) => (
+            <Text key={line} style={styles.body}>
+              {line}
+            </Text>
+          ))}
+        </Section>
+      ) : null}
 
       <Section title={sectionTitles.evidence}>
         <Text style={styles.helper}>{evidenceIntro}</Text>
-        {evidenceCounts.map((item) => (
-          <Text key={item.label} style={styles.body}>
-            {resultLabels.evidenceCount(item.label, item.count)}
-          </Text>
-        ))}
+        {usedEvidence.length ? (
+          <Group title={resultLabels.evidenceKeyTitle}>
+            {usedEvidence.map((label) => (
+              <View key={label} style={styles.keyRow}>
+                <EvidenceDots evidence={label} />
+                <Text style={[styles.body, styles.flex]}>
+                  <Text style={styles.label}>{evidenceKey[label].title}: </Text>
+                  {evidenceKey[label].meaning}
+                </Text>
+              </View>
+            ))}
+          </Group>
+        ) : null}
         <Sources />
       </Section>
 
@@ -270,7 +317,37 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Button label={resultLabels.change} style="secondary" onPress={handleChange} />
         <Button label={resultLabels.startOver} style="secondary" loading={isClearing} onPress={handleStartOver} />
       </View>
+
+      <Sheet visible={sheet !== null} title={sheet?.title ?? ''} onClose={() => setSheet(null)}>
+        {sheet ? <SheetBody content={sheet} /> : null}
+      </Sheet>
     </Screen>
+  );
+}
+
+function SheetBody({ content }: { content: SheetContent }) {
+  return (
+    <>
+      {content.lead ? <Text style={styles.body}>{content.lead}</Text> : null}
+      {content.groups
+        .filter((group) => group.items.length)
+        .map((group) => (
+          <Group key={group.heading} title={group.heading}>
+            {group.items.map((item) => (
+              <View key={item} style={styles.bulletRow}>
+                <Text style={styles.body}>•</Text>
+                <Text style={[styles.body, styles.flex]}>{item}</Text>
+              </View>
+            ))}
+          </Group>
+        ))}
+      {content.evidence ? (
+        <View style={styles.keyRow}>
+          <EvidenceDots evidence={content.evidence} />
+          <Text style={[styles.helper, styles.flex]}>{evidenceKey[content.evidence].meaning}</Text>
+        </View>
+      ) : null}
+    </>
   );
 }
 
@@ -285,24 +362,41 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function Point({ point }: { point: ResultPoint }) {
+function Group({ title, helper, children }: { title: string; helper?: string; children: ReactNode }) {
   return (
-    <View style={styles.point}>
-      <Text style={styles.body}>{point.text}</Text>
-      {point.evidence ? <Text style={styles.evidence}>{resultLabels.evidenceLabel(point.evidence)}</Text> : null}
+    <View style={styles.group}>
+      <Text style={styles.label}>{title}</Text>
+      {helper ? <Text style={styles.helper}>{helper}</Text> : null}
+      {children}
     </View>
   );
 }
 
+function Point({ point }: { point: ResultPoint }) {
+  return (
+    <View style={styles.point}>
+      <Text style={[styles.body, styles.flex]}>{point.text}</Text>
+      {/* Beside the line, not above it, so the dots don't read as bullets */}
+      {point.evidence ? (
+        <View style={styles.pointDots}>
+          <EvidenceDots evidence={point.evidence} />
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+// "Show 6 more" opens the rest of the same list in place, so it's clear they belong together
 function MoreList<T>({ items, render }: { items: T[]; render: (item: T) => ReactNode }) {
   const [expanded, setExpanded] = useState(false);
+  const hidden = items.length - VISIBLE_AT_ONCE;
   const visible = expanded ? items : items.slice(0, VISIBLE_AT_ONCE);
   return (
     <View style={styles.list}>
       {visible.map(render)}
-      {items.length > VISIBLE_AT_ONCE ? (
+      {hidden > 0 ? (
         <Button
-          label={expanded ? resultLabels.showFewer : resultLabels.showAll(items.length)}
+          label={expanded ? resultLabels.showFewer : resultLabels.showMore(hidden)}
           style="ghost"
           onPress={() => setExpanded(!expanded)}
         />
@@ -318,8 +412,7 @@ function Sources() {
       <Button label={open ? resultLabels.hideSources : resultLabels.showSources} style="ghost" onPress={() => setOpen(!open)} />
       {open
         ? sourceGroups.map((group) => (
-            <View key={group.publisher} style={styles.subGroup}>
-              <Text style={styles.label}>{group.publisher}</Text>
+            <Group key={group.publisher} title={group.publisher}>
               {group.sources.map((source) => (
                 <Pressable
                   key={source.url}
@@ -331,7 +424,7 @@ function Sources() {
                   <Text style={styles.link}>{source.title}</Text>
                 </Pressable>
               ))}
-            </View>
+            </Group>
           ))
         : null}
     </View>
@@ -380,9 +473,7 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: space[12],
-    paddingTop: space[24],
-    borderTopWidth: stroke.default,
-    borderTopColor: c.border,
+    paddingTop: space[32],
   },
   sectionTitle: {
     ...type.title,
@@ -400,11 +491,6 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.ink,
   },
-  startRow: {
-    flexDirection: 'row',
-    gap: space[12],
-    alignItems: 'flex-start',
-  },
   startNumber: {
     width: space[32],
     height: space[32],
@@ -420,12 +506,25 @@ const styles = StyleSheet.create({
   list: {
     gap: space[12],
   },
-  point: {
-    gap: space[4],
+  group: {
+    gap: space[8],
   },
-  evidence: {
-    ...type.caption,
-    color: c.inkMuted,
+  point: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space[12],
+  },
+  pointDots: {
+    paddingTop: space[8],
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    gap: space[8],
+  },
+  keyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[12],
   },
   tabs: {
     flexDirection: 'row',
@@ -441,21 +540,6 @@ const styles = StyleSheet.create({
     backgroundColor: c.surface,
   },
   cardTitle: {
-    ...type.title,
-    color: c.ink,
-  },
-  subGroup: {
-    gap: space[8],
-  },
-  productRow: {
-    gap: space[4],
-    padding: layout.insideComponent,
-    borderRadius: radius.medium,
-    borderWidth: stroke.default,
-    borderColor: c.border,
-    backgroundColor: c.surface,
-  },
-  productName: {
     ...type.label,
     color: c.ink,
   },
@@ -480,6 +564,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     gap: space[12],
+    paddingTop: space[24],
   },
   errorBox: {
     gap: space[12],

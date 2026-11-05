@@ -1,5 +1,5 @@
 import { answerCards } from '@/data/answerCards';
-import { explorationSentence, openLines, twoAreaSubtitle } from '@/data/draftCopy';
+import { clarify, explorationSentence, openLines, twoAreaSubtitle } from '@/data/draftCopy';
 import type { AnswerCard, CareArea, Evidence, MixingRule, ResultName } from '@/data/outcomeTypes';
 import { quizQuestions } from '@/data/quiz';
 import {
@@ -22,7 +22,9 @@ import { mixingRules } from '@/data/rules';
 import type { SavedAnswers } from '@/lib/quizFlow';
 import { pickedAreas, visibleQuestionIds } from '@/lib/quizFlow';
 
-export type ResultPoint = { text: string; code: string; evidence?: Evidence };
+// What a tapped point opens: concrete steps, what the answer may mean, and what to watch for
+export type PointDetail = { tries: string[]; meanings: string[]; watch: string[] };
+export type ResultPoint = { text: string; code: string; evidence?: Evidence; detail?: PointDetail };
 
 export type AreaResult = {
   area: CareArea;
@@ -31,8 +33,10 @@ export type AreaResult = {
   meanings: ResultPoint[];
 };
 
-// One card's product types, shown together under the reason from that card
-export type ProductGroup = { why: string; items: string[]; code: string; evidence?: Evidence };
+// A product type ("Gentle cleanser"), never a brand, with the reason from its card
+export type ProductType = { text: string; why: string; code: string; evidence?: Evidence; watch?: string };
+// "Glycerin: Helps attract water into skin." split into the name and what it does
+export type Ingredient = { name: string; role: string; code: string; evidence?: Evidence };
 
 export type GuidanceResult = {
   name: ResultName;
@@ -41,8 +45,8 @@ export type GuidanceResult = {
   startHere: ResultPoint[];
   why: ResultPoint[];
   byArea: AreaResult[];
-  productGroups: ProductGroup[];
-  ingredients: ResultPoint[];
+  productTypes: ProductType[];
+  ingredients: Ingredient[];
   explainers: ResultPoint[];
   showLabelGuide: boolean;
   check: ResultPoint[];
@@ -77,10 +81,10 @@ export function buildResult(answers: SavedAnswers): GuidanceResult {
 
   const byArea: AreaResult[] = areas.map((area) => {
     const areaCards = cards.filter((card) => card.area === area);
-    const ruleLines = rules.filter((rule) => rule.area === area).map(rulePoint);
+    const ruleLines = rules.filter((rule) => rule.area === area).map((rule) => rulePoint(rule, areaCards, picked));
     const cardLines = areaCards
       .filter((card) => card.appSays && !replaced.has(`${card.questionId}:${card.optionId}`))
-      .map((card) => cardPoint(card, card.appSays as string));
+      .map((card) => ({ ...cardPoint(card, clarify(card.appSays as string)), detail: detailFrom([card]) }));
     return {
       area,
       points: dedupe([...ruleLines, ...cardLines]),
@@ -101,11 +105,9 @@ export function buildResult(answers: SavedAnswers): GuidanceResult {
     startHere,
     why,
     byArea,
-    productGroups: productGroupsFrom(cards),
-    ingredients: dedupe(
-      cards.flatMap((card) => (card.ingredients ?? []).filter(isIngredientLine).map((text) => cardPoint(card, text))),
-    ),
-    explainers: dedupe(cards.filter((card) => card.explainer).map((card) => cardPoint(card, card.explainer as string))),
+    productTypes: productTypesFrom(cards),
+    ingredients: ingredientsFrom(cards),
+    explainers: dedupe(cards.filter((card) => card.explainer).map((card) => cardPoint(card, clarify(card.explainer as string)))),
     showLabelGuide: picked('p2_task', 'read_label') || picked('p3_info', 'read_label'),
     check: dedupe(cards.filter((card) => card.watchOutFor).map((card) => cardPoint(card, card.watchOutFor as string))),
     skinTone: dedupe(cards.filter((card) => card.everySkinTone).map((card) => cardPoint(card, card.everySkinTone as string))),
@@ -122,8 +124,31 @@ function cardPoint(card: AnswerCard, text: string): ResultPoint {
   return { text, code: card.code, evidence: card.evidence };
 }
 
-function rulePoint(rule: MixingRule): ResultPoint {
-  return { text: rule.appSays, code: rule.code };
+// A rule has no steps of its own, so its pop-up uses the steps from the answers it combines
+function rulePoint(
+  rule: MixingRule,
+  areaCards: AnswerCard[],
+  picked: (questionId: string, optionId: string) => boolean,
+): ResultPoint {
+  const refs = rule.conditions.flat().filter((ref) => picked(ref.questionId, ref.optionId));
+  const involved = areaCards.filter((card) => refs.some((ref) => ref.questionId === card.questionId && ref.optionId === card.optionId));
+  return { text: clarify(rule.appSays), code: rule.code, evidence: weakest(involved), detail: detailFrom(involved) };
+}
+
+function detailFrom(cards: AnswerCard[]): PointDetail {
+  const unique = (items: string[]) => [...new Set(items)];
+  return {
+    tries: unique(cards.flatMap((card) => (card.thingsToTry ?? []).filter(isTryLine))),
+    meanings: unique(cards.flatMap((card) => (card.whatItMayMean ? [card.whatItMayMean] : []))),
+    watch: unique(cards.flatMap((card) => (card.watchOutFor ? [card.watchOutFor] : []))),
+  };
+}
+
+// A rule is only as well-studied as the least-studied answer it combines
+const evidenceRank: Evidence[] = ['Strong', 'Moderate', 'Limited', 'Assumption'];
+function weakest(cards: AnswerCard[]): Evidence | undefined {
+  const ranks = cards.map((card) => (card.evidence ? evidenceRank.indexOf(card.evidence) : -1)).filter((rank) => rank >= 0);
+  return ranks.length ? evidenceRank[Math.max(...ranks)] : undefined;
 }
 
 function dedupe<T extends { text: string }>(items: T[]): T[] {
@@ -156,15 +181,32 @@ function isIngredientLine(text: string): boolean {
   return /^[A-Z][^:;]{1,60}: [A-Z][^:]*$/.test(text) && !/^(None|No|Learning|Choose|If)\b/.test(text);
 }
 
-function productGroupsFrom(cards: AnswerCard[]): ProductGroup[] {
+function productTypesFrom(cards: AnswerCard[]): ProductType[] {
   const seen = new Set<string>();
-  const groups: ProductGroup[] = [];
+  const types: ProductType[] = [];
   for (const card of cards) {
-    const items = (card.thingsToTry ?? []).filter((text) => isTryLine(text) && !seen.has(text));
-    items.forEach((text) => seen.add(text));
-    if (items.length) groups.push({ why: card.whatItMayMean ?? '', items, code: card.code, evidence: card.evidence });
+    for (const text of (card.thingsToTry ?? []).filter(isTryLine)) {
+      if (seen.has(text)) continue;
+      seen.add(text);
+      types.push({ text: text.replace(/\.$/, ''), why: card.whatItMayMean ?? '', code: card.code, evidence: card.evidence, watch: card.watchOutFor });
+    }
   }
-  return groups;
+  return types;
+}
+
+function ingredientsFrom(cards: AnswerCard[]): Ingredient[] {
+  const seen = new Set<string>();
+  const items: Ingredient[] = [];
+  for (const card of cards) {
+    for (const line of (card.ingredients ?? []).filter(isIngredientLine)) {
+      const [name, role] = line.split(': ');
+      const key = name.replace(/^Optional /, '');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      items.push({ name: key, role, code: card.code, evidence: card.evidence });
+    }
+  }
+  return items;
 }
 
 function openItems(answers: SavedAnswers): string[] {
@@ -179,7 +221,7 @@ function openItems(answers: SavedAnswers): string[] {
       items.push(openLines.notSure(question.prompt));
     }
   }
-  return items.length ? items : [openLines.nothingOpen];
+  return items;
 }
 
 // The first pick in the order the choices appear, not the order they were tapped
