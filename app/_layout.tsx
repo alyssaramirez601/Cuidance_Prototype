@@ -9,8 +9,8 @@ import { WebFrame } from '@/components/WebFrame';
 import { colors, fontFamily } from '@/constants/tokens';
 import { useAuth } from '@/hooks/useAuth';
 
-// Signed-in people start on proof. Without this the web picks the first route by file name (dev), while the phone follows the screen order below
-export const unstable_settings = { anchor: 'proof' };
+// Signed-in people start on start, which opens the first quiz question. Without this the web picks the first route by file name (dev), while the phone follows the screen order below
+export const unstable_settings = { anchor: 'start' };
 
 export default function RootLayout() {
   const { session, isLoading } = useAuth();
@@ -47,6 +47,7 @@ export default function RootLayout() {
         </Stack.Protected>
         {/* Signed-in people can only reach these screens */}
         <Stack.Protected guard={!!session}>
+          <Stack.Screen name="start" />
           <Stack.Screen name="proof" />
           <Stack.Screen name="dev" />
           <Stack.Screen name="quiz/[questionId]" />

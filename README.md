@@ -130,7 +130,7 @@ The deploy reads two repository Variables (Settings, then Secrets and variables,
 What exists today:
 
 ```
-/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen, and the quiz question screen in app/quiz, plus a temporary dev screen that shows every component
+/app          Screens and navigation (Expo Router): welcome, create account, sign in, a start route that opens the first quiz question after sign-in, the quiz question screen in app/quiz, and a temporary proof screen behind Save and exit, plus a temporary dev screen that shows every component
 /components   Reusable UI, one file per Figma component (see docs/design-system/components.md), plus Screen and LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
 /data         Quiz questions (the four Getting started questions, U1 to U4)
