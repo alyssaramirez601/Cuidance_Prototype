@@ -88,6 +88,7 @@ export const resultLabels = {
   showSources: 'Show sources',
   hideSources: 'Hide sources',
   evidenceKeyTitle: 'What the dots mean',
+  sourcesIntro: 'The guidance comes from dermatology groups, the FDA and CDC, peer-reviewed journals and EU law. No brand blogs or influencer posts.',
   tryTitle: 'What you could try',
   whyTitle: 'Why it may fit',
   watchTitle: 'Watch out for',

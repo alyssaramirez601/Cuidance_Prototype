@@ -151,6 +151,23 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Text style={styles.body}>{result.exploration}</Text>
       </View>
 
+      {usedEvidence.length ? (
+        // Up top, so the dots make sense the first time someone sees them
+        <View style={styles.keyBox} accessibilityRole="summary">
+          <Text style={styles.label}>{resultLabels.evidenceKeyTitle}</Text>
+          <Text style={styles.helper}>{evidenceIntro}</Text>
+          {usedEvidence.map((label) => (
+            <View key={label} style={styles.keyRow}>
+              <EvidenceDots evidence={label} />
+              <Text style={[styles.body, styles.flex]}>
+                <Text style={styles.label}>{evidenceKey[label].title}: </Text>
+                {evidenceKey[label].meaning}
+              </Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
+
       {result.startHere.length ? (
         <Section title={sectionTitles.startHere}>
           {result.startHere.map((point, index) => (
@@ -190,8 +207,8 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
             </View>
           ) : null}
           {shownAreas.map((item) => (
-            <View key={item.area} style={styles.card}>
-              <Text style={styles.cardTitle}>{capitalize(areaLabels[item.area])}</Text>
+            <View key={item.area} style={styles.group}>
+              {useTabs ? null : <Text style={styles.label}>{capitalize(areaLabels[item.area])}</Text>}
               {item.meanings.length ? (
                 <MoreList items={item.meanings} render={(point) => <Point key={point.code} point={point} />} />
               ) : (
@@ -285,20 +302,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
       ) : null}
 
       <Section title={sectionTitles.evidence}>
-        <Text style={styles.helper}>{evidenceIntro}</Text>
-        {usedEvidence.length ? (
-          <Group title={resultLabels.evidenceKeyTitle}>
-            {usedEvidence.map((label) => (
-              <View key={label} style={styles.keyRow}>
-                <EvidenceDots evidence={label} />
-                <Text style={[styles.body, styles.flex]}>
-                  <Text style={styles.label}>{evidenceKey[label].title}: </Text>
-                  {evidenceKey[label].meaning}
-                </Text>
-              </View>
-            ))}
-          </Group>
-        ) : null}
+        <Text style={styles.helper}>{resultLabels.sourcesIntro}</Text>
         <Sources />
       </Section>
 
@@ -513,6 +517,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: space[12],
+    padding: layout.insideComponent,
+    borderRadius: radius.medium,
+    borderWidth: stroke.default,
+    borderColor: c.border,
+    backgroundColor: c.surface,
   },
   pointDots: {
     paddingTop: space[8],
@@ -526,22 +535,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space[12],
   },
-  tabs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  keyBox: {
     gap: space[8],
-  },
-  card: {
-    gap: space[12],
+    marginTop: space[24],
     padding: layout.insideComponent,
     borderRadius: radius.medium,
     borderWidth: stroke.default,
     borderColor: c.border,
     backgroundColor: c.surface,
   },
-  cardTitle: {
-    ...type.label,
-    color: c.ink,
+  tabs: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space[8],
   },
   emergency: {
     flexDirection: 'row',
