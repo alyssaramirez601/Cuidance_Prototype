@@ -134,9 +134,9 @@ What exists today:
 /app          Screens and navigation (Expo Router): welcome, create account, sign in, a start route that opens the first quiz question after sign-in, the quiz question screen in app/quiz, and a temporary proof screen behind Save and exit, plus a temporary dev screen that shows every component
 /components   Reusable UI, one file per Figma component (see docs/design-system/components.md), plus Screen and LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
-/data         Quiz questions (the four Getting started questions, U1 to U4)
-/hooks        useAuth, useQuizAnswer and useGoBack
-/lib          Supabase client, sign-in helpers and saving quiz answers
+/data         Quiz questions: Getting started, the "I’m not sure yet" follow-ups, and all five care areas
+/hooks        useAuth, useQuizAnswer, useQuizNext and useGoBack
+/lib          Supabase client, sign-in helpers, saving quiz answers, and quizFlow (which questions each person sees)
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /supabase     Database migrations (SQL files), in supabase/migrations

@@ -7,11 +7,12 @@ import { AnswerOption, type AnswerOptionState } from '@/components/AnswerOption'
 import { QuizProgress } from '@/components/QuizProgress';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, type } from '@/constants/tokens';
-import { CORE_QUESTION_COUNT, quizQuestions } from '@/data/quiz';
+import { quizQuestions } from '@/data/quiz';
 import type { QuizQuestion } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
 import { useGoBack } from '@/hooks/useGoBack';
 import { useQuizAnswer } from '@/hooks/useQuizAnswer';
+import { useQuizNext } from '@/hooks/useQuizNext';
 
 export default function QuizQuestionScreen() {
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
@@ -50,19 +51,10 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
   const goBack = useGoBack();
   const { selected, status, message, toggle, retry } = useQuizAnswer(userId, question);
   const isSingle = question.selectionMode === 'single';
-  const index = quizQuestions.findIndex((item) => item.id === question.id);
-  const nextQuestion = quizQuestions[index + 1];
+  const { goNext, isMoving, message: moveMessage } = useQuizNext(userId, question, selected.length > 0);
   const atLimit = question.maxSelections !== undefined && selected.length >= question.maxSelections;
-  const canContinue = selected.length > 0 && status !== 'saving' && status !== 'error';
-
-  function handleNext() {
-    if (nextQuestion) {
-      router.push(`/quiz/${nextQuestion.id}`);
-    } else {
-      // The branch questions and the result screen aren't built yet, so Getting started ends at the proof screen for now
-      router.replace('/proof');
-    }
-  }
+  const hasAnswerOrCanSkip = selected.length > 0 || question.optional === true;
+  const canContinue = hasAnswerOrCanSkip && status !== 'saving' && status !== 'error' && !isMoving;
 
   function optionState(optionId: string): AnswerOptionState {
     if (selected.includes(optionId)) return 'selected';
@@ -96,7 +88,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
         </Pressable>
       </View>
 
-      <QuizProgress label={question.progress} current={question.step} total={CORE_QUESTION_COUNT} />
+      <QuizProgress label={question.progress} current={question.step} total={question.total} />
 
       <View style={styles.header}>
         <Text style={styles.prompt} accessibilityRole="header">
@@ -126,6 +118,12 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
             <Text style={styles.savedText}>✓ Saved</Text>
           </View>
         ) : null}
+        {moveMessage ? (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>{moveMessage}</Text>
+            <Button label="Try again" style="secondary" onPress={goNext} />
+          </View>
+        ) : null}
         {status === 'error' ? (
           <View style={styles.errorBox}>
             <Text style={styles.errorText}>{message}</Text>
@@ -135,8 +133,13 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
       </View>
 
       <View style={styles.actions}>
-        {/* Stays off until something is picked and saved, so nobody moves on with an unsaved answer */}
-        <Button label={question.nextLabel} state={canContinue ? undefined : 'disabled'} onPress={handleNext} />
+        {/* Stays off until something is picked and saved (or the question is optional), so nobody moves on with an unsaved answer */}
+        <Button
+          label={question.nextLabel}
+          state={canContinue ? undefined : 'disabled'}
+          loading={isMoving}
+          onPress={goNext}
+        />
         <Button label="Back" style="secondary" onPress={goBack} />
       </View>
     </Screen>
