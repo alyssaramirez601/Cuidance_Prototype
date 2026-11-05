@@ -166,10 +166,11 @@ const styles = StyleSheet.create({
     color: colors.light.disabledInk,
   },
   header: {
-    gap: space[8],
+    gap: space[4],
   },
+  // Title size, not heading, so even the 8-choice questions fit on one screen in a phone browser
   prompt: {
-    ...type.heading,
+    ...type.title,
     color: colors.light.ink,
   },
   helper: {
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
     color: colors.light.inkMuted,
   },
   options: {
-    gap: space[8],
+    gap: space[4],
   },
   note: {
     ...type.caption,

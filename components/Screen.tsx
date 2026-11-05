@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     gap: space[16],
   },
   compact: {
-    paddingVertical: space[12],
-    gap: space[12],
+    paddingVertical: space[8],
+    gap: space[8],
   },
   centered: {
     justifyContent: 'center',
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   footer: {
     gap: space[8],
     paddingHorizontal: layout.screenEdge,
-    paddingVertical: space[12],
+    paddingVertical: space[8],
     borderTopWidth: stroke.default,
     borderTopColor: colors.light.border,
     backgroundColor: colors.light.background,

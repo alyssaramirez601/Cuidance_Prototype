@@ -186,7 +186,7 @@ export const stroke = {
 
 export const sizes = {
   icon: { small: 16, medium: 20, large: 24 },
-  answerOptionMinHeight: 48, // was 56; slimmer so a whole quiz question fits on one screen. Nov 5, needs Esme's OK
+  answerOptionMinHeight: 44, // was 56; the touch minimum, slimmer so a whole quiz question fits on one screen. Nov 5, needs Esme's OK
   answerIndicator: 22,
   answerRadioDot: 8,
   checkboxBox: 22,
