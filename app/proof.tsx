@@ -4,31 +4,22 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
-import { AnswerOption } from '@/components/AnswerOption';
 import { Screen } from '@/components/Screen';
-import { colors, radius, space, stroke, type } from '@/constants/tokens';
-import { q1Areas } from '@/data/quiz';
+import { colors, space, type } from '@/constants/tokens';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuizAnswer } from '@/hooks/useQuizAnswer';
 import { signOut } from '@/lib/auth';
 
-// Temporary test screen that proves sign-in and saving work. The real quiz screens replace it.
+// Temporary account screen behind "Save and exit" until Home exists. The quiz itself starts right after sign-in
 export default function ProofScreen() {
   const { session } = useAuth();
   if (!session) {
     return <LoadingState label="Loading your account" />;
   }
-  return <ProofQuestion userId={session.user.id} email={session.user.email ?? ''} />;
+  return <AccountTest email={session.user.email ?? ''} />;
 }
 
-type ProofQuestionProps = {
-  userId: string;
-  email: string;
-};
-
-function ProofQuestion({ userId, email }: ProofQuestionProps) {
+function AccountTest({ email }: { email: string }) {
   const router = useRouter();
-  const { selected, status, message, toggle, retry } = useQuizAnswer(userId, q1Areas);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
 
@@ -42,51 +33,9 @@ function ProofQuestion({ userId, email }: ProofQuestionProps) {
     }
   }
 
-  if (status === 'loading') {
-    return <LoadingState label="Loading your answers" />;
-  }
-
   return (
     <Screen>
-      <Text style={styles.testNote}>Test screen: the real quiz comes next.</Text>
-
-      <View style={styles.header}>
-        <Text style={styles.prompt} accessibilityRole="header">
-          {q1Areas.prompt}
-        </Text>
-        <Text style={styles.helper}>{q1Areas.helper}</Text>
-      </View>
-
-      <View style={styles.options}>
-        {q1Areas.options.map((option) => (
-          <AnswerOption indicator="checkbox"
-            key={option.id}
-            label={option.label}
-            state={selected.includes(option.id) ? 'selected' : 'default'}
-            onPress={() => toggle(option.id)}
-          />
-        ))}
-      </View>
-
-      <Text style={styles.note}>{q1Areas.note}</Text>
-
-      <View accessibilityLiveRegion="polite" style={styles.statusArea}>
-        {status === 'saving' ? <Text style={styles.statusText}>Saving</Text> : null}
-        {status === 'saved' ? (
-          <View style={styles.savedChip}>
-            <Text style={styles.savedText}>✓ Saved</Text>
-          </View>
-        ) : null}
-        {status === 'error' ? (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorText}>{message}</Text>
-            <Button label="Try again" style="secondary" onPress={retry} />
-          </View>
-        ) : null}
-      </View>
-
-      {/* Temporary way in to the real quiz until Home exists */}
-      <Button label="Start the quiz" onPress={() => router.push('/quiz/q1_areas')} />
+      <Text style={styles.testNote}>Test screen: Home comes next.</Text>
 
       {/* TEMPORARY: remove before merging */}
       <Button label="Dev screen" style="secondary" onPress={() => router.push('/dev')} />
@@ -114,59 +63,12 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: colors.light.inkMuted,
   },
-  header: {
-    gap: space[8],
-  },
-  prompt: {
-    ...type.heading,
-    color: colors.light.ink,
-  },
-  helper: {
-    ...type.body,
-    color: colors.light.inkMuted,
-  },
-  options: {
-    gap: space[12],
-  },
-  note: {
-    ...type.caption,
-    color: colors.light.inkMuted,
-  },
-  statusArea: {
-    minHeight: space[48],
-    justifyContent: 'center',
-  },
-  statusText: {
-    ...type.body,
-    color: colors.light.inkMuted,
-  },
-  savedChip: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: space[16],
-    paddingVertical: space[8],
-    borderRadius: radius.pill,
-    backgroundColor: colors.light.successSurface,
-  },
-  savedText: {
-    ...type.label,
-    color: colors.light.ink,
-  },
-  errorBox: {
-    gap: space[12],
-    padding: space[16],
-    borderRadius: radius.medium,
-    backgroundColor: colors.light.errorSurface,
-  },
   errorText: {
     ...type.body,
     color: colors.light.error,
   },
   account: {
     gap: space[12],
-    marginTop: space[16],
-    paddingTop: space[24],
-    borderTopWidth: stroke.default,
-    borderTopColor: colors.light.border,
   },
   signedInAs: {
     ...type.caption,

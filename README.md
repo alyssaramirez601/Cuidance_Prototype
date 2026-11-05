@@ -5,6 +5,7 @@ Beauty and personal-care guidance that fits you.
 ## Links
 
 - **Real app** (web version, open on any phone): https://alyssaramirez601.github.io/Cuidance_Prototype/app/
+- **App preview** (the latest work-in-progress branch, for testing before review): https://alyssaramirez601.github.io/Cuidance_Prototype/app-preview/
 - **Clickable prototype:** https://alyssaramirez601.github.io/Cuidance_Prototype/
 - **Wireframes:** https://alyssaramirez601.github.io/Cuidance_Prototype/wireframes/
 - **Admin web** (Esme's repo): https://esm3bobadilla.github.io/Cuidance_Admin/
@@ -130,16 +131,17 @@ The deploy reads two repository Variables (Settings, then Secrets and variables,
 What exists today:
 
 ```
-/app          Screens and navigation (Expo Router): welcome, create account, sign in, and a temporary proof screen, and the quiz question screen in app/quiz, plus a temporary dev screen that shows every component
+/app          Screens and navigation (Expo Router): welcome, create account, sign in, a start route that opens the first quiz question after sign-in, the quiz question and result screens in app/quiz, and a temporary proof screen behind Save and exit, plus a temporary dev screen that shows every component
 /components   Reusable UI, one file per Figma component (see docs/design-system/components.md), plus Screen and LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
-/data         Quiz questions (the four Getting started questions, U1 to U4)
-/hooks        useAuth, useQuizAnswer and useGoBack
-/lib          Supabase client, sign-in helpers and saving quiz answers
+/data         Quiz questions for every section, plus the result content: answer cards, mixing rules and sources (generated from docs/quiz-outcomes by scripts/build-outcome-data.mjs), result names, the emergency line, and draft copy waiting for approval (draftCopy.ts)
+/hooks        useAuth, useQuizAnswer, useQuizNext, useGuidanceResult and useGoBack
+/lib          Supabase client, sign-in helpers, saving quiz answers, quizFlow (which questions each person sees) buildResult (turns answers into a result) and results (Save result and Start over)
 /assets       App icon and splash images (Expo placeholders for now)
 /docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
+/scripts      build-outcome-data.mjs: copies the answer cards, mixing rules and sources from docs/quiz-outcomes into data/. Run it with `node scripts/build-outcome-data.mjs` whenever those docs change
 /supabase     Database migrations (SQL files), in supabase/migrations
-/.github      Pull request template, and the workflow that publishes the web version (workflows/deploy-app-web.yml)
+/.github      Pull request template, and the workflows that publish the web version (workflows/deploy-app-web.yml) and the preview from work-in-progress branches (workflows/deploy-app-preview.yml)
 ```
 
 ## Design
