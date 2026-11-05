@@ -10,6 +10,7 @@ function nextSelection(
   optionId: string,
   selectionMode: QuizQuestion['selectionMode'],
   exclusiveOptionId?: string,
+  maxSelections?: number,
 ): string[] {
   // Choose one: tapping the chosen option again keeps it, so a number can't end up unanswered
   if (selectionMode === 'single') {
@@ -20,6 +21,10 @@ function nextSelection(
   }
   if (optionId === exclusiveOptionId) {
     return [optionId];
+  }
+  // A screen reader can still reach a turned-off option, so the limit is also enforced here
+  if (maxSelections !== undefined && current.length >= maxSelections) {
+    return current;
   }
   return [...current.filter((id) => id !== exclusiveOptionId), optionId];
 }
@@ -75,12 +80,19 @@ export function useQuizAnswer(userId: string, question: QuizQuestion) {
 
   const toggle = useCallback(
     (optionId: string) => {
-      const next = nextSelection(selectedRef.current, optionId, question.selectionMode, question.exclusiveOptionId);
+      const next = nextSelection(
+        selectedRef.current,
+        optionId,
+        question.selectionMode,
+        question.exclusiveOptionId,
+        question.maxSelections,
+      );
+      if (next === selectedRef.current) return;
       selectedRef.current = next;
       setSelected(next);
       persist(next);
     },
-    [persist, question.selectionMode, question.exclusiveOptionId],
+    [persist, question.selectionMode, question.exclusiveOptionId, question.maxSelections],
   );
 
   const retry = useCallback(() => {

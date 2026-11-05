@@ -85,6 +85,9 @@ function ProofQuestion({ userId, email }: ProofQuestionProps) {
         ) : null}
       </View>
 
+      {/* Temporary way in to the real quiz until Home exists */}
+      <Button label="Start the quiz" onPress={() => router.push('/quiz/q1_areas')} />
+
       {/* TEMPORARY: remove before merging */}
       <Button label="Dev screen" style="secondary" onPress={() => router.push('/dev')} />
 

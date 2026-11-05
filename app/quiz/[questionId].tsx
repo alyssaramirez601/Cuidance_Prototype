@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
-import { AnswerOption } from '@/components/AnswerOption';
+import { AnswerOption, type AnswerOptionState } from '@/components/AnswerOption';
 import { QuizProgress } from '@/components/QuizProgress';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, type } from '@/constants/tokens';
@@ -50,6 +50,24 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
   const goBack = useGoBack();
   const { selected, status, message, toggle, retry } = useQuizAnswer(userId, question);
   const isSingle = question.selectionMode === 'single';
+  const index = quizQuestions.findIndex((item) => item.id === question.id);
+  const nextQuestion = quizQuestions[index + 1];
+  const atLimit = question.maxSelections !== undefined && selected.length >= question.maxSelections;
+  const canContinue = selected.length > 0 && status !== 'saving' && status !== 'error';
+
+  function handleNext() {
+    if (nextQuestion) {
+      router.push(`/quiz/${nextQuestion.id}`);
+    } else {
+      // The branch questions and the result screen aren't built yet, so Getting started ends at the proof screen for now
+      router.replace('/proof');
+    }
+  }
+
+  function optionState(optionId: string): AnswerOptionState {
+    if (selected.includes(optionId)) return 'selected';
+    return atLimit ? 'disabled' : 'default';
+  }
 
   if (status === 'loading') {
     return <LoadingState label="Loading your answers" />;
@@ -93,7 +111,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
             key={option.id}
             label={option.label}
             indicator={isSingle ? 'radio' : 'checkbox'}
-            state={selected.includes(option.id) ? 'selected' : 'default'}
+            state={optionState(option.id)}
             onPress={() => toggle(option.id)}
           />
         ))}
@@ -117,8 +135,8 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
       </View>
 
       <View style={styles.actions}>
-        {/* U4 is not built yet, so Next question stays off until it exists */}
-        <Button label="Next question" state="disabled" onPress={() => {}} />
+        {/* Stays off until something is picked and saved, so nobody moves on with an unsaved answer */}
+        <Button label={question.nextLabel} state={canContinue ? undefined : 'disabled'} onPress={handleNext} />
         <Button label="Back" style="secondary" onPress={goBack} />
       </View>
     </Screen>
