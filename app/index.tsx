@@ -13,11 +13,12 @@ const footerArt = require('@/assets/images/welcome-footer.png');
 const logo = require('@/assets/logo/logo-horizontal-green.png');
 
 // Width / height of each image file, so they scale without stretching
-const HERO_RATIO = 853 / 577;
-const FOOTER_RATIO = 853 / 99;
 const LOGO_RATIO = 1028 / 222;
 // Logo version 4 full lockup minimum width, from CLAUDE.md
 const LOGO_WIDTH = 160;
+// The collage never grows past its full design height, and never shrinks below the logo band
+const HERO_MAX_HEIGHT = 280;
+const HERO_MIN_HEIGHT = 64;
 
 // The three feature tiles still use the design's own artwork. The sparkle, flask and list icons
 // are not in docs/design-system/icons.md yet, so they can't be drawn with the Icon component
@@ -43,9 +44,15 @@ export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
-    <Screen>
+    <Screen compact>
       <View style={styles.heroWrap}>
-        <Image source={hero} style={styles.hero} contentFit="cover" accessible={false} />
+        <Image
+          source={hero}
+          style={styles.hero}
+          contentFit="cover"
+          contentPosition="bottom"
+          accessible={false}
+        />
         <Image source={logo} style={styles.logo} contentFit="contain" accessibilityLabel="Cuidance" />
       </View>
 
@@ -84,7 +91,13 @@ export default function WelcomeScreen() {
         </Pressable>
       </View>
 
-      <Image source={footerArt} style={styles.footerArt} contentFit="cover" accessible={false} />
+      <Image
+        source={footerArt}
+        style={styles.footerArt}
+        contentFit="cover"
+        contentPosition="top"
+        accessible={false}
+      />
     </Screen>
   );
 }
@@ -92,14 +105,18 @@ export default function WelcomeScreen() {
 const c = colors.light;
 
 const styles = StyleSheet.create({
-  // The artwork runs edge to edge, so it steps out of the screen padding
+  // The artwork runs edge to edge, so it steps out of the screen padding. It takes whatever height
+  // is left after the text and button, so the whole screen fits in one view without scrolling
   heroWrap: {
+    flex: 5,
+    minHeight: HERO_MIN_HEIGHT,
+    maxHeight: HERO_MAX_HEIGHT,
     marginHorizontal: -layout.screenEdge,
-    marginTop: -space[24],
+    marginTop: -space[8],
   },
+  // Cropped from the top on shorter phones, so the paper curve under the logo always shows
   hero: {
-    width: '100%',
-    aspectRatio: HERO_RATIO,
+    flex: 1,
   },
   // Sits on the paper curve at the bottom of the artwork, where the design places it
   logo: {
@@ -109,15 +126,16 @@ const styles = StyleSheet.create({
     width: LOGO_WIDTH,
     height: LOGO_WIDTH / LOGO_RATIO,
   },
-  // The design sets text further in than the screen edge, and the button a little less far
+  // The design sets text and the button a little further in than the screen edge. Kept small so
+  // lines don't wrap more than they need to and the screen still fits in one view
   textInset: {
-    paddingHorizontal: space[16],
+    paddingHorizontal: space[8],
   },
   buttonInset: {
     paddingHorizontal: space[8],
   },
   intro: {
-    gap: space[12],
+    gap: space[8],
   },
   title: {
     ...type.display,
@@ -133,13 +151,13 @@ const styles = StyleSheet.create({
     color: c.highlight,
     textTransform: 'uppercase',
     letterSpacing: letterSpacing.eyebrow,
-    marginBottom: space[8],
+    marginBottom: space[4],
   },
   helpRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[16],
-    paddingVertical: space[12],
+    paddingVertical: space[8],
   },
   helpRowDivider: {
     borderTopWidth: StyleSheet.hairlineWidth,
@@ -173,11 +191,12 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.accent,
   },
+  // A thin strip of the bottom collage, like the design. It shares the spare space with the top
+  // collage and disappears on short screens rather than pushing the button off screen
   footerArt: {
-    width: undefined,
+    flex: 1,
+    maxHeight: space[48],
     marginHorizontal: -layout.screenEdge,
-    marginBottom: -space[24],
-    marginTop: 'auto',
-    aspectRatio: FOOTER_RATIO,
+    marginBottom: -space[8],
   },
 });
