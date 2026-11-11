@@ -6,6 +6,7 @@
 3. Every new screen or route handles loading, error and not found.
 4. When you add a folder, update the Project structure section in README.md.
 5. End every task with a short report: branch, files changed, checks run, and decisions a teammate needs to make.
+6. Read ARCHITECTURE.md (the map of what is built). If a task changes routes, tables, folders or where state lives, update it in the same pull request.
 
 Rules for any Claude agent working in this repo. Follow them on every task. If something here conflicts with a request, ask before going ahead.
 
