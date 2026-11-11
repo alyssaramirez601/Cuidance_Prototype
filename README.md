@@ -137,7 +137,7 @@ What exists today:
 /data         Quiz questions for every section, plus the result content: answer cards, mixing rules and sources (generated from docs/quiz-outcomes by scripts/build-outcome-data.mjs), result names, the emergency line, and draft copy waiting for approval (draftCopy.ts)
 /hooks        useAuth, useQuizAnswer, useQuizNext, useGuidanceResult and useGoBack
 /lib          Supabase client, sign-in helpers, saving quiz answers, quizFlow (which questions each person sees) buildResult (turns answers into a result) and results (Save result and Start over)
-/assets       App icon and splash images (Expo placeholders for now)
+/assets       App icon and splash images (Expo placeholders for now), Welcome artwork cut from the Week 8 hi-fi design (assets/images/welcome-*), and the logo (assets/logo)
 /docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
 /scripts      build-outcome-data.mjs: copies the answer cards, mixing rules and sources from docs/quiz-outcomes into data/. Run it with `node scripts/build-outcome-data.mjs` whenever those docs change
 /supabase     Database migrations (SQL files), in supabase/migrations
