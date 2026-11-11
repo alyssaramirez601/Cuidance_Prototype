@@ -46,6 +46,7 @@ export const colors = {
     borderStrong: '#7C766B', // input and control outlines (3:1)
     disabledSurface: '#E6E2D9',
     disabledInk: '#8B867C',
+    scrim: 'rgba(17, 17, 17, 0.4)', // Guidance Ink at 40%, dims the screen behind a sheet. Added Nov 5, needs Esme's OK
   },
   dark: {
     background: '#121714',
@@ -76,6 +77,7 @@ export const colors = {
     borderStrong: '#838B85',
     disabledSurface: '#252C28',
     disabledInk: '#6F7570',
+    scrim: 'rgba(0, 0, 0, 0.6)', // dims the screen behind a sheet. Added Nov 5, needs Esme's OK
   },
 } as const;
 
@@ -184,7 +186,7 @@ export const stroke = {
 
 export const sizes = {
   icon: { small: 16, medium: 20, large: 24 },
-  answerOptionMinHeight: 56,
+  answerOptionMinHeight: 44, // was 56; the touch minimum, slimmer so a whole quiz question fits on one screen. Nov 5, needs Esme's OK
   answerIndicator: 22,
   answerRadioDot: 8,
   checkboxBox: 22,

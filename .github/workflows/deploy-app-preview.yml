@@ -1,0 +1,45 @@
+name: Deploy app preview
+
+# Every work-in-progress branch publishes to app-preview, so Alyssa can test on her phone
+# before a pull request goes to review. The real app at /app only changes from main
+on:
+  push:
+    branches-ignore: [main, gh-pages]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-app-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Export web build
+        run: npm run build:web
+        env:
+          EXPO_WEB_BASE_URL: /Cuidance_Prototype/app-preview
+          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+
+      # keep_files stops this from deleting the real app and the tester prototype already on gh-pages
+      - name: Publish to gh-pages app-preview folder
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          destination_dir: app-preview
+          keep_files: true
