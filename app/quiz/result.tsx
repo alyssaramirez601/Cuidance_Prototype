@@ -42,9 +42,17 @@ type SheetContent = {
 
 // Non-figurative hero (no person, a team decision), made in the Welcome collage style from the
 // artwork kit prompt 07, and the collage strip from the chosen quiz hi-fi
-const heroArt = require('@/assets/images/result-hero.png');
+// Two heroes, so results don't all look the same (Week 8 crit: rotate a small set). The pick comes
+// from the result name, so a saved result always reopens with the same art
+const heroArts = [require('@/assets/images/result-hero.png'), require('@/assets/images/result-hero-b.png')];
 const footerArt = require('@/assets/images/quiz-footer.png');
 const HERO_RATIO = 1807 / 870;
+
+function heroFor(name: string) {
+  let sum = 0;
+  for (const char of name) sum += char.charCodeAt(0);
+  return heroArts[sum % heroArts.length];
+}
 const FOOTER_ART_HEIGHT = space[48];
 
 export default function ResultScreen() {
@@ -158,7 +166,7 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
         <Text style={styles.topTitle}>{savedMode ? savedCopy.backToSaved : resultLabels.screenTitle}</Text>
       </View>
 
-      <Image source={heroArt} style={styles.hero} contentFit="cover" accessible={false} />
+      <Image source={heroFor(result.name.headline)} style={styles.hero} contentFit="cover" accessible={false} />
 
       <View style={styles.nameBlock}>
         <Text style={styles.eyebrow}>{resultLabels.eyebrow}</Text>
