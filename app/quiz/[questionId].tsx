@@ -1,18 +1,28 @@
+import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { Icon } from '@/components/Icon';
+import { Note } from '@/components/Note';
 import { LoadingState } from '@/components/LoadingState';
 import { AnswerOption, type AnswerOptionState } from '@/components/AnswerOption';
 import { QuizProgress } from '@/components/QuizProgress';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, type } from '@/constants/tokens';
+import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
 import { quizQuestions } from '@/data/quiz';
 import type { QuizQuestion } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
 import { useGoBack } from '@/hooks/useGoBack';
 import { useQuizAnswer } from '@/hooks/useQuizAnswer';
 import { useQuizNext } from '@/hooks/useQuizNext';
+
+// Collage strip under the buttons, cut from the Week 8 chosen hi-fi quiz screen
+const footerArt = require('@/assets/images/quiz-footer.png');
+const FOOTER_ART_HEIGHT = space[48];
+// Below this window height (a phone browser with its toolbars), the strip is hidden so the
+// question, answers and buttons still fit in one view
+const FOOTER_ART_MIN_WINDOW = 700;
 
 export default function QuizQuestionScreen() {
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
@@ -49,6 +59,8 @@ type QuestionContentProps = {
 function QuestionContent({ userId, question }: QuestionContentProps) {
   const router = useRouter();
   const goBack = useGoBack();
+  const { height: windowHeight } = useWindowDimensions();
+  const showFooterArt = windowHeight >= FOOTER_ART_MIN_WINDOW;
   const { selected, status, message, toggle, retry } = useQuizAnswer(userId, question);
   const isSingle = question.selectionMode === 'single';
   const { goNext, isMoving, message: moveMessage } = useQuizNext(userId, question, selected.length > 0);
@@ -88,12 +100,24 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
           />
         </View>
       </View>
+      {showFooterArt ? (
+        <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
+      ) : null}
     </>
   );
 
   return (
-    <Screen compact footer={footer}>
+    <Screen compact footer={footer} footerDivider={false}>
       <View style={styles.topBar}>
+        <Pressable
+          onPress={() => router.replace('/proof')}
+          accessibilityRole="button"
+          accessibilityLabel="Save and exit"
+          style={styles.saveExit}
+        >
+          <Icon name="back" size={sizes.icon.large} color={colors.light.ink} />
+          <Text style={styles.saveExitLabel}>Save and exit</Text>
+        </Pressable>
         {/* Help has no content yet, so it shows but stays inactive until the team decides what it opens */}
         <Pressable
           disabled
@@ -103,14 +127,6 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
           style={styles.topButton}
         >
           <Text style={[styles.topLabel, styles.topLabelInactive]}>Help</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.replace('/proof')}
-          accessibilityRole="button"
-          accessibilityLabel="Save and exit"
-          style={styles.topButton}
-        >
-          <Text style={styles.topLabel}>Save and exit</Text>
         </Pressable>
       </View>
 
@@ -143,7 +159,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
         ))}
       </View>
 
-      {question.note ? <Text style={styles.note}>{question.note}</Text> : null}
+      {question.note ? <Note text={question.note} /> : null}
     </Screen>
   );
 }
@@ -158,6 +174,23 @@ const styles = StyleSheet.create({
     minWidth: layout.minTouchTarget,
     justifyContent: 'center',
   },
+  saveExit: {
+    minHeight: layout.minTouchTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[4],
+    // Lines the chevron up with the screen edge, like the hi-fi
+    marginLeft: -space[4],
+  },
+  saveExitLabel: {
+    ...type.label,
+    color: colors.light.ink,
+  },
+  footerArt: {
+    height: FOOTER_ART_HEIGHT,
+    marginHorizontal: -layout.screenEdge,
+    marginBottom: -space[8],
+  },
   topLabel: {
     ...type.label,
     color: colors.light.accent,
@@ -168,9 +201,9 @@ const styles = StyleSheet.create({
   header: {
     gap: space[4],
   },
-  // Title size, not heading, so even the 8-choice questions fit on one screen in a phone browser
+  // Newsreader heading, like the Week 8 hi-fi question
   prompt: {
-    ...type.title,
+    ...type.heading,
     color: colors.light.ink,
   },
   helper: {
@@ -179,10 +212,6 @@ const styles = StyleSheet.create({
   },
   options: {
     gap: space[4],
-  },
-  note: {
-    ...type.caption,
-    color: colors.light.inkMuted,
   },
   flex: {
     flex: 1,
