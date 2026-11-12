@@ -11,6 +11,9 @@ type CheckboxProps = {
   state?: CheckboxState;
   // Shown under the label in the error state
   error?: string;
+  // A tappable link inside the label, like "Privacy & Trust". The label must contain linkText
+  linkText?: string;
+  onLinkPress?: () => void;
 };
 
 const c = colors.light;
@@ -22,7 +25,7 @@ const boxLooks = {
   disabled: { fill: c.disabledSurface, border: c.disabledInk, borderWidth: stroke.default },
 } as const;
 
-export function Checkbox({ label, onPress, state = 'unchecked', error }: CheckboxProps) {
+export function Checkbox({ label, onPress, state = 'unchecked', error, linkText, onLinkPress }: CheckboxProps) {
   const look = boxLooks[state];
   const isDisabled = state === 'disabled';
 
@@ -39,7 +42,9 @@ export function Checkbox({ label, onPress, state = 'unchecked', error }: Checkbo
         {state === 'checked' ? <Icon name="check" size={sizes.icon.small} color={c.onAccent} /> : null}
       </View>
       <View style={styles.textColumn}>
-        <Text style={[styles.label, { color: isDisabled ? c.disabledInk : c.ink }]}>{label}</Text>
+        <Text style={[styles.label, { color: isDisabled ? c.disabledInk : c.ink }]}>
+          {renderLabel(label, linkText, onLinkPress)}
+        </Text>
         {state === 'error' && error ? (
           <Text accessibilityLiveRegion="polite" style={styles.error}>
             {error}
@@ -50,7 +55,27 @@ export function Checkbox({ label, onPress, state = 'unchecked', error }: Checkbo
   );
 }
 
+function renderLabel(label: string, linkText?: string, onLinkPress?: () => void) {
+  const start = linkText ? label.indexOf(linkText) : -1;
+  if (!linkText || !onLinkPress || start === -1) {
+    return label;
+  }
+  return (
+    <>
+      {label.slice(0, start)}
+      <Text onPress={onLinkPress} accessibilityRole="link" style={styles.link}>
+        {linkText}
+      </Text>
+      {label.slice(start + linkText.length)}
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
+  link: {
+    color: c.accent,
+    textDecorationLine: 'underline',
+  },
   row: {
     flexDirection: 'row',
     gap: space[12],
