@@ -22,6 +22,8 @@ const PRIVACY_LABEL = 'I\u2019ve reviewed Privacy & Trust. My answers are used t
 const footerArt = require('@/assets/images/auth-footer.png');
 // The strip never grows past its height in the design
 const FOOTER_ART_MAX_HEIGHT = 88;
+// Below this the strip reads as a stray stripe, so it's hidden instead
+const FOOTER_ART_MIN_HEIGHT = space[32];
 const authTabs = [
   { key: 'create', label: 'Create account' },
   { key: 'sign-in', label: 'Sign in' },
@@ -29,6 +31,7 @@ const authTabs = [
 
 export default function CreateAccountScreen() {
   const router = useRouter();
+  const [artTooShort, setArtTooShort] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -152,7 +155,15 @@ export default function CreateAccountScreen() {
         <Text style={styles.linkLabel}>Already have an account? Sign in</Text>
       </Pressable>
 
-      <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
+      {/* Anchored bottom right so the arch never gets cut; hidden when there's only room for a sliver */}
+      <Image
+        source={footerArt}
+        style={[styles.footerArt, artTooShort && styles.footerArtHidden]}
+        contentFit="cover"
+        contentPosition="right bottom"
+        accessible={false}
+        onLayout={(event) => setArtTooShort(event.nativeEvent.layout.height < FOOTER_ART_MIN_HEIGHT)}
+      />
 
       <PrivacySheet
         visible={showPrivacy}
@@ -202,5 +213,8 @@ const styles = StyleSheet.create({
     maxHeight: FOOTER_ART_MAX_HEIGHT,
     marginHorizontal: -layout.screenEdge,
     marginBottom: -space[8],
+  },
+  footerArtHidden: {
+    opacity: 0,
   },
 });

@@ -14,7 +14,7 @@ import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { Toast } from '@/components/Toast';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels, emptyResult, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
+import { areaLabels, emptyResult, savedCopy, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
 import { labelGuide } from '@/data/labelGuide';
 import type { CareArea, Evidence } from '@/data/outcomeTypes';
 import { emergencyLine } from '@/data/safety';
@@ -40,11 +40,19 @@ type SheetContent = {
   evidence?: Evidence;
 };
 
-// Non-figurative hero from the Week 8 Step 5 result screen (the team chose this over the AI portrait),
-// and the collage strip from the chosen quiz hi-fi
-const heroArt = require('@/assets/images/result-hero.png');
+// Non-figurative hero (no person, a team decision), made in the Welcome collage style from the
+// artwork kit prompt 07, and the collage strip from the chosen quiz hi-fi
+// Two heroes, so results don't all look the same (Week 8 crit: rotate a small set). The pick comes
+// from the result name, so a saved result always reopens with the same art
+const heroArts = [require('@/assets/images/result-hero.png'), require('@/assets/images/result-hero-b.png')];
 const footerArt = require('@/assets/images/quiz-footer.png');
-const HERO_RATIO = 1229 / 593;
+const HERO_RATIO = 1807 / 870;
+
+function heroFor(name: string) {
+  let sum = 0;
+  for (const char of name) sum += char.charCodeAt(0);
+  return heroArts[sum % heroArts.length];
+}
 const FOOTER_ART_HEIGHT = space[48];
 
 export default function ResultScreen() {
@@ -86,14 +94,22 @@ function ResultContent({ userId }: { userId: string }) {
   return <ResultView userId={userId} result={state.result} answers={state.answers} />;
 }
 
-type ResultViewProps = { userId: string; result: GuidanceResult; answers: SavedAnswers };
+type ResultViewProps = {
+  userId: string;
+  result: GuidanceResult;
+  answers: SavedAnswers;
+  // A result reopened from Saved: read-only, and its only way out goes back to Saved
+  savedMode?: { onBack: () => void };
+};
 
-function ResultView({ userId, result, answers }: ResultViewProps) {
+export function ResultView({ userId, result, answers, savedMode }: ResultViewProps) {
   const router = useRouter();
   const [activeArea, setActiveArea] = useState<CareArea>(result.areas[0]);
   const [sheet, setSheet] = useState<SheetContent | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Saving opens a confirmation with a way to Saved, instead of leaving people on a checkmark
+  const [showSaved, setShowSaved] = useState(false);
   const [actionError, setActionError] = useState('');
   const [isClearing, setIsClearing] = useState(false);
   // Three or more areas get one tab each instead of stacked reports
@@ -120,8 +136,10 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
     setIsSaving(true);
     const outcome = await saveResult(userId, result.name, answers);
     setIsSaving(false);
-    if (outcome.ok) setSaved(true);
-    else setActionError(outcome.message);
+    if (outcome.ok) {
+      setSaved(true);
+      setShowSaved(true);
+    } else setActionError(outcome.message);
   }
 
   function handleChange() {
@@ -142,17 +160,17 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
     <Screen>
       <View style={styles.topBar}>
         <Pressable
-          onPress={() => router.replace('/proof')}
+          onPress={savedMode ? savedMode.onBack : () => router.replace('/home')}
           accessibilityRole="button"
-          accessibilityLabel={resultLabels.close}
+          accessibilityLabel={savedMode ? savedCopy.backToSaved : resultLabels.close}
           style={styles.closeButton}
         >
-          <Icon name="close" size={sizes.icon.large} color={c.ink} />
+          <Icon name={savedMode ? 'back' : 'close'} size={sizes.icon.large} color={c.ink} />
         </Pressable>
-        <Text style={styles.topTitle}>{resultLabels.screenTitle}</Text>
+        <Text style={styles.topTitle}>{savedMode ? savedCopy.backToSaved : resultLabels.screenTitle}</Text>
       </View>
 
-      <Image source={heroArt} style={styles.hero} contentFit="cover" accessible={false} />
+      <Image source={heroFor(result.name.headline)} style={styles.hero} contentFit="cover" accessible={false} />
 
       <View style={styles.nameBlock}>
         <Text style={styles.eyebrow}>{resultLabels.eyebrow}</Text>
@@ -168,6 +186,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <View style={styles.basedOn}>
           <View style={styles.basedOnHeader}>
             <Text style={[styles.helperInk, styles.flex]}>{resultLabels.basedOn}</Text>
+            {savedMode ? null : (
             <Pressable
               onPress={handleChange}
               accessibilityRole="link"
@@ -176,6 +195,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
             >
               <Text style={styles.link}>{resultLabels.edit}</Text>
             </Pressable>
+            )}
           </View>
           <View style={styles.tags}>
             {tags.map((tag) => (
@@ -341,10 +361,14 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
       </Section>
 
       <View accessibilityLiveRegion="polite" style={styles.status}>
-        {saved ? <Toast type="success" message={resultLabels.saved} /> : null}
         {actionError ? <Toast type="error" message={actionError} /> : null}
       </View>
 
+      {savedMode ? (
+        <View style={styles.actions}>
+          <Button label={savedCopy.backToSaved} onPress={savedMode.onBack} />
+        </View>
+      ) : (
       <View style={styles.actions}>
         <Button
           label={isSaving ? resultLabels.saving : resultLabels.save}
@@ -356,11 +380,34 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Button label={resultLabels.change} style="secondary" onPress={handleChange} />
         <Button label={resultLabels.startOver} style="secondary" loading={isClearing} onPress={handleStartOver} />
       </View>
+      )}
 
       <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
 
       <Sheet visible={sheet !== null} title={sheet?.title ?? ''} onClose={() => setSheet(null)}>
         {sheet ? <SheetBody content={sheet} /> : null}
+      </Sheet>
+
+      <Sheet visible={showSaved} title={resultLabels.savedTitle} onClose={() => setShowSaved(false)}>
+        <View style={styles.savedSheet}>
+          <Text style={styles.savedBody}>{resultLabels.savedBody(result.name.headline)}</Text>
+          {/* Saved comes first because that's where people expect to land after saving */}
+          <Button
+            label={resultLabels.viewInSaved}
+            onPress={() => {
+              setShowSaved(false);
+              router.replace('/saved');
+            }}
+          />
+          <Button
+            label={resultLabels.continueHome}
+            style="secondary"
+            onPress={() => {
+              setShowSaved(false);
+              router.replace('/home');
+            }}
+          />
+        </View>
       </Sheet>
     </Screen>
   );
@@ -641,6 +688,14 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.accent,
     textDecorationLine: 'underline',
+  },
+  savedSheet: {
+    gap: space[12],
+  },
+  savedBody: {
+    ...type.body,
+    color: c.inkMuted,
+    marginBottom: space[12],
   },
   status: {
     gap: space[8],

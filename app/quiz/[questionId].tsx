@@ -110,7 +110,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
     <Screen compact footer={footer} footerDivider={false}>
       <View style={styles.topBar}>
         <Pressable
-          onPress={() => router.replace('/proof')}
+          onPress={() => router.replace('/home')}
           accessibilityRole="button"
           accessibilityLabel="Save and exit"
           style={styles.saveExit}

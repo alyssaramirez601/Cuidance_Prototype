@@ -17,6 +17,8 @@ const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 // Same collage strip as Create account; the Week 8 Sign in design uses the same artwork
 const footerArt = require('@/assets/images/auth-footer.png');
 const FOOTER_ART_MAX_HEIGHT = 88;
+// Below this the strip reads as a stray stripe, so it's hidden instead
+const FOOTER_ART_MIN_HEIGHT = space[32];
 const authTabs = [
   { key: 'create', label: 'Create account' },
   { key: 'sign-in', label: 'Sign in' },
@@ -24,6 +26,7 @@ const authTabs = [
 
 export default function SignInScreen() {
   const router = useRouter();
+  const [artTooShort, setArtTooShort] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,7 +127,15 @@ export default function SignInScreen() {
         <Text style={styles.linkLabel}>New to Cuidance? Create account</Text>
       </Pressable>
 
-      <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
+      {/* Anchored bottom right so the arch never gets cut; hidden when there's only room for a sliver */}
+      <Image
+        source={footerArt}
+        style={[styles.footerArt, artTooShort && styles.footerArtHidden]}
+        contentFit="cover"
+        contentPosition="right bottom"
+        accessible={false}
+        onLayout={(event) => setArtTooShort(event.nativeEvent.layout.height < FOOTER_ART_MIN_HEIGHT)}
+      />
     </Screen>
   );
 }
@@ -168,5 +179,8 @@ const styles = StyleSheet.create({
     maxHeight: FOOTER_ART_MAX_HEIGHT,
     marginHorizontal: -layout.screenEdge,
     marginBottom: -space[8],
+  },
+  footerArtHidden: {
+    opacity: 0,
   },
 });

@@ -11,19 +11,24 @@ type ListRowProps = {
   leading?: ReactNode;
   // Something small after the label, like evidence dots
   trailing?: ReactNode;
+  // A muted line under the label, like "Ready to revisit anytime"
+  detail?: string;
 };
 
 const c = colors.light;
 
 // The one tappable row (CLAUDE.md names it). Not in the Figma design system yet, so Esme should add it there
-export function ListRow({ label, onPress, leading, trailing }: ListRowProps) {
+export function ListRow({ label, onPress, leading, trailing, detail }: ListRowProps) {
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} accessibilityHint="Opens more detail">
       {({ pressed }) => (
         <View style={[styles.row, pressed && styles.pressed]}>
           {leading}
           <View style={styles.middle}>
-            <Text style={styles.label}>{label}</Text>
+            <View style={styles.text}>
+              <Text style={styles.label}>{label}</Text>
+              {detail ? <Text style={styles.detail}>{detail}</Text> : null}
+            </View>
             {trailing}
           </View>
           <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
@@ -52,8 +57,15 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: space[8],
   },
+  text: {
+    gap: space[4],
+  },
   label: {
     ...type.body,
     color: c.ink,
+  },
+  detail: {
+    ...type.caption,
+    color: c.inkMuted,
   },
 });
