@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, graphic, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
 
 type HomeHeaderProps = {
   greeting: string;
@@ -10,27 +10,22 @@ type HomeHeaderProps = {
   onProfilePress: () => void;
 };
 
-// The terracotta band is drawn in code so the greeting always sits on plain color and stays
-// readable. The collage on the right is artwork kit 08 (ChatGPT, transparent background),
-// made in the Welcome collage style. Band and swoosh sizes come from the Week 8 Step 5 frame
+// Artwork kit 08 (ChatGPT, made in the Welcome collage style). The terracotta band is left
+// plain so the greeting sits on it as real text, with the person's own name
 const art = require('@/assets/images/home-header-art.png');
-const swoosh = require('@/assets/images/home-header-swoosh.png');
-const HEADER_HEIGHT = 220;
-const ART_RATIO = 1196 / 1315;
+const ART_RATIO = 1672 / 941;
 
 const c = colors.light;
-const g = graphic.light;
 
 export function HomeHeader({ greeting, name, onProfilePress }: HomeHeaderProps) {
   return (
     <View style={styles.header}>
-      <View style={[styles.shape, styles.band]} />
-      <Image source={art} style={styles.art} contentFit="contain" accessible={false} />
-      <Image source={swoosh} style={styles.swoosh} tintColor={c.background} contentFit="contain" accessible={false} />
+      <Image source={art} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
 
+      {/* Sits in the middle of the terracotta band, which runs from about 14% to 82% of the height */}
       <View style={styles.greeting}>
         <Text style={styles.greetingSmall}>{greeting}</Text>
-        <Text style={styles.greetingName} accessibilityRole="header">
+        <Text style={styles.greetingName} accessibilityRole="header" numberOfLines={2}>
           {name ? `Hi, ${name}` : 'Hi there'}
         </Text>
       </View>
@@ -44,41 +39,15 @@ export function HomeHeader({ greeting, name, onProfilePress }: HomeHeaderProps) 
 
 const styles = StyleSheet.create({
   header: {
-    height: HEADER_HEIGHT,
-    overflow: 'hidden',
+    aspectRatio: ART_RATIO,
     marginHorizontal: -layout.screenEdge,
-  },
-  shape: {
-    position: 'absolute',
-  },
-  band: {
-    width: 367,
-    height: 158,
-    left: -42,
-    top: 38,
-    borderTopRightRadius: radius.pill,
-    borderBottomRightRadius: radius.pill,
-    backgroundColor: g.terracottaDeep,
-  },
-  art: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    height: HEADER_HEIGHT,
-    width: HEADER_HEIGHT * ART_RATIO,
-  },
-  swoosh: {
-    position: 'absolute',
-    width: 97,
-    height: 21,
-    left: layout.screenEdge,
-    top: 141,
   },
   greeting: {
     position: 'absolute',
     left: layout.screenEdge,
-    top: 65,
-    right: 120,
+    top: '30%',
+    // Stays inside the band, clear of the vessel and leaves on the right
+    width: '62%',
   },
   greetingSmall: {
     ...type.label,
@@ -93,8 +62,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: space[24],
     top: space[16],
-    width: space[48] + space[8],
-    height: space[48] + space[8],
+    width: space[48],
+    height: space[48],
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
