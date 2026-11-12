@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, layout, space, stroke, type } from '@/constants/tokens';
+import { colors, layout, stroke, type } from '@/constants/tokens';
 
 type Tab = {
   key: string;

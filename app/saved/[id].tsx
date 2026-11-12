@@ -18,6 +18,12 @@ type State =
   | { status: 'missing' }
   | { status: 'ready'; saved: SavedResult };
 
+function stateFrom(loaded: Awaited<ReturnType<typeof getSavedResult>>): State {
+  if (!loaded.ok) return { status: 'error', message: loaded.message };
+  if (!loaded.result) return { status: 'missing' };
+  return { status: 'ready', saved: loaded.result };
+}
+
 // A saved result, rebuilt from the answers it was saved with, so it reads the way it did that day
 export default function SavedResultScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -26,16 +32,17 @@ export default function SavedResultScreen() {
   const [state, setState] = useState<State>({ status: 'loading' });
   const backToSaved = useCallback(() => router.navigate('/saved'), [router]);
 
-  const load = useCallback(async () => {
-    setState({ status: 'loading' });
-    const loaded = await getSavedResult(id);
-    if (!loaded.ok) setState({ status: 'error', message: loaded.message });
-    else if (!loaded.result) setState({ status: 'missing' });
-    else setState({ status: 'ready', saved: loaded.result });
-  }, [id]);
+  const load = useCallback(() => getSavedResult(id).then(stateFrom), [id]);
 
   useEffect(() => {
-    load();
+    // Ignores a reply that lands after leaving the screen
+    let active = true;
+    load().then((next) => {
+      if (active) setState(next);
+    });
+    return () => {
+      active = false;
+    };
   }, [load]);
 
   if (!session || state.status === 'loading') {
@@ -46,7 +53,14 @@ export default function SavedResultScreen() {
       <Screen centered>
         <View style={styles.errorBox}>
           <Text style={styles.errorText}>{state.message}</Text>
-          <Button label="Try again" style="secondary" onPress={load} />
+          <Button
+            label="Try again"
+            style="secondary"
+            onPress={() => {
+              setState({ status: 'loading' });
+              load().then(setState);
+            }}
+          />
         </View>
       </Screen>
     );
