@@ -138,7 +138,7 @@ What exists today:
 /hooks        useAuth, useQuizAnswer, useQuizNext, useGuidanceResult and useGoBack
 /lib          Supabase client, sign-in helpers, saving quiz answers, quizFlow (which questions each person sees) buildResult (turns answers into a result) and results (Save result and Start over)
 /assets       App icon and splash images (Expo placeholders for now), Welcome artwork cut from the Week 8 hi-fi design (assets/images/welcome-*), and the logo (assets/logo)
-/docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, and the component and icon spec, in docs/design-system
+/docs         The clickable prototype, in docs/prototype, the wireframes, in docs/wireframes, the quiz outcome library, in docs/quiz-outcomes, the component and icon spec, in docs/design-system, and screenshots that go with pull requests, in docs/evidence
 /scripts      build-outcome-data.mjs: copies the answer cards, mixing rules and sources from docs/quiz-outcomes into data/. Run it with `node scripts/build-outcome-data.mjs` whenever those docs change
 /supabase     Database migrations (SQL files), in supabase/migrations
 /.github      Pull request template, and the workflows that publish the web version (workflows/deploy-app-web.yml) and the preview from work-in-progress branches (workflows/deploy-app-preview.yml)
