@@ -14,7 +14,7 @@ const logo = require('@/assets/logo/logo-horizontal-green.png');
 
 // Width / height of each image file, so they scale without stretching
 const HERO_RATIO = 853 / 577;
-const FOOTER_RATIO = 853 / 99;
+const FOOTER_RATIO = 1672 / 403;
 const LOGO_RATIO = 1028 / 222;
 // Logo version 4 full lockup minimum width, from CLAUDE.md
 const LOGO_WIDTH = 160;
