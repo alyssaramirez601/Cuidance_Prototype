@@ -10,11 +10,13 @@ type HomeHeaderProps = {
   onProfilePress: () => void;
 };
 
-// Shapes from the Week 8 Step 5 "Home · quiz done" header, rebuilt in code so the greeting
-// stays real text. Sizes are the Figma frame's, scaled to the screen width by the parent
-const mark = require('@/assets/images/home-header-mark.png');
+// The terracotta band is drawn in code so the greeting always sits on plain color and stays
+// readable. The collage on the right is artwork kit 08 (ChatGPT, transparent background),
+// made in the Welcome collage style. Band and swoosh sizes come from the Week 8 Step 5 frame
+const art = require('@/assets/images/home-header-art.png');
 const swoosh = require('@/assets/images/home-header-swoosh.png');
 const HEADER_HEIGHT = 220;
+const ART_RATIO = 1196 / 1315;
 
 const c = colors.light;
 const g = graphic.light;
@@ -22,11 +24,8 @@ const g = graphic.light;
 export function HomeHeader({ greeting, name, onProfilePress }: HomeHeaderProps) {
   return (
     <View style={styles.header}>
-      <View style={[styles.shape, styles.green]} />
-      <View style={[styles.shape, styles.clay]} />
       <View style={[styles.shape, styles.band]} />
-      <View style={[styles.shape, styles.olive]} />
-      <Image source={mark} style={styles.mark} tintColor={c.ink} contentFit="contain" accessible={false} />
+      <Image source={art} style={styles.art} contentFit="contain" accessible={false} />
       <Image source={swoosh} style={styles.swoosh} tintColor={c.background} contentFit="contain" accessible={false} />
 
       <View style={styles.greeting}>
@@ -52,22 +51,6 @@ const styles = StyleSheet.create({
   shape: {
     position: 'absolute',
   },
-  green: {
-    width: 284,
-    height: 252,
-    right: -52,
-    top: -74,
-    borderRadius: 134,
-    backgroundColor: g.greenBold,
-  },
-  clay: {
-    width: 178,
-    height: 178,
-    right: -31,
-    bottom: -52,
-    borderRadius: 89,
-    backgroundColor: g.clay,
-  },
   band: {
     width: 367,
     height: 158,
@@ -77,20 +60,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: radius.pill,
     backgroundColor: g.terracottaDeep,
   },
-  olive: {
-    width: 101,
-    height: 101,
-    left: 250,
-    bottom: -48,
-    borderRadius: 50,
-    backgroundColor: g.oliveBold,
-  },
-  mark: {
+  art: {
     position: 'absolute',
-    width: 105,
-    height: 82,
-    right: 27,
-    bottom: 15,
+    right: 0,
+    top: 0,
+    height: HEADER_HEIGHT,
+    width: HEADER_HEIGHT * ART_RATIO,
   },
   swoosh: {
     position: 'absolute',

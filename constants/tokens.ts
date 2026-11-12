@@ -98,8 +98,7 @@ export const graphic = {
     blueBold: '#152B91',
     dot: '#A8432A',
     paper: '#FBF6EE',
-    // From the Week 8 Step 5 Home header collage (Figma), for shapes only
-    oliveBold: '#9BAE68',
+    // The Home header band, from the Week 8 Step 5 Home frame (Figma), for shapes only
     terracottaDeep: '#A8432A',
   },
   dark: {
@@ -114,8 +113,7 @@ export const graphic = {
     blueBold: '#8396F2',
     dot: '#F2A68F',
     paper: '#1F2622',
-    // Dark mode isn't built in v1; these mirror the light shapes until Esme sets dark values
-    oliveBold: '#9BAE68',
+    // Dark mode isn't built in v1; this mirrors the light band until Esme sets a dark value
     terracottaDeep: '#A8432A',
   },
 } as const;
