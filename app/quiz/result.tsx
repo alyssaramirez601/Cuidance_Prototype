@@ -108,6 +108,8 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
   const [sheet, setSheet] = useState<SheetContent | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Saving opens a confirmation with a way to Saved, instead of leaving people on a checkmark
+  const [showSaved, setShowSaved] = useState(false);
   const [actionError, setActionError] = useState('');
   const [isClearing, setIsClearing] = useState(false);
   // Three or more areas get one tab each instead of stacked reports
@@ -134,8 +136,10 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
     setIsSaving(true);
     const outcome = await saveResult(userId, result.name, answers);
     setIsSaving(false);
-    if (outcome.ok) setSaved(true);
-    else setActionError(outcome.message);
+    if (outcome.ok) {
+      setSaved(true);
+      setShowSaved(true);
+    } else setActionError(outcome.message);
   }
 
   function handleChange() {
@@ -357,7 +361,6 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
       </Section>
 
       <View accessibilityLiveRegion="polite" style={styles.status}>
-        {saved ? <Toast type="success" message={resultLabels.saved} /> : null}
         {actionError ? <Toast type="error" message={actionError} /> : null}
       </View>
 
@@ -383,6 +386,28 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
 
       <Sheet visible={sheet !== null} title={sheet?.title ?? ''} onClose={() => setSheet(null)}>
         {sheet ? <SheetBody content={sheet} /> : null}
+      </Sheet>
+
+      <Sheet visible={showSaved} title={resultLabels.savedTitle} onClose={() => setShowSaved(false)}>
+        <View style={styles.savedSheet}>
+          <Text style={styles.savedBody}>{resultLabels.savedBody(result.name.headline)}</Text>
+          {/* Saved comes first because that's where people expect to land after saving */}
+          <Button
+            label={resultLabels.viewInSaved}
+            onPress={() => {
+              setShowSaved(false);
+              router.replace('/saved');
+            }}
+          />
+          <Button
+            label={resultLabels.continueHome}
+            style="secondary"
+            onPress={() => {
+              setShowSaved(false);
+              router.replace('/home');
+            }}
+          />
+        </View>
       </Sheet>
     </Screen>
   );
@@ -663,6 +688,14 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.accent,
     textDecorationLine: 'underline',
+  },
+  savedSheet: {
+    gap: space[12],
+  },
+  savedBody: {
+    ...type.body,
+    color: c.inkMuted,
+    marginBottom: space[12],
   },
   status: {
     gap: space[8],

@@ -97,7 +97,12 @@ export const resultLabels = {
   whyTitle: 'Why it may fit',
   watchTitle: 'Watch out for',
   ingredientRole: 'What it does',
-  saved: 'Result saved.',
+  // Save confirmation sheet, from the clickable prototype (p2). The prototype also says
+  // "and Guidance History"; left out until that Profile page exists
+  savedTitle: 'Result saved',
+  savedBody: (name: string) => `${name} is now in Saved.`,
+  viewInSaved: 'View in Saved',
+  continueHome: 'Continue to Home',
   save: 'Save result',
   saving: 'Saving',
   change: 'Change my answers',
