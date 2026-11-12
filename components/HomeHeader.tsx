@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
 
 type HomeHeaderProps = {
   greeting: string;
@@ -68,5 +68,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: c.surface,
+    // Grounded Green ring so the button doesn't blend into the pale paper behind it
+    borderWidth: stroke.strong,
+    borderColor: c.brand,
   },
 });
