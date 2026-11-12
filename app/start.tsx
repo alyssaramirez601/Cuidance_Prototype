@@ -12,6 +12,9 @@ import { firstNameFrom } from '@/lib/auth';
 // Artwork cut from the Week 8 hi-fi "02D · Account created" design, not redrawn
 const hero = require('@/assets/images/account-created-hero.png');
 const footerArt = require('@/assets/images/account-created-footer.png');
+// Names longer than this always go on their own line under "Welcome,". Shorter names stay
+// on the same line when there's room, and wrap after "Welcome," on narrow phones
+const NAME_SAME_LINE_MAX = 7;
 // The artwork never grows past its size in the design
 const HERO_MAX_HEIGHT = 360;
 const FOOTER_MAX_HEIGHT = 88;
@@ -22,6 +25,11 @@ export default function StartScreen() {
   const router = useRouter();
   const { session } = useAuth();
   const firstName = firstNameFrom(session?.user.user_metadata);
+  const greeting = !firstName
+    ? 'Welcome'
+    : firstName.length > NAME_SAME_LINE_MAX
+      ? `Welcome,\n${firstName}`
+      : `Welcome, ${firstName}`;
 
   return (
     <Screen compact>
@@ -32,7 +40,7 @@ export default function StartScreen() {
       <View style={styles.text}>
         {/* Copy from the clickable prototype. With no name it says just "Welcome" */}
         <Text style={styles.title} accessibilityRole="header">
-          {firstName ? `Welcome, ${firstName}` : 'Welcome'}
+          {greeting}
         </Text>
         <Text style={styles.body}>
           Next is the full guidance quiz: about 7 to 10 questions, depending on the areas you pick.
