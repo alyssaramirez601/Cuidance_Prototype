@@ -1,7 +1,9 @@
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AnswerTag } from '@/components/AnswerTag';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { EvidenceDots } from '@/components/EvidenceDots';
@@ -22,7 +24,7 @@ import { useGuidanceResult } from '@/hooks/useGuidanceResult';
 import type { GuidanceResult, ResultPoint } from '@/lib/buildResult';
 import { hasResult } from '@/lib/buildResult';
 import type { SavedAnswers } from '@/lib/quizFlow';
-import { visibleQuestionIds } from '@/lib/quizFlow';
+import { visibleQuestionIds, answerTags } from '@/lib/quizFlow';
 import { clearAnswers, saveResult } from '@/lib/results';
 
 const c = colors.light;
@@ -37,6 +39,13 @@ type SheetContent = {
   groups: { heading: string; items: string[] }[];
   evidence?: Evidence;
 };
+
+// Non-figurative hero from the Week 8 Step 5 result screen (the team chose this over the AI portrait),
+// and the collage strip from the chosen quiz hi-fi
+const heroArt = require('@/assets/images/result-hero.png');
+const footerArt = require('@/assets/images/quiz-footer.png');
+const HERO_RATIO = 1229 / 593;
+const FOOTER_ART_HEIGHT = space[48];
 
 export default function ResultScreen() {
   const { session } = useAuth();
@@ -90,6 +99,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
   // Three or more areas get one tab each instead of stacked reports
   const useTabs = result.areas.length >= 3;
   const shownAreas = useTabs ? result.byArea.filter((item) => item.area === activeArea) : result.byArea;
+  const tags = answerTags(answers);
   const usedEvidence = evidenceOrder.filter((label) => result.evidence.some((item) => item.evidence === label));
 
   function openPoint(point: ResultPoint, title: string) {
@@ -142,6 +152,8 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Text style={styles.topTitle}>{resultLabels.screenTitle}</Text>
       </View>
 
+      <Image source={heroArt} style={styles.hero} contentFit="cover" accessible={false} />
+
       <View style={styles.nameBlock}>
         <Text style={styles.eyebrow}>{resultLabels.eyebrow}</Text>
         <Text style={styles.headline} accessibilityRole="header">
@@ -150,6 +162,28 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Text style={styles.subtitle}>{result.name.subtitle}</Text>
         <Text style={styles.body}>{result.exploration}</Text>
       </View>
+
+      {tags.length ? (
+        // Shows the answers the guidance is built from, with a way back to change them
+        <View style={styles.basedOn}>
+          <View style={styles.basedOnHeader}>
+            <Text style={[styles.helperInk, styles.flex]}>{resultLabels.basedOn}</Text>
+            <Pressable
+              onPress={handleChange}
+              accessibilityRole="link"
+              accessibilityLabel={resultLabels.editAnswers}
+              style={styles.editLink}
+            >
+              <Text style={styles.link}>{resultLabels.edit}</Text>
+            </Pressable>
+          </View>
+          <View style={styles.tags}>
+            {tags.map((tag) => (
+              <AnswerTag key={tag} label={tag} />
+            ))}
+          </View>
+        </View>
+      ) : null}
 
       {usedEvidence.length ? (
         // Up top, so the dots make sense the first time someone sees them
@@ -318,9 +352,12 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
           state={saved ? 'disabled' : undefined}
           onPress={handleSave}
         />
+        {/* Stacked, not side by side: "Change my answers" wraps to two lines on phones when halved */}
         <Button label={resultLabels.change} style="secondary" onPress={handleChange} />
         <Button label={resultLabels.startOver} style="secondary" loading={isClearing} onPress={handleStartOver} />
       </View>
+
+      <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
 
       <Sheet visible={sheet !== null} title={sheet?.title ?? ''} onClose={() => setSheet(null)}>
         {sheet ? <SheetBody content={sheet} /> : null}
@@ -462,7 +499,8 @@ const styles = StyleSheet.create({
     gap: space[8],
   },
   eyebrow: {
-    ...type.label,
+    ...type.caption,
+    fontFamily: type.label.fontFamily,
     color: c.highlight,
     textTransform: 'uppercase',
     letterSpacing: letterSpacing.eyebrow,
@@ -477,11 +515,50 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: space[12],
-    paddingTop: space[32],
+    paddingTop: space[24],
   },
-  sectionTitle: {
-    ...type.title,
+  // Edge to edge under the top bar
+  hero: {
+    marginHorizontal: -layout.screenEdge,
+    aspectRatio: HERO_RATIO,
+  },
+  basedOn: {
+    gap: space[12],
+    marginTop: space[8],
+    padding: layout.insideComponent,
+    borderRadius: radius.medium,
+    backgroundColor: c.surfaceWarm,
+  },
+  basedOnHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[12],
+  },
+  editLink: {
+    minHeight: layout.minTouchTarget,
+    justifyContent: 'center',
+  },
+  helperInk: {
+    ...type.caption,
     color: c.ink,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space[8],
+  },
+  footerArt: {
+    height: FOOTER_ART_HEIGHT,
+    marginHorizontal: -layout.screenEdge,
+    marginBottom: -space[24],
+  },
+  // Terracotta eyebrows ("START HERE"), like the Week 8 hi-fi
+  sectionTitle: {
+    ...type.caption,
+    fontFamily: type.label.fontFamily,
+    color: c.highlight,
+    textTransform: 'uppercase',
+    letterSpacing: letterSpacing.eyebrow,
   },
   body: {
     ...type.body,
