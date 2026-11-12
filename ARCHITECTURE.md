@@ -19,7 +19,9 @@ cuidance_prototype/
 │   ├── quiz/
 │   │   ├── [questionId].tsx  One file for every quiz question
 │   │   └── result.tsx        Guidance result
-│   ├── proof.tsx             Temporary account screen behind "Save and exit"
+│   ├── (tabs)/               Home, Explore, Saved, Shop, Profile and the tab bar
+│   ├── saved/[id].tsx        A reopened saved result
+│   ├── proof.tsx             Old test screen, no longer linked
 │   └── dev.tsx               Temporary screen showing every component
 ├── components/               Shared UI, one file per Figma component
 ├── constants/tokens.ts       The only source of color, type, spacing, radius
@@ -55,13 +57,15 @@ Signed out
 
 Signed in
 ├── /start                 "Welcome, [name]" (Account created): Start guidance opens the first quiz question
+├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Explore, Shop and Profile are stand-ins until they are built
+├── /saved/[id]            A saved result, rebuilt from its saved answers. Read-only, back goes to Saved
 ├── /quiz/[questionId]     Any of the 22 questions (which ones depends on the care areas picked)
 ├── /quiz/result           Guidance result: Save result, Change my answers, Start over
-├── /proof                 Temporary, until Home exists
+├── /proof                 Temporary test screen (no longer linked; sign out is on Profile)
 └── /dev                   Temporary component screen
 ```
 
-Not built yet: the tab bar (Home, Explore, Saved, Shop, Profile) under `(tabs)/`.
+Saved › Guidance reads `saved_results`. Products, Owned and Routines show empty states until their tables exist.
 
 ## 4. Where state lives
 
@@ -75,7 +79,8 @@ Not built yet: the tab bar (Home, Explore, Saved, Shop, Profile) under `(tabs)/`
 
 - **Week 11 loop:** which action in the Admin Web should show up on Mobile (or the other way around)? Waiting on Alyssa and Esme.
 - **Admin Web on Supabase:** the Admin Web uses seeded, browser-only data. The loop needs it to read and write the same Supabase project.
-- **Home:** what Home shows, and whether it replaces `/start` and `/proof`.
+- **Home:** Partner Highlights are labeled placeholders until Shop has real partners.
+- **Saved › Products, Owned, Routines:** need new Supabase tables (build part 2).
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).

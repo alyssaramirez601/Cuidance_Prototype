@@ -105,3 +105,65 @@ export const resultLabels = {
   loading: 'Building your result',
   takeQuiz: 'Take the quiz',
 };
+
+// Home, from the Week 8 Step 5 Home hi-fi (07 and 07B). "Good afternoon" and "Good evening"
+// are draft lines that follow "Good morning" from the design, waiting for team approval
+export const homeCopy = {
+  loading: 'Loading Home',
+  loadError: 'We couldn’t load your Home screen. Check your connection and try again.',
+  morning: 'Good morning',
+  afternoon: 'Good afternoon',
+  evening: 'Good evening',
+  resumeEyebrow: 'Pick up where you left off',
+  resumeTitle: 'Your guidance quiz',
+  questionsLeft: (count: number) => (count === 1 ? '1 question left' : `${count} questions left`),
+  resumeButton: 'Continue guidance',
+  updatesTitle: 'Guidance updates',
+  yourResult: 'Your result',
+  revisit: 'Ready to revisit anytime',
+  getGuidance: 'Get your guidance',
+  getGuidanceDetail: 'Take the quiz to see what may fit you',
+};
+
+// Placeholder partner content from the Week 8 Home hi-fi, until Shop has real partners.
+// The note line is draft copy, so nobody mistakes these for real products
+export const partnerPlaceholders = {
+  title: 'Partner Highlights',
+  filters: ['Today’s trends', 'Best sellers', 'New arrivals'],
+  products: [
+    { brand: 'Partner brand', name: 'Mineral Sunscreen SPF 30' },
+    { brand: 'Partner brand', name: 'Hand Cream' },
+    { brand: 'Partner brand', name: 'Body Oil' },
+  ],
+  note: 'Sample partner content. Real partners appear here once Shop is connected.',
+  seeAll: 'See all in Shop',
+};
+
+// Saved, from the Week 8 Step 5 Saved hi-fi (15 to 18)
+export const savedCopy = {
+  title: 'Saved',
+  loading: 'Loading your saved guidance',
+  tabs: [
+    { key: 'guidance', label: 'Guidance' },
+    { key: 'products', label: 'Products' },
+    { key: 'owned', label: 'Owned' },
+    { key: 'routines', label: 'Routines' },
+  ],
+  guidanceIntro: 'Saved results and explainers you want to return to.',
+  resultLine: (date: string) => `Result · saved ${date}`,
+  savedTag: 'Saved',
+  emptyTitle: 'Nothing saved yet',
+  emptyBody: 'When you save a result or an article, it will show up here.',
+  emptyButton: 'Take the guidance quiz',
+  ownedEmptyTitle: 'Nothing here yet',
+  ownedEmptyBody: 'Add products you already use to track how they work for you.',
+  addOwned: 'Add a product you own',
+  // Draft: the design has no empty Products screen yet
+  productsEmptyBody: 'Products you save from Explore or Shop will show up here.',
+  routinesIntro: 'Your routines and routine notes, in one place.',
+  routinesEmptyBody: 'Routines you create will show up here.',
+  createRoutine: 'Create a routine',
+  backToSaved: 'Back to Saved',
+  notFoundTitle: 'We couldn’t find that saved result',
+  notFoundBody: 'It may have been removed. Head back to Saved to see what’s there.',
+};

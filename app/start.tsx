@@ -50,6 +50,7 @@ export default function StartScreen() {
 
       <View style={styles.actions}>
         <Button label="Start guidance" onPress={() => router.push(`/quiz/${quizQuestions[0].id}`)} />
+        <Button label="Go to Home" style="secondary" onPress={() => router.replace('/home')} />
       </View>
 
       <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
     color: c.inkMuted,
   },
   actions: {
+    gap: space[12],
     marginTop: 'auto',
     paddingTop: space[24],
     paddingHorizontal: space[8],

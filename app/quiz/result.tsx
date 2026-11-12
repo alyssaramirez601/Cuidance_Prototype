@@ -14,7 +14,7 @@ import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { Toast } from '@/components/Toast';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels, emptyResult, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
+import { areaLabels, emptyResult, savedCopy, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
 import { labelGuide } from '@/data/labelGuide';
 import type { CareArea, Evidence } from '@/data/outcomeTypes';
 import { emergencyLine } from '@/data/safety';
@@ -86,9 +86,15 @@ function ResultContent({ userId }: { userId: string }) {
   return <ResultView userId={userId} result={state.result} answers={state.answers} />;
 }
 
-type ResultViewProps = { userId: string; result: GuidanceResult; answers: SavedAnswers };
+type ResultViewProps = {
+  userId: string;
+  result: GuidanceResult;
+  answers: SavedAnswers;
+  // A result reopened from Saved: read-only, and its only way out goes back to Saved
+  savedMode?: { onBack: () => void };
+};
 
-function ResultView({ userId, result, answers }: ResultViewProps) {
+export function ResultView({ userId, result, answers, savedMode }: ResultViewProps) {
   const router = useRouter();
   const [activeArea, setActiveArea] = useState<CareArea>(result.areas[0]);
   const [sheet, setSheet] = useState<SheetContent | null>(null);
@@ -142,14 +148,14 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
     <Screen>
       <View style={styles.topBar}>
         <Pressable
-          onPress={() => router.replace('/proof')}
+          onPress={savedMode ? savedMode.onBack : () => router.replace('/home')}
           accessibilityRole="button"
-          accessibilityLabel={resultLabels.close}
+          accessibilityLabel={savedMode ? savedCopy.backToSaved : resultLabels.close}
           style={styles.closeButton}
         >
-          <Icon name="close" size={sizes.icon.large} color={c.ink} />
+          <Icon name={savedMode ? 'back' : 'close'} size={sizes.icon.large} color={c.ink} />
         </Pressable>
-        <Text style={styles.topTitle}>{resultLabels.screenTitle}</Text>
+        <Text style={styles.topTitle}>{savedMode ? savedCopy.backToSaved : resultLabels.screenTitle}</Text>
       </View>
 
       <Image source={heroArt} style={styles.hero} contentFit="cover" accessible={false} />
@@ -168,6 +174,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <View style={styles.basedOn}>
           <View style={styles.basedOnHeader}>
             <Text style={[styles.helperInk, styles.flex]}>{resultLabels.basedOn}</Text>
+            {savedMode ? null : (
             <Pressable
               onPress={handleChange}
               accessibilityRole="link"
@@ -176,6 +183,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
             >
               <Text style={styles.link}>{resultLabels.edit}</Text>
             </Pressable>
+            )}
           </View>
           <View style={styles.tags}>
             {tags.map((tag) => (
@@ -345,6 +353,11 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         {actionError ? <Toast type="error" message={actionError} /> : null}
       </View>
 
+      {savedMode ? (
+        <View style={styles.actions}>
+          <Button label={savedCopy.backToSaved} onPress={savedMode.onBack} />
+        </View>
+      ) : (
       <View style={styles.actions}>
         <Button
           label={isSaving ? resultLabels.saving : resultLabels.save}
@@ -356,6 +369,7 @@ function ResultView({ userId, result, answers }: ResultViewProps) {
         <Button label={resultLabels.change} style="secondary" onPress={handleChange} />
         <Button label={resultLabels.startOver} style="secondary" loading={isClearing} onPress={handleStartOver} />
       </View>
+      )}
 
       <Image source={footerArt} style={styles.footerArt} contentFit="cover" contentPosition="top" accessible={false} />
 
