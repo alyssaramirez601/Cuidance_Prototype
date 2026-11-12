@@ -54,7 +54,7 @@ Signed out
 └── /sign-in
 
 Signed in
-├── /start                 → redirects to the first quiz question
+├── /start                 "Welcome, [name]" (Account created): Start guidance opens the first quiz question
 ├── /quiz/[questionId]     Any of the 22 questions (which ones depends on the care areas picked)
 ├── /quiz/result           Guidance result: Save result, Change my answers, Start over
 ├── /proof                 Temporary, until Home exists

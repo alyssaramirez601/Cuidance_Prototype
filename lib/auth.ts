@@ -112,3 +112,13 @@ export async function signOut(): Promise<AuthResult> {
   }
   return { ok: true };
 }
+
+// First name for greetings like "Welcome, Maya". Email sign-ups store display_name;
+// Google sign-ins send full_name or name. Returns an empty string if there is none
+export function firstNameFrom(metadata: Record<string, unknown> | undefined): string {
+  const raw = metadata?.display_name ?? metadata?.full_name ?? metadata?.name;
+  if (typeof raw !== 'string') {
+    return '';
+  }
+  return raw.trim().split(/\s+/)[0] ?? '';
+}
