@@ -40,11 +40,11 @@ type SheetContent = {
   evidence?: Evidence;
 };
 
-// Non-figurative hero from the Week 8 Step 5 result screen (the team chose this over the AI portrait),
-// and the collage strip from the chosen quiz hi-fi
+// Non-figurative hero (no person, a team decision), made in the Welcome collage style from the
+// artwork kit prompt 07, and the collage strip from the chosen quiz hi-fi
 const heroArt = require('@/assets/images/result-hero.png');
 const footerArt = require('@/assets/images/quiz-footer.png');
-const HERO_RATIO = 1229 / 593;
+const HERO_RATIO = 1807 / 870;
 const FOOTER_ART_HEIGHT = space[48];
 
 export default function ResultScreen() {
