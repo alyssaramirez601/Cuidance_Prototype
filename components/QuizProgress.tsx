@@ -10,9 +10,17 @@ type QuizProgressProps = {
 };
 
 export function QuizProgress({ label, current, total }: QuizProgressProps) {
+  // "Getting started · 1 of 4" shows as the section name with the count beside it, like the Week 8 hi-fi
+  const splitAt = label.lastIndexOf(' · ');
+  const section = splitAt === -1 ? label : label.slice(0, splitAt);
+  const count = splitAt === -1 ? '' : label.slice(splitAt + 3);
+
   return (
     <View style={styles.container} accessibilityRole="progressbar" accessibilityLabel={label}>
-      <Text style={styles.label}>{label}</Text>
+      <View style={styles.labelRow}>
+        <Text style={styles.section}>{section}</Text>
+        {count ? <Text style={styles.count}>{count}</Text> : null}
+      </View>
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${(current / total) * 100}%` }]} />
       </View>
@@ -24,7 +32,18 @@ const styles = StyleSheet.create({
   container: {
     gap: space[8],
   },
-  label: {
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    gap: space[12],
+  },
+  section: {
+    ...type.title,
+    flexShrink: 1,
+    color: colors.light.ink,
+  },
+  count: {
     ...type.caption,
     color: colors.light.inkMuted,
   },

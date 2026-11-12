@@ -200,6 +200,7 @@ Follow the Quiz Outcomes Board. In short:
 ## Design matching
 
 - When building a screen, match the prototype, Esme's Figma designs and the "Validated changes" section: spacing, typography, hierarchy, alignment and colors.
+- **One screen or scroll:** screens where someone answers or fills something in (quiz questions, sign in, create account, guest preview) fit in one view on a phone, with no scrolling. Pin the actions in the `Screen` footer and let artwork shrink before text does. Browse screens (Welcome, Home, Explore, Saved, Profile, the result) can scroll, and their artwork shows in full. Check both iPhone and Android sizes.
 - Avoid extra gradients, heavy shadows, decorative icons and flashy animation.
 - Animations: only simple ones, like fades, slides for sheets and the progress bar. Use `react-native-reanimated` only if it's truly needed.
 

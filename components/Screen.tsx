@@ -11,9 +11,11 @@ type ScreenProps = {
   footer?: ReactNode;
   // Tighter spacing for screens meant to fit in one view, like quiz questions
   compact?: boolean;
+  // The line above the footer. The quiz hi-fi has none
+  footerDivider?: boolean;
 };
 
-export function Screen({ children, centered = false, footer, compact = false }: ScreenProps) {
+export function Screen({ children, centered = false, footer, compact = false, footerDivider = true }: ScreenProps) {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -23,13 +25,16 @@ export function Screen({ children, centered = false, footer, compact = false }: 
         >
           {children}
         </ScrollView>
-        {footer ? <View style={styles.footer}>{footer}</View> : null}
+        {footer ? <View style={[styles.footer, !footerDivider && styles.footerNoDivider]}>{footer}</View> : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  footerNoDivider: {
+    borderTopWidth: 0,
+  },
   safe: {
     flex: 1,
     backgroundColor: colors.light.background,

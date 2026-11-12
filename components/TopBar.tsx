@@ -6,7 +6,8 @@ import { colors, layout, sizes, space, type } from '@/constants/tokens';
 
 type TopBarProps = {
   onBack: () => void;
-  onHelp: () => void;
+  // Leave out on screens with nothing to explain, like Create account
+  onHelp?: () => void;
 };
 
 export function TopBar({ onBack, onHelp }: TopBarProps) {
@@ -16,7 +17,7 @@ export function TopBar({ onBack, onHelp }: TopBarProps) {
         <Icon name="back" size={sizes.icon.large} color={colors.light.ink} />
         <Text style={styles.backLabel}>Back</Text>
       </Pressable>
-      <HelpButton onPress={onHelp} />
+      {onHelp ? <HelpButton onPress={onHelp} /> : null}
     </View>
   );
 }

@@ -74,6 +74,10 @@ function joinList(items: string[]): string {
 // Result screen labels
 export const resultLabels = {
   screenTitle: 'Your result',
+  // From the Week 8 hi-fi result screen
+  basedOn: 'Based on what you selected',
+  edit: 'Edit',
+  editAnswers: 'Edit your answers',
   eyebrow: 'Your guidance',
   close: 'Close',
   showMore: (count: number) => `Show ${count} more`,

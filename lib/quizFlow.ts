@@ -32,3 +32,17 @@ export function nextQuestionId(currentId: string, answers: SavedAnswers): string
   const index = ids.indexOf(currentId);
   return index === -1 ? null : (ids[index + 1] ?? null);
 }
+
+// The answers shown in "Based on what you selected" on the result: what someone picked in
+// their care-area questions, in quiz order. The four starting questions and the "not sure"
+// route are left out because they set up the quiz rather than describe the person
+export function answerTags(answers: SavedAnswers): string[] {
+  const shown = new Set(visibleQuestionIds(answers));
+  return quizQuestions
+    .filter((question) => shown.has(question.id) && question.section !== 'start' && question.section !== 'not_sure')
+    .flatMap((question) =>
+      (answers[question.id] ?? [])
+        .map((optionId) => question.options.find((option) => option.id === optionId)?.label)
+        .filter((label): label is string => Boolean(label)),
+    );
+}
