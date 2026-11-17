@@ -7,7 +7,8 @@ import type { CareArea } from '@/data/outcomeTypes';
 
 export type Subcategory = { id: string; label: string };
 export type Category = { id: string; label: string; subs: Subcategory[] };
-export type Department = { id: string; label: string; area?: CareArea; categories: Category[] };
+// `short` is the tab label on the Products page, where the full name would crowd the row
+export type Department = { id: string; label: string; short: string; area?: CareArea; categories: Category[] };
 
 function subs(...labels: [string, string][]): Subcategory[] {
   return labels.map(([id, label]) => ({ id, label }));
@@ -16,6 +17,7 @@ function subs(...labels: [string, string][]): Subcategory[] {
 export const departments: Department[] = [
   {
     id: 'makeup',
+    short: 'Makeup',
     label: 'Makeup and nails',
     area: 'makeup',
     categories: [
@@ -83,6 +85,7 @@ export const departments: Department[] = [
   },
   {
     id: 'skin',
+    short: 'Skin',
     label: 'Skin care',
     area: 'skin',
     categories: [
@@ -132,6 +135,7 @@ export const departments: Department[] = [
   },
   {
     id: 'hair',
+    short: 'Hair',
     label: 'Hair care',
     area: 'hair',
     categories: [
@@ -179,6 +183,7 @@ export const departments: Department[] = [
   },
   {
     id: 'fragrance',
+    short: 'Fragrance',
     label: 'Fragrance',
     area: 'body',
     categories: [
@@ -190,6 +195,7 @@ export const departments: Department[] = [
   },
   {
     id: 'body',
+    short: 'Body',
     label: 'Bath and body',
     area: 'body',
     categories: [
@@ -228,6 +234,7 @@ export const departments: Department[] = [
   },
   {
     id: 'tools',
+    short: 'Tools',
     label: 'Tools and brushes',
     categories: [
       {

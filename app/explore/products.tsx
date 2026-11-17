@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Chip } from '@/components/Chip';
 import { ListRow } from '@/components/ListRow';
@@ -7,6 +7,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
+import { Tabs } from '@/components/Tabs';
 import { colors, layout, space, type } from '@/constants/tokens';
 import { departments, findCategory, findDepartment } from '@/data/categories';
 import { productsCopy } from '@/data/exploreCopy';
@@ -46,13 +47,18 @@ function ProductsContent({ userId }: { userId: string }) {
     <Screen>
       <PageHeader title={productsCopy.title} backTo="/explore" />
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow} style={styles.bleed}>
-        <Chip label={productsCopy.forYou} state={forYou ? 'selected' : 'default'} onPress={() => set({ forYou: '1' })} />
-        <Chip label={productsCopy.all} state={!forYou && !department ? 'selected' : 'default'} onPress={() => set({})} />
-        {departments.map((d) => (
-          <Chip key={d.id} label={d.label} state={department?.id === d.id ? 'selected' : 'default'} onPress={() => set({ department: d.id })} />
-        ))}
-      </ScrollView>
+      <View style={styles.bleed}>
+        <Tabs
+          scrollable
+          tabs={[
+            { key: 'foryou', label: productsCopy.forYou },
+            { key: 'all', label: productsCopy.all },
+            ...departments.map((d) => ({ key: d.id, label: d.short })),
+          ]}
+          activeKey={forYou ? 'foryou' : (department?.id ?? 'all')}
+          onChange={(key) => (key === 'foryou' ? set({ forYou: '1' }) : key === 'all' ? set({}) : set({ department: key }))}
+        />
+      </View>
 
       {department && !forYou ? (
         <View style={styles.wrap}>
@@ -112,10 +118,6 @@ const styles = StyleSheet.create({
     marginHorizontal: -layout.screenEdge,
     flexGrow: 0,
     flexShrink: 0,
-  },
-  chipRow: {
-    gap: space[8],
-    paddingHorizontal: layout.screenEdge,
   },
   wrap: {
     flexDirection: 'row',
