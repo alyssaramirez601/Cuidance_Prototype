@@ -57,8 +57,11 @@ function capitalize(text: string): string {
 }
 
 const styles = StyleSheet.create({
+  // A sideways scroll row inside the page's scroll grows to fill the screen unless told not to
   bleed: {
     marginHorizontal: -layout.screenEdge,
+    flexGrow: 0,
+    flexShrink: 0,
   },
   chipRow: {
     gap: space[8],
