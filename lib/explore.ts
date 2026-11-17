@@ -49,6 +49,8 @@ const TYPE_ART: Record<string, number> = {
   'hair/treatment/thinning': require('@/assets/art-library/type-serum-dropper.png'),
   'hair/treatment/scalp': require('@/assets/art-library/type-serum-dropper.png'),
   'body/moisturizers/serums-oils': require('@/assets/art-library/type-serum-dropper.png'),
+  fragrance: require('@/assets/art-library/type-fragrance.png'),
+  tools: require('@/assets/art-library/explore-tools.png'),
 };
 
 // `scene` art is a full square picture that fills its tile; `arch` art sits inside a warm tile
@@ -56,7 +58,9 @@ export type ProductImage = { source: number; kind: 'scene' | 'arch' };
 
 export function productImage(product: Product): ProductImage {
   const scene =
-    TYPE_ART[`${product.department}/${product.category}/${product.sub}`] ?? TYPE_ART[`${product.department}/${product.category}`];
+    TYPE_ART[`${product.department}/${product.category}/${product.sub}`] ??
+    TYPE_ART[`${product.department}/${product.category}`] ??
+    TYPE_ART[product.department];
   if (scene) return { source: scene, kind: 'scene' };
   return { source: profileArt.areas[product.area] ?? profileArt.areas.products, kind: 'arch' };
 }

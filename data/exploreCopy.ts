@@ -97,15 +97,15 @@ export const educationCopy = {
   backToEducation: 'Back to Education',
 };
 
-// Tile art for the Explore grid. Alyssa's arch set covers the care areas; Esme's Week 12 spot
-// illustrations cover ingredients and education. Fragrance and tools borrow art until their own arches exist
+// Tile art for the Explore grid. Alyssa's arch set covers the care areas; her ChatGPT scenes
+// (Nov 17) cover fragrance, tools, ingredients and education
 export const exploreArt: Record<string, number> = {
   makeup: require('@/assets/art-library/area-makeup.png'),
   skin: require('@/assets/art-library/area-skin.png'),
   hair: require('@/assets/art-library/area-hair.png'),
-  fragrance: require('@/assets/art-library/area-body.png'),
+  fragrance: require('@/assets/art-library/type-fragrance.png'),
   body: require('@/assets/art-library/area-body.png'),
-  tools: require('@/assets/art-library/area-products.png'),
+  tools: require('@/assets/art-library/explore-tools.png'),
   ingredients: require('@/assets/art-library/explore-ingredients.png'),
   education: require('@/assets/art-library/explore-education.png'),
 };
