@@ -103,9 +103,9 @@ export const exploreArt: Record<string, number> = {
   makeup: require('@/assets/art-library/area-makeup.png'),
   skin: require('@/assets/art-library/area-skin.png'),
   hair: require('@/assets/art-library/area-hair.png'),
-  fragrance: require('@/assets/art-library/type-fragrance.png'),
+  fragrance: require('@/assets/art-library/type-fragrance.webp'),
   body: require('@/assets/art-library/area-body.png'),
-  tools: require('@/assets/art-library/explore-tools.png'),
-  ingredients: require('@/assets/art-library/explore-ingredients.png'),
-  education: require('@/assets/art-library/explore-education.png'),
+  tools: require('@/assets/art-library/explore-tools.webp'),
+  ingredients: require('@/assets/art-library/explore-ingredients.webp'),
+  education: require('@/assets/art-library/explore-education.webp'),
 };
