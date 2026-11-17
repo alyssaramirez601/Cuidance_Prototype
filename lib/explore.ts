@@ -36,7 +36,14 @@ export function countFor(filter: ProductFilter): number {
 // category match; anything without one falls back to the arch art for its care area
 const TYPE_ART: Record<string, number> = {
   'makeup/face/foundation': require('@/assets/art-library/type-foundation.png'),
-  'makeup/face/concealer': require('@/assets/art-library/type-foundation.png'),
+  'makeup/face/concealer': require('@/assets/art-library/type-concealer.png'),
+  'makeup/face/color-correct': require('@/assets/art-library/type-concealer.png'),
+  'makeup/face/blush': require('@/assets/art-library/type-blush.png'),
+  'makeup/face/bronzer': require('@/assets/art-library/type-bronzer.png'),
+  'makeup/face/contour': require('@/assets/art-library/type-bronzer.png'),
+  'makeup/face/highlighter': require('@/assets/art-library/type-highlighter.png'),
+  'makeup/face/setting': require('@/assets/art-library/type-setting-spray.png'),
+  'makeup/body-makeup': require('@/assets/art-library/type-highlighter.png'),
   'makeup/face/bb-cc': require('@/assets/art-library/type-foundation.png'),
   'makeup/face/tinted-moisturizer': require('@/assets/art-library/type-foundation.png'),
   'makeup/lips': require('@/assets/art-library/type-lipstick.png'),
