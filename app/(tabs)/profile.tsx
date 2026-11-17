@@ -11,12 +11,13 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { areaLabels } from '@/data/draftCopy';
 import { profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData, type ProfileData } from '@/hooks/useProfileData';
 import { firstNameFrom, signOut } from '@/lib/auth';
 import { shortDate } from '@/lib/profile';
-import { answerTags } from '@/lib/quizFlow';
+import { answerTagsByArea } from '@/lib/quizFlow';
 
 const c = colors.light;
 const BANNER_RATIO = 1400 / 467;
@@ -129,7 +130,7 @@ function PersonCard({ name, email, onEdit }: { name: string; email: string; onEd
 
 function AttributesCard({ data }: { data: ProfileData }) {
   const router = useRouter();
-  const tags = answerTags(data.answers);
+  const groups = answerTagsByArea(data.answers);
   const updated = data.profile.quizCompletedAt;
 
   return (
@@ -141,12 +142,17 @@ function AttributesCard({ data }: { data: ProfileData }) {
         {updated ? <Text style={styles.meta}>{profileCopy.updated(shortDate(updated))}</Text> : null}
       </View>
 
-      {tags.length > 0 ? (
-        <View style={styles.tags}>
-          {tags.map((tag) => (
-            <AnswerTag key={tag} label={tag} />
-          ))}
-        </View>
+      {groups.length > 0 ? (
+        groups.map((group) => (
+          <View key={group.area} style={styles.group}>
+            <Text style={styles.groupTitle}>{capitalize(areaLabels[group.area])}</Text>
+            <View style={styles.tags}>
+              {group.tags.map((tag) => (
+                <AnswerTag key={tag} label={tag} />
+              ))}
+            </View>
+          </View>
+        ))
       ) : (
         <Text style={styles.body}>{profileCopy.noAttributes}</Text>
       )}
@@ -161,6 +167,10 @@ function AttributesCard({ data }: { data: ProfileData }) {
       <Button label={profileCopy.viewAttributes} style="secondary" onPress={() => router.push('/profile/attributes')} />
     </View>
   );
+}
+
+function capitalize(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function TextLink({ label, onPress }: { label: string; onPress: () => void }) {
@@ -251,6 +261,16 @@ const styles = StyleSheet.create({
   body: {
     ...type.body,
     color: c.inkMuted,
+  },
+  group: {
+    gap: space[8],
+    paddingTop: space[12],
+    borderTopWidth: stroke.default,
+    borderTopColor: c.border,
+  },
+  groupTitle: {
+    ...type.label,
+    color: c.ink,
   },
   tags: {
     flexDirection: 'row',

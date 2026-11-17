@@ -46,3 +46,20 @@ export function answerTags(answers: SavedAnswers): string[] {
         .filter((label): label is string => Boolean(label)),
     );
 }
+
+// The same answers as answerTags, split by care area in quiz order, so Profile can show them under
+// a heading for each area instead of one long pile. Areas with nothing picked are left out
+export function answerTagsByArea(answers: SavedAnswers): { area: QuizSection; tags: string[] }[] {
+  return pickedAreas(answers)
+    .map((area) => ({
+      area,
+      tags: quizQuestions
+        .filter((question) => question.section === area)
+        .flatMap((question) =>
+          (answers[question.id] ?? [])
+            .map((optionId) => question.options.find((option) => option.id === optionId)?.label)
+            .filter((label): label is string => Boolean(label)),
+        ),
+    }))
+    .filter((group) => group.tags.length > 0);
+}
