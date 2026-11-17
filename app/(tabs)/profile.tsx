@@ -144,25 +144,34 @@ function AttributesCard({ data }: { data: ProfileData }) {
 
       {groups.length > 0 ? (
         groups.map((group) => (
-          <View key={group.area} style={styles.group}>
-            <Text style={styles.groupTitle}>{capitalize(areaLabels[group.area])}</Text>
-            <View style={styles.tags}>
-              {group.tags.map((tag) => (
-                <AnswerTag key={tag} label={tag} />
-              ))}
-            </View>
-          </View>
+          <Pressable
+            key={group.area}
+            onPress={() => router.push({ pathname: '/profile/attributes', params: { area: group.area } })}
+            accessibilityRole="button"
+            accessibilityLabel={`${capitalize(areaLabels[group.area])}: ${group.tags.join(', ')}`}
+            accessibilityHint="Opens your attributes for this area"
+          >
+            {({ pressed }) => (
+              <View style={[styles.group, pressed && styles.groupPressed]}>
+                <View style={styles.groupHead}>
+                  <Image source={profileArt.areas[group.area]} style={styles.areaArt} contentFit="contain" accessible={false} />
+                  <Text style={styles.groupTitle}>{capitalize(areaLabels[group.area])}</Text>
+                  <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
+                </View>
+                <View style={styles.tags}>
+                  {group.tags.map((tag) => (
+                    <AnswerTag key={tag} label={tag} />
+                  ))}
+                </View>
+              </View>
+            )}
+          </Pressable>
         ))
       ) : (
         <Text style={styles.body}>{profileCopy.noAttributes}</Text>
       )}
 
       <Text style={styles.meta}>{profileCopy.attributesHelper}</Text>
-
-      <View style={styles.links}>
-        <TextLink label={profileCopy.usedInExplore} onPress={() => router.navigate('/explore')} />
-        <TextLink label={profileCopy.usedInResults} onPress={() => router.push('/quiz/result')} />
-      </View>
 
       <Button label={profileCopy.viewAttributes} style="secondary" onPress={() => router.push('/profile/attributes')} />
     </View>
@@ -171,15 +180,6 @@ function AttributesCard({ data }: { data: ProfileData }) {
 
 function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function TextLink({ label, onPress }: { label: string; onPress: () => void }) {
-  return (
-    <Pressable onPress={onPress} accessibilityRole="link" accessibilityLabel={label} style={styles.textLink}>
-      <Text style={styles.link}>{label}</Text>
-      <Icon name="arrow" size={sizes.icon.small} color={c.accent} />
-    </Pressable>
-  );
 }
 
 // A small piece of Esme's Week 12 art in place of a line icon, like the website and emails
@@ -268,25 +268,28 @@ const styles = StyleSheet.create({
     borderTopWidth: stroke.default,
     borderTopColor: c.border,
   },
+  groupPressed: {
+    backgroundColor: c.background,
+  },
+  groupHead: {
+    minHeight: layout.minTouchTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[12],
+  },
+  areaArt: {
+    width: space[32],
+    height: space[32] + space[4],
+  },
   groupTitle: {
     ...type.label,
     color: c.ink,
+    flex: 1,
   },
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: space[8],
-  },
-  links: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: space[16],
-  },
-  textLink: {
-    minHeight: layout.minTouchTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space[4],
   },
   rows: {
     gap: space[8],

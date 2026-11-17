@@ -10,8 +10,6 @@ export const profileCopy = {
   attributesTitle: 'Your attributes',
   updated: (date: string) => `Updated ${date}`,
   attributesHelper: 'These details help Cuidance explain fit.',
-  usedInExplore: 'Used in Explore',
-  usedInResults: 'Used in your results',
   viewAttributes: 'View attributes',
   // DRAFT: the prototype always has a sample person, so it never shows an empty attributes card
   noAttributes: 'Take the quiz to add your attributes.',
@@ -32,6 +30,11 @@ export const attributesCopy = {
   note: 'Shown because you selected it. Edit anytime.',
   confidenceTitle: 'Confidence exploring',
   confidenceNote: 'Cuidance adjusts how much it explains. Change this anytime.',
+  // Alyssa's wording (Nov 17), replacing the prototype's "Used in Explore" and "Used in your results"
+  explore: 'Explore',
+  inResults: 'Based on your results',
+  // DRAFT: shown when one area is opened from Profile
+  showAll: 'Show all attributes',
   editAttributes: 'Edit attributes',
   retake: 'Retake the quiz',
   // DRAFT: group titles reuse the quiz's own area names
@@ -98,4 +101,13 @@ export const profileArt = {
   privacy: require('@/assets/art-library/profile-privacy.png'),
   notifications: require('@/assets/art-library/profile-notifications.png'),
   account: require('@/assets/art-library/profile-account.png'),
+  // One per care area. Skin, hair, makeup and body are Alyssa's ChatGPT set (Nov 17) in the same style;
+  // products reuses Esme's bottle-and-jar spot illustration
+  areas: {
+    skin: require('@/assets/art-library/area-skin.png'),
+    hair: require('@/assets/art-library/area-hair.png'),
+    makeup: require('@/assets/art-library/area-makeup.png'),
+    body: require('@/assets/art-library/area-body.png'),
+    products: require('@/assets/art-library/area-products.png'),
+  } as Record<string, number>,
 };
