@@ -85,8 +85,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "transparent",
     marginBottom: -stroke.default,
   },
+  // flex: 0 squeezes the tabs to nothing on the web, so each one keeps its natural width instead
   tabScroll: {
-    flex: 0,
+    flexGrow: 0,
+    flexShrink: 0,
+    flexBasis: 'auto',
     paddingHorizontal: space[12],
   },
   scroll: {
