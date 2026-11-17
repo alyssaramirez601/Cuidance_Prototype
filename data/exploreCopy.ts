@@ -14,6 +14,10 @@ export const exploreCopy = {
   noGuidance: 'Take the quiz so Explore can start from what you selected.',
   takeQuiz: 'Take the quiz',
   scan: 'Scan a product',
+  // DRAFT: the short label on the button beside search
+  scanShort: 'Scan',
+  // From the Sephora app reference
+  allCategories: 'All categories',
   // DRAFT: the scanner isn't built for the beta
   scanSoonTitle: 'Scanning is coming soon',
   scanSoonBody: 'For now, search for a product by name, or browse by category.',
@@ -91,4 +95,17 @@ export const educationCopy = {
   notFoundTitle: 'Article not found',
   notFoundBody: 'This article may have moved.',
   backToEducation: 'Back to Education',
+};
+
+// Tile art for the Explore grid. Alyssa's arch set covers the care areas; Esme's Week 12 spot
+// illustrations cover ingredients and education. Fragrance and tools borrow art until their own arches exist
+export const exploreArt: Record<string, number> = {
+  makeup: require('@/assets/art-library/area-makeup.png'),
+  skin: require('@/assets/art-library/area-skin.png'),
+  hair: require('@/assets/art-library/area-hair.png'),
+  fragrance: require('@/assets/art-library/area-body.png'),
+  body: require('@/assets/art-library/area-body.png'),
+  tools: require('@/assets/art-library/area-products.png'),
+  ingredients: require('@/assets/art-library/explore-ingredients.png'),
+  education: require('@/assets/art-library/explore-education.png'),
 };

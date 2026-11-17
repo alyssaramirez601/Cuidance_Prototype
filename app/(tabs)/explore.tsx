@@ -1,25 +1,21 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { AnswerTag } from '@/components/AnswerTag';
 import { Button } from '@/components/Button';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
-import { ProductCard } from '@/components/ProductCard';
 import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
-import { departments } from '@/data/categories';
-import { areaLabels } from '@/data/draftCopy';
-import { exploreCopy, productsCopy } from '@/data/exploreCopy';
+import { departments, findCategory } from '@/data/categories';
+import { exploreArt, exploreCopy, productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { productArt, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
-import { answerTags, pickedAreas } from '@/lib/quizFlow';
-import { profileArt } from '@/data/profileCopy';
+import { pickedAreas } from '@/lib/quizFlow';
 
 const c = colors.light;
 
@@ -37,10 +33,21 @@ function ExploreContent({ userId }: { userId: string }) {
   const [scanOpen, setScanOpen] = useState(false);
 
   const answers = state.status === 'ready' ? state.data.answers : {};
-  const areas = pickedAreas(answers);
-  const tags = answerTags(answers).slice(0, 4);
-  const forYou = productsFor({ areas }).slice(0, 6);
+  const forYou = productsFor({ areas: pickedAreas(answers) }).slice(0, 8);
   const searching = query.trim().length > 0;
+
+  // Laid out like the Sephora app's Shop tab (Alyssa's reference, Nov 17): search with scan,
+  // a row you can swipe, then every category as a two-column grid of tiles
+  const tiles: { key: string; label: string; art: number; go: () => void }[] = [
+    ...departments.map((d) => ({
+      key: d.id,
+      label: d.label,
+      art: exploreArt[d.id],
+      go: () => router.push({ pathname: '/explore/products', params: { department: d.id } }),
+    })),
+    { key: 'ingredients', label: exploreCopy.shortcuts.ingredients, art: exploreArt.ingredients, go: () => router.push('/explore/ingredients') },
+    { key: 'education', label: exploreCopy.shortcuts.education, art: exploreArt.education, go: () => router.push('/explore/education') },
+  ];
 
   return (
     <Screen>
@@ -48,90 +55,80 @@ function ExploreContent({ userId }: { userId: string }) {
         {exploreCopy.title}
       </Text>
 
-      <TextInput
-        label={exploreCopy.searchLabel}
-        placeholder={exploreCopy.searchPlaceholder}
-        value={query}
-        onChangeText={setQuery}
-        returnKeyType="search"
-        autoCorrect={false}
-      />
-      <Button label={exploreCopy.scan} style="secondary" onPress={() => setScanOpen(true)} />
+      <View style={styles.searchRow}>
+        <View style={styles.searchField}>
+          <TextInput
+            label={exploreCopy.searchLabel}
+            placeholder={exploreCopy.searchPlaceholder}
+            value={query}
+            onChangeText={setQuery}
+            returnKeyType="search"
+            autoCorrect={false}
+          />
+        </View>
+        <Pressable
+          onPress={() => setScanOpen(true)}
+          accessibilityRole="button"
+          accessibilityLabel={exploreCopy.scan}
+          style={({ pressed }) => [styles.scan, pressed && styles.pressed]}
+        >
+          <Text style={styles.scanText}>{exploreCopy.scanShort}</Text>
+        </Pressable>
+      </View>
 
       {searching ? (
         <SearchResults query={query} />
       ) : (
         <>
-          <View style={styles.shortcuts}>
-            <ListRow label={exploreCopy.shortcuts.products} onPress={() => router.push('/explore/products')} />
-            <ListRow label={exploreCopy.shortcuts.ingredients} onPress={() => router.push('/explore/ingredients')} />
-            <ListRow label={exploreCopy.shortcuts.education} onPress={() => router.push('/explore/education')} />
-            <ListRow label={exploreCopy.shortcuts.guidance} onPress={() => router.push('/quiz/result')} />
-          </View>
-
-          <View style={styles.card}>
-            <Text style={styles.cardTitle} accessibilityRole="header">
-              {exploreCopy.guidanceTitle}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} accessibilityRole="header">
+              {productsCopy.forYou}
             </Text>
-            {state.status === 'loading' ? null : tags.length ? (
-              <>
-                <Text style={styles.body}>{exploreCopy.guidanceBody}</Text>
-                <Text style={styles.meta}>{exploreCopy.usingDetails}</Text>
-                <View style={styles.tags}>
-                  {tags.map((tag) => (
-                    <AnswerTag key={tag} label={tag} />
-                  ))}
-                </View>
-                <Button
-                  label={exploreCopy.startExploring}
-                  onPress={() => router.push({ pathname: '/explore/products', params: { forYou: '1' } })}
-                />
-              </>
+            {state.status === 'loading' ? null : forYou.length ? (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.carousel}>
+                {forYou.map((product) => (
+                  <Pressable
+                    key={product.id}
+                    onPress={() => router.push(`/explore/product/${product.id}`)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${product.brand} ${product.name}`}
+                    style={styles.mini}
+                  >
+                    <View style={styles.miniArt}>
+                      <Image source={productArt(product)} style={styles.miniImage} contentFit="contain" accessible={false} />
+                    </View>
+                    <Text style={styles.miniLabel} numberOfLines={2}>
+                      {subLabel(product.department, product.category, product.sub) ?? product.type}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
             ) : (
-              <>
+              <View style={styles.quizCard}>
                 <Text style={styles.body}>{exploreCopy.noGuidance}</Text>
                 <Button label={exploreCopy.takeQuiz} onPress={() => router.push('/quiz/q1_areas')} />
-              </>
+              </View>
             )}
           </View>
 
-          {forYou.length ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle} accessibilityRole="header">
-                {productsCopy.forYou}
-              </Text>
-              <Text style={styles.meta}>{productsCopy.forYouNote}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carousel}>
-                {forYou.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    brand={product.brand}
-                    name={product.name}
-                    fitLabel={capitalize(areaLabels[product.area])}
-                    image={productArt(product)}
-                    onPress={() => router.push(`/explore/product/${product.id}`)}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          ) : null}
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle} accessibilityRole="header">
-              {exploreCopy.productsHeading}
+              {exploreCopy.allCategories}
             </Text>
-            {departments.map((department) => (
-              <ListRow
-                key={department.id}
-                label={department.label}
-                leading={
-                  department.area ? (
-                    <Image source={profileArt.areas[department.area]} style={styles.deptArt} contentFit="contain" accessible={false} />
-                  ) : undefined
-                }
-                onPress={() => router.push({ pathname: '/explore/products', params: { department: department.id } })}
-              />
-            ))}
+            <View style={styles.grid}>
+              {tiles.map((tile) => (
+                <Pressable
+                  key={tile.key}
+                  onPress={tile.go}
+                  accessibilityRole="button"
+                  accessibilityLabel={tile.label}
+                  style={({ pressed }) => [styles.tile, pressed && styles.pressed]}
+                >
+                  <Text style={styles.tileLabel}>{tile.label}</Text>
+                  <Image source={tile.art} style={styles.tileArt} contentFit="contain" accessible={false} />
+                </Pressable>
+              ))}
+            </View>
           </View>
         </>
       )}
@@ -144,6 +141,12 @@ function ExploreContent({ userId }: { userId: string }) {
       </Sheet>
     </Screen>
   );
+}
+
+// The most specific category name, like "Face moisturizer", for the small labels in the For you row
+function subLabel(department: string, category: string, sub?: string): string | undefined {
+  const cat = findCategory(department, category);
+  return cat?.subs.find((s) => s.id === sub)?.label ?? cat?.label;
 }
 
 function SearchResults({ query }: { query: string }) {
@@ -183,29 +186,106 @@ function SearchResults({ query }: { query: string }) {
   );
 }
 
-function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 const styles = StyleSheet.create({
   title: {
     ...type.heading,
     color: c.ink,
   },
-  shortcuts: {
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: space[8],
   },
-  card: {
+  searchField: {
+    flex: 1,
+  },
+  // Same height as the input, so the two line up
+  scan: {
+    height: layout.buttonHeight,
+    paddingHorizontal: space[16],
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.small,
+    borderWidth: stroke.default,
+    borderColor: c.borderStrong,
+    backgroundColor: c.surface,
+  },
+  scanText: {
+    ...type.label,
+    color: c.accent,
+  },
+  pressed: {
+    backgroundColor: c.background,
+  },
+  section: {
+    gap: space[12],
+  },
+  sectionTitle: {
+    ...type.title,
+    color: c.ink,
+    marginTop: space[8],
+  },
+  bleed: {
+    marginHorizontal: -layout.screenEdge,
+  },
+  carousel: {
+    gap: space[16],
+    paddingHorizontal: layout.screenEdge,
+  },
+  mini: {
+    width: space[48] * 2,
+    gap: space[8],
+  },
+  miniArt: {
+    height: space[48] * 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.medium,
+    backgroundColor: c.surfaceWarm,
+  },
+  miniImage: {
+    width: '75%',
+    height: '85%',
+  },
+  miniLabel: {
+    ...type.caption,
+    color: c.ink,
+    textAlign: 'center',
+  },
+  quizCard: {
     gap: space[12],
     padding: layout.insideComponent,
+    borderRadius: radius.medium,
+    backgroundColor: c.surfaceWarm,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: space[12],
+  },
+  // Two per row: title top left, art bottom right, like the reference
+  tile: {
+    width: '48%',
+    height: space[48] * 2 + space[24],
+    padding: space[12],
     borderRadius: radius.medium,
     borderWidth: stroke.default,
     borderColor: c.border,
     backgroundColor: c.surface,
+    overflow: 'hidden',
   },
-  cardTitle: {
-    ...type.title,
+  tileLabel: {
+    ...type.label,
     color: c.ink,
+    width: '70%',
+  },
+  tileArt: {
+    position: 'absolute',
+    right: space[8],
+    bottom: space[8],
+    width: space[48] + space[8],
+    height: space[48] + space[16],
   },
   body: {
     ...type.body,
@@ -214,23 +294,6 @@ const styles = StyleSheet.create({
   meta: {
     ...type.caption,
     color: c.inkMuted,
-  },
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: space[8],
-  },
-  section: {
-    gap: space[8],
-  },
-  sectionTitle: {
-    ...type.title,
-    color: c.ink,
-    marginTop: space[8],
-  },
-  carousel: {
-    gap: space[12],
-    paddingRight: layout.screenEdge,
   },
   deptArt: {
     width: space[32] + space[8],
