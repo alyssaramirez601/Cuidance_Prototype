@@ -72,6 +72,8 @@ Signed in
 ├── /explore/ingredient/[name]  Reviewed notes for an ingredient and the products that list it
 ├── /explore/education     Articles built from reviewed quiz-outcome content
 ├── /explore/article/[id]  One article, with its safety line and sources
+├── /explore/scan          Barcode scanner (expo-camera) with a type-it-in fallback
+├── /explore/barcode/[code]  Barcode result: a Cuidance product opens its page; otherwise Open Beauty Facts details or not found
 ├── /quiz/[questionId]     Any of the 22 questions (which ones depends on the care areas picked)
 ├── /quiz/result           Guidance result: Save result, Change my answers, Start over
 ├── /proof                 Temporary test screen (no longer linked; sign out is on Profile)
@@ -98,6 +100,6 @@ Saved › Guidance reads `saved_results`. Products, Owned and Routines show empt
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).
-- **Explore:** products, categories, ingredient notes and articles are local data in `data/` for the beta (`products.ts`, `categories.ts`, `ingredientNotes.ts`, `education.ts`). Products show illustrations until photo permission is sorted out. Other stores get search links, not confirmed stock. Scan is coming soon.
+- **Explore:** products, categories, ingredient notes and articles are local data in `data/` for the beta (`products.ts`, `categories.ts`, `ingredientNotes.ts`, `education.ts`). Products show illustrations until photo permission is sorted out. Other stores get search links, not confirmed stock. Scan looks barcodes up in Open Beauty Facts (`lib/barcode.ts`); new dependency `expo-camera` needs Esme's OK.
 - **Profile:** delete account needs a server step (it's a turned-off button for now). Email is read-only. Privacy and notification choices are saved on the phone only and don't change anything yet.
 - **Guest preview:** promised in the feature list, not built yet.

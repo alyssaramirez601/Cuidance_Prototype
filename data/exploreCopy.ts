@@ -18,10 +18,6 @@ export const exploreCopy = {
   scanShort: 'Scan',
   // From the Sephora app reference
   allCategories: 'All categories',
-  // DRAFT: the scanner isn't built for the beta
-  scanSoonTitle: 'Scanning is coming soon',
-  scanSoonBody: 'For now, search for a product by name, or browse by category.',
-  scanSoonButton: 'Got it',
   // DRAFT
   searchResults: (count: number, query: string) => `${count} ${count === 1 ? 'result' : 'results'} for “${query}”`,
   noResults: 'Nothing matches that yet. Try a product type, a brand or an ingredient.',
@@ -108,4 +104,35 @@ export const exploreArt: Record<string, number> = {
   tools: require('@/assets/art-library/explore-tools.webp'),
   ingredients: require('@/assets/art-library/explore-ingredients.webp'),
   education: require('@/assets/art-library/explore-education.webp'),
+};
+
+// Scan, from the clickable prototype screens 08B and 08C. DRAFT lines are new
+export const scanCopy = {
+  title: 'Scan a product',
+  aim: 'Point at barcode',
+  intro: 'Scan while you shop or at home to look up ingredient and product notes.',
+  // DRAFT
+  permissionTitle: 'Camera access',
+  permissionBody: 'Cuidance uses the camera only to read barcodes. Nothing is recorded or saved.',
+  allowCamera: 'Allow camera',
+  deniedBody: 'Camera access is turned off. You can turn it on in your phone’s settings, or type the barcode instead.',
+  orType: 'Or type the barcode',
+  barcodeLabel: 'Barcode number',
+  barcodeHelper: 'The 8 to 14 digits under the barcode.',
+  barcodeError: 'Enter the 8 to 14 digits under the barcode.',
+  lookUp: 'Look up',
+  looking: 'Looking up that barcode',
+  // From prototype screen 08C
+  notFoundTitle: 'Product not found',
+  notFoundBody: 'This product is not in Cuidance yet.',
+  searchInstead: 'Search instead',
+  scanAgain: 'Scan again',
+  // DRAFT: for products found in Open Beauty Facts but not in Cuidance
+  openTitle: 'Found in Open Beauty Facts',
+  openBody: 'This product isn’t in Cuidance yet, so these details come from Open Beauty Facts, a free product database anyone can edit. Check the package too.',
+  openCredit: 'Product data: Open Beauty Facts, Open Database License',
+  openCreditUrl: 'https://world.openbeautyfacts.org',
+  noIngredients: 'No ingredient list on file for this product.',
+  ingredientsTitle: 'Ingredients',
+  sizeLabel: 'Size',
 };

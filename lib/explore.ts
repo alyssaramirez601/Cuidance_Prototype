@@ -264,3 +264,9 @@ export function storeLinks(product: Product): StoreLink[] {
   }
   return links;
 }
+
+// Search links at every store, for products Cuidance doesn't carry yet (like a scanned barcode)
+export function searchStoreLinks(query: string): StoreLink[] {
+  const q = encodeURIComponent(query);
+  return Object.entries(SEARCH_URLS).map(([store, build]) => ({ store, url: build(q), checked: false }));
+}

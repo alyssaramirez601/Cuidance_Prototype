@@ -8,7 +8,6 @@ import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
-import { Sheet } from '@/components/Sheet';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { departments, findCategory } from '@/data/categories';
@@ -31,7 +30,6 @@ function ExploreContent({ userId }: { userId: string }) {
   const router = useRouter();
   const { state } = useProfileData(userId);
   const [query, setQuery] = useState('');
-  const [scanOpen, setScanOpen] = useState(false);
 
   const answers = state.status === 'ready' ? state.data.answers : {};
   const forYou = productsFor({ areas: pickedAreas(answers) }).slice(0, 8);
@@ -68,7 +66,7 @@ function ExploreContent({ userId }: { userId: string }) {
           />
         </View>
         <Pressable
-          onPress={() => setScanOpen(true)}
+          onPress={() => router.push('/explore/scan')}
           accessibilityRole="button"
           accessibilityLabel={exploreCopy.scan}
           style={({ pressed }) => [styles.scan, pressed && styles.pressed]}
@@ -138,12 +136,6 @@ function ExploreContent({ userId }: { userId: string }) {
         </>
       )}
 
-      <Sheet visible={scanOpen} title={exploreCopy.scanSoonTitle} onClose={() => setScanOpen(false)}>
-        <View style={styles.sheetBody}>
-          <Text style={styles.body}>{exploreCopy.scanSoonBody}</Text>
-          <Button label={exploreCopy.scanSoonButton} onPress={() => setScanOpen(false)} />
-        </View>
-      </Sheet>
     </Screen>
   );
 }
