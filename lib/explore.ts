@@ -32,9 +32,37 @@ export function countFor(filter: ProductFilter): number {
   return productsFor(filter).length;
 }
 
-// The illustration shown for a product until real photos are cleared: the arch art for its care area
+// Product-type illustrations from Alyssa's ChatGPT set (Nov 17). A subcategory match wins over a
+// category match; anything without one falls back to the arch art for its care area
+const TYPE_ART: Record<string, number> = {
+  'makeup/face/foundation': require('@/assets/art-library/type-foundation.png'),
+  'makeup/face/concealer': require('@/assets/art-library/type-foundation.png'),
+  'makeup/face/bb-cc': require('@/assets/art-library/type-foundation.png'),
+  'makeup/face/tinted-moisturizer': require('@/assets/art-library/type-foundation.png'),
+  'makeup/lips': require('@/assets/art-library/type-lipstick.png'),
+  'skin/moisturizers': require('@/assets/art-library/type-moisturizer-jar.png'),
+  'body/moisturizers/body-butters': require('@/assets/art-library/type-moisturizer-jar.png'),
+  'hair/treatment/masks': require('@/assets/art-library/type-moisturizer-jar.png'),
+  'skin/treatments/serums': require('@/assets/art-library/type-serum-dropper.png'),
+  'skin/moisturizers/face-oils': require('@/assets/art-library/type-serum-dropper.png'),
+  'hair/treatment/oils-serums': require('@/assets/art-library/type-serum-dropper.png'),
+  'hair/treatment/thinning': require('@/assets/art-library/type-serum-dropper.png'),
+  'hair/treatment/scalp': require('@/assets/art-library/type-serum-dropper.png'),
+  'body/moisturizers/serums-oils': require('@/assets/art-library/type-serum-dropper.png'),
+};
+
+// `scene` art is a full square picture that fills its tile; `arch` art sits inside a warm tile
+export type ProductImage = { source: number; kind: 'scene' | 'arch' };
+
+export function productImage(product: Product): ProductImage {
+  const scene =
+    TYPE_ART[`${product.department}/${product.category}/${product.sub}`] ?? TYPE_ART[`${product.department}/${product.category}`];
+  if (scene) return { source: scene, kind: 'scene' };
+  return { source: profileArt.areas[product.area] ?? profileArt.areas.products, kind: 'arch' };
+}
+
 export function productArt(product: Product) {
-  return profileArt.areas[product.area] ?? profileArt.areas.products;
+  return productImage(product).source;
 }
 
 export function searchProducts(query: string): Product[] {

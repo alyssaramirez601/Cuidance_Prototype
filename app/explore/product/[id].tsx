@@ -11,7 +11,7 @@ import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { findCategory, findDepartment } from '@/data/categories';
 import { productCopy } from '@/data/exploreCopy';
-import { findProduct, notedIngredients, productArt, storeLinks } from '@/lib/explore';
+import { findProduct, notedIngredients, productImage, storeLinks } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -35,13 +35,18 @@ export default function ProductScreen() {
   const category = findCategory(product.department, product.category);
   const sub = category?.subs.find((s) => s.id === product.sub);
   const noted = notedIngredients(product);
+  const image = productImage(product);
 
   return (
     <Screen>
       <PageHeader title={product.name} backTo="/explore" />
 
       <View style={styles.hero}>
-        <Image source={productArt(product)} style={styles.heroArt} contentFit="contain" accessible={false} />
+        {image.kind === 'scene' ? (
+          <Image source={image.source} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
+        ) : (
+          <Image source={image.source} style={styles.heroArt} contentFit="contain" accessible={false} />
+        )}
       </View>
 
       <View style={styles.facts}>
@@ -130,7 +135,8 @@ function Fact({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   hero: {
-    aspectRatio: 4 / 3,
+    aspectRatio: 1,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.medium,

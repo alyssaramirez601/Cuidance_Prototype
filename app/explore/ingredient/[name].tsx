@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -6,11 +5,12 @@ import { Button } from '@/components/Button';
 import { EvidenceDots } from '@/components/EvidenceDots';
 import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
+import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { areaLabels } from '@/data/draftCopy';
 import { ingredientsCopy } from '@/data/exploreCopy';
-import { noteArea, notesFor, productArt, productsWithIngredient } from '@/lib/explore';
+import { noteArea, notesFor, productsWithIngredient } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -63,7 +63,7 @@ export default function IngredientScreen() {
               key={product.id}
               label={product.name}
               detail={`${product.brand} · ${product.type}`}
-              leading={<Image source={productArt(product)} style={styles.art} contentFit="contain" accessible={false} />}
+              leading={<ProductThumb product={product} />}
               onPress={() => router.push(`/explore/product/${product.id}`)}
             />
           ))}

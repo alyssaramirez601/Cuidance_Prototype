@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -6,13 +5,14 @@ import { Chip } from '@/components/Chip';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
+import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { colors, layout, space, type } from '@/constants/tokens';
 import { departments, findCategory, findDepartment } from '@/data/categories';
 import { productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
-import { productArt, productsFor } from '@/lib/explore';
+import { productsFor } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
 
 const c = colors.light;
@@ -96,7 +96,7 @@ function ProductsContent({ userId }: { userId: string }) {
               key={product.id}
               label={product.name}
               detail={`${product.brand} · ${product.type}`}
-              leading={<Image source={productArt(product)} style={styles.art} contentFit="contain" accessible={false} />}
+              leading={<ProductThumb product={product} />}
               onPress={() => router.push(`/explore/product/${product.id}`)}
             />
           ))}

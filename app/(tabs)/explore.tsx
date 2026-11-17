@@ -6,6 +6,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
+import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { TextInput } from '@/components/TextInput';
@@ -14,7 +15,7 @@ import { departments, findCategory } from '@/data/categories';
 import { exploreArt, exploreCopy, productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
-import { productArt, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
+import { productImage, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
 
 const c = colors.light;
@@ -95,7 +96,11 @@ function ExploreContent({ userId }: { userId: string }) {
                     style={styles.mini}
                   >
                     <View style={styles.miniArt}>
-                      <Image source={productArt(product)} style={styles.miniImage} contentFit="contain" accessible={false} />
+                      {productImage(product).kind === 'scene' ? (
+                        <Image source={productImage(product).source} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
+                      ) : (
+                        <Image source={productImage(product).source} style={styles.miniImage} contentFit="contain" accessible={false} />
+                      )}
                     </View>
                     <Text style={styles.miniLabel} numberOfLines={2}>
                       {subLabel(product.department, product.category, product.sub) ?? product.type}
@@ -170,7 +175,7 @@ function SearchResults({ query }: { query: string }) {
           key={product.id}
           label={product.name}
           detail={`${product.brand} · ${product.type}`}
-          leading={<Image source={productArt(product)} style={styles.deptArt} contentFit="contain" accessible={false} />}
+          leading={<ProductThumb product={product} />}
           onPress={() => router.push(`/explore/product/${product.id}`)}
         />
       ))}
@@ -238,6 +243,7 @@ const styles = StyleSheet.create({
   },
   miniArt: {
     height: space[48] * 2,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.medium,
