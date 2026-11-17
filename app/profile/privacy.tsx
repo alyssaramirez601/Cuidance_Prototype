@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/Checkbox';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
 import { PrivacySheet } from '@/components/PrivacySheet';
-import { ProfilePageHeader } from '@/components/ProfilePageHeader';
+import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
@@ -39,7 +39,7 @@ function PrivacyContent({ userId }: { userId: string }) {
         </>
       }
     >
-      <ProfilePageHeader title={privacyCopy.title} intro={privacyCopy.intro} art={profileArt.privacy} />
+      <PageHeader title={privacyCopy.title} intro={privacyCopy.intro} art={profileArt.privacy} />
 
       <View style={styles.card}>
         {privacyCopy.toggles.map((label, index) => (

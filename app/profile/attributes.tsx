@@ -7,7 +7,7 @@ import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
-import { ProfilePageHeader } from '@/components/ProfilePageHeader';
+import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
 import { areaLabels } from '@/data/draftCopy';
@@ -85,7 +85,7 @@ function AttributesContent({ userId }: { userId: string }) {
 
   return (
     <Screen>
-      <ProfilePageHeader
+      <PageHeader
         title={attributesCopy.title}
         intro={intro}
         art={(area && profileArt.areas[area]) || profileArt.attributes}

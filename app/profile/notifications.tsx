@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
 import { LoadingState } from '@/components/LoadingState';
-import { ProfilePageHeader } from '@/components/ProfilePageHeader';
+import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
@@ -35,7 +35,7 @@ function NotificationsContent({ userId }: { userId: string }) {
         </>
       }
     >
-      <ProfilePageHeader title={notificationsCopy.title} intro={notificationsCopy.intro} art={profileArt.notifications} />
+      <PageHeader title={notificationsCopy.title} intro={notificationsCopy.intro} art={profileArt.notifications} />
 
       <View style={styles.card}>
         {notificationsCopy.toggles.map((item, index) => (

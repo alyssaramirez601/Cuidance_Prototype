@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import { ListRow } from '@/components/ListRow';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
-import { ProfilePageHeader } from '@/components/ProfilePageHeader';
+import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
@@ -76,7 +76,7 @@ function AccountContent({ userId, email }: { userId: string; email: string }) {
         </>
       }
     >
-      <ProfilePageHeader title={accountCopy.title} art={profileArt.account} />
+      <PageHeader title={accountCopy.title} art={profileArt.account} />
 
       {state.status === 'error' ? (
         <LoadError message={state.message} onRetry={retry} />

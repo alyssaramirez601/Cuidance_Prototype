@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
-import { ProfilePageHeader } from '@/components/ProfilePageHeader';
+import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { historyCopy, profileArt, profileCopy } from '@/data/profileCopy';
@@ -35,7 +35,7 @@ function HistoryContent({ userId }: { userId: string }) {
 
   return (
     <Screen>
-      <ProfilePageHeader title={historyCopy.title} intro={historyCopy.intro} art={profileArt.history} />
+      <PageHeader title={historyCopy.title} intro={historyCopy.intro} art={profileArt.history} />
 
       {state.status === 'error' ? <LoadError message={state.message} onRetry={retry} /> : null}
 

@@ -1,27 +1,30 @@
 import { Image, type ImageSource } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { TopBar } from '@/components/TopBar';
 import { colors, space, type } from '@/constants/tokens';
 
-type ProfilePageHeaderProps = {
+type PageHeaderProps = {
   title: string;
   intro?: string;
-  art: ImageSource;
+  // Leave out on pages without a picture
+  art?: ImageSource;
+  // Where Back goes when there's no history, like after opening a link straight to the page
+  backTo?: Href;
 };
 
-// Top of each Profile page: a Back bar, one of Esme's Week 12 illustrations, then the title and intro.
+// Top of each inner page (Profile and Explore): a Back bar, an illustration if there is one, then the title and intro.
 // The art is decoration, so screen readers skip it and read the title instead
-export function ProfilePageHeader({ title, intro, art }: ProfilePageHeaderProps) {
+export function PageHeader({ title, intro, art, backTo = '/profile' }: PageHeaderProps) {
   const router = useRouter();
   return (
     <View style={styles.header}>
       <View style={styles.topBar}>
-        {/* Opened from a link or a refresh there's nothing to go back to, so it returns to Profile */}
-        <TopBar onBack={() => (router.canGoBack() ? router.back() : router.replace('/profile'))} />
+        {/* Opened from a link or a refresh there's nothing to go back to, so it returns to backTo */}
+        <TopBar onBack={() => (router.canGoBack() ? router.back() : router.replace(backTo))} />
       </View>
-      <Image source={art} style={styles.art} contentFit="contain" accessible={false} />
+      {art ? <Image source={art} style={styles.art} contentFit="contain" accessible={false} /> : null}
       <Text style={styles.title} accessibilityRole="header">
         {title}
       </Text>

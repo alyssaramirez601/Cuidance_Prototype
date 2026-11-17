@@ -22,6 +22,7 @@ cuidance_prototype/
 │   ├── (tabs)/               Home, Explore, Saved, Shop, Profile and the tab bar
 │   ├── saved/[id].tsx        A reopened saved result
 │   ├── profile/              Profile pages: attributes, history, privacy, notifications, account
+│   ├── explore/              Explore pages: products, product detail, ingredients, ingredient, education, article
 │   ├── proof.tsx             Old test screen, no longer linked
 │   └── dev.tsx               Temporary screen showing every component
 ├── components/               Shared UI, one file per Figma component
@@ -58,13 +59,19 @@ Signed out
 
 Signed in
 ├── /start                 "Welcome, [name]" (Account created): Start guidance opens the first quiz question
-├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Explore and Shop are stand-ins until they are built
+├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Shop is a stand-in until it is built
 ├── /saved/[id]            A saved result, rebuilt from its saved answers. Read-only, back goes to Saved
 ├── /profile/attributes    Every quiz answer, grouped by area, with Edit attributes and Retake the quiz
 ├── /profile/history       Saved results, newest first (the newest is marked Current)
 ├── /profile/privacy       Privacy choices and the Privacy & Trust sheet
 ├── /profile/notifications Notification choices
 ├── /profile/account       Change the display name, send a password reset link
+├── /explore/products      Browse by department, category and subcategory (Ulta and Sephora style), or "For you"
+├── /explore/product/[id]  Label facts, ingredients with reviewed notes, where to buy
+├── /explore/ingredients   Ingredient lookup
+├── /explore/ingredient/[name]  Reviewed notes for an ingredient and the products that list it
+├── /explore/education     Articles built from reviewed quiz-outcome content
+├── /explore/article/[id]  One article, with its safety line and sources
 ├── /quiz/[questionId]     Any of the 22 questions (which ones depends on the care areas picked)
 ├── /quiz/result           Guidance result: Save result, Change my answers, Start over
 ├── /proof                 Temporary test screen (no longer linked; sign out is on Profile)
@@ -91,5 +98,6 @@ Saved › Guidance reads `saved_results`. Products, Owned and Routines show empt
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).
+- **Explore:** products, categories, ingredient notes and articles are local data in `data/` for the beta (`products.ts`, `categories.ts`, `ingredientNotes.ts`, `education.ts`). Products show illustrations until photo permission is sorted out. Other stores get search links, not confirmed stock. Scan is coming soon.
 - **Profile:** delete account needs a server step (it's a turned-off button for now). Email is read-only. Privacy and notification choices are saved on the phone only and don't change anything yet.
 - **Guest preview:** promised in the feature list, not built yet.

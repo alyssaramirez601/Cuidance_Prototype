@@ -8,40 +8,13 @@ import type { CareArea } from '@/data/outcomeTypes';
 
 export type Retailer = 'Ulta' | 'Sephora';
 
-// Shop-style categories inside each care area, from Alyssa's Ulta and Sephora references (Nov 17).
-// Only categories with products, plus a few common ones, so nobody taps into an empty list often
-export const productCategories: Record<CareArea, { id: string; label: string }[]> = {
-  makeup: [
-    { id: 'face', label: 'Face' },
-    { id: 'cheek', label: 'Cheek' },
-    { id: 'eyes', label: 'Eyes' },
-    { id: 'lips', label: 'Lips' },
-  ],
-  skin: [
-    { id: 'cleansers', label: 'Cleansers' },
-    { id: 'toners', label: 'Toners and essences' },
-    { id: 'serums', label: 'Serums and treatments' },
-    { id: 'moisturizers', label: 'Moisturizers' },
-    { id: 'sunscreen', label: 'Sunscreen' },
-  ],
-  hair: [
-    { id: 'wash', label: 'Shampoo and conditioner' },
-    { id: 'styling', label: 'Styling' },
-    { id: 'treatments', label: 'Treatments' },
-  ],
-  body: [
-    { id: 'moisturizers', label: 'Lotions, butters and oils' },
-    { id: 'fragrance', label: 'Fragrance and mists' },
-    { id: 'shave', label: 'Shave and hair removal' },
-  ],
-  products: [],
-};
-
 export type Product = {
   id: string;
   area: CareArea;
-  // One of productCategories[area]
+  // Where it sits in data/categories.ts: department > category > subcategory
+  department: string;
   category: string;
+  sub?: string;
   brand: string;
   name: string;
   // Plain product type, like "Concealer"
@@ -60,7 +33,9 @@ export const products: Product[] = [
   {
     "id": "morphe-cheek-thrills-trio",
     "area": "makeup",
-    "category": "cheek",
+    "department": "makeup",
+    "category": "face",
+    "sub": "blush",
     "brand": "Morphe",
     "name": "Cheek Thrills Multi-Finish Face Trio",
     "type": "Blush trio (cream, balm and powder)",
@@ -103,7 +78,9 @@ export const products: Product[] = [
   {
     "id": "estee-lauder-double-wear",
     "area": "makeup",
+    "department": "makeup",
     "category": "face",
+    "sub": "foundation",
     "brand": "Estée Lauder",
     "name": "Double Wear Stay-in-Place Longwear Matte Foundation",
     "type": "Liquid foundation",
@@ -149,7 +126,9 @@ export const products: Product[] = [
   {
     "id": "loreal-infallible-setting-mist",
     "area": "makeup",
+    "department": "makeup",
     "category": "face",
+    "sub": "setting",
     "brand": "L’Oréal Paris",
     "name": "Infallible 3-Second Setting Mist Spray",
     "type": "Setting spray",
@@ -177,7 +156,9 @@ export const products: Product[] = [
   {
     "id": "essence-silky-blur-concealer",
     "area": "makeup",
+    "department": "makeup",
     "category": "face",
+    "sub": "concealer",
     "brand": "Essence",
     "name": "Silky Blur Hydrating Longwear Concealer",
     "type": "Concealer",
@@ -217,7 +198,9 @@ export const products: Product[] = [
   {
     "id": "fab-oat-milk-essence",
     "area": "skin",
-    "category": "toners",
+    "department": "skin",
+    "category": "moisturizers",
+    "sub": "mists-essences",
     "brand": "First Aid Beauty",
     "name": "Ultra Repair Hydrating Oat Milk Essence",
     "type": "Milky toner and essence",
@@ -259,7 +242,9 @@ export const products: Product[] = [
   {
     "id": "ordinary-glycolic-toner",
     "area": "skin",
-    "category": "toners",
+    "department": "skin",
+    "category": "cleansers",
+    "sub": "toner",
     "brand": "The Ordinary",
     "name": "Glycolic Acid 7% Exfoliating and Brightening Daily Toner",
     "type": "Exfoliating toner",
@@ -315,7 +300,9 @@ export const products: Product[] = [
   {
     "id": "clinique-moisture-surge",
     "area": "skin",
+    "department": "skin",
     "category": "moisturizers",
+    "sub": "face-moisturizer",
     "brand": "Clinique",
     "name": "Moisture Surge 100H Auto-Replenishing Hydrator",
     "type": "Gel moisturizer",
@@ -372,7 +359,9 @@ export const products: Product[] = [
   {
     "id": "dr-althea-345-relief",
     "area": "skin",
+    "department": "skin",
     "category": "moisturizers",
+    "sub": "face-moisturizer",
     "brand": "Dr. Althea",
     "name": "345 Relief Cream",
     "type": "Face cream",
@@ -424,7 +413,9 @@ export const products: Product[] = [
   {
     "id": "redken-all-soft-shampoo",
     "area": "hair",
+    "department": "hair",
     "category": "wash",
+    "sub": "shampoo",
     "brand": "Redken",
     "name": "All Soft Shampoo",
     "type": "Shampoo for dry, brittle hair",
@@ -487,7 +478,9 @@ export const products: Product[] = [
   {
     "id": "kenra-platinum-blow-dry-spray",
     "area": "hair",
+    "department": "hair",
     "category": "styling",
+    "sub": "heat-protectant",
     "brand": "Kenra Professional",
     "name": "Platinum Blow-Dry Spray",
     "type": "Heat protectant spray",
@@ -511,7 +504,9 @@ export const products: Product[] = [
   {
     "id": "ordinary-multi-peptide-hair-serum",
     "area": "hair",
-    "category": "treatments",
+    "department": "hair",
+    "category": "treatment",
+    "sub": "thinning",
     "brand": "The Ordinary",
     "name": "Multi-Peptide Serum for Hair Density",
     "type": "Leave-in scalp serum",
@@ -561,7 +556,9 @@ export const products: Product[] = [
   {
     "id": "pureology-hydrate-shampoo",
     "area": "hair",
+    "department": "hair",
     "category": "wash",
+    "sub": "shampoo",
     "brand": "Pureology",
     "name": "Hydrate Shampoo",
     "type": "Shampoo for dry hair",
@@ -635,7 +632,8 @@ export const products: Product[] = [
   {
     "id": "sol-de-janeiro-cheirosa-62",
     "area": "body",
-    "category": "fragrance",
+    "department": "fragrance",
+    "category": "mists",
     "brand": "Sol de Janeiro",
     "name": "Cheirosa 62 Hair & Body Perfume Mist",
     "type": "Hair and body perfume mist",
@@ -657,7 +655,9 @@ export const products: Product[] = [
   {
     "id": "saltair-multi-lipid-body-butter",
     "area": "body",
+    "department": "body",
     "category": "moisturizers",
+    "sub": "body-butters",
     "brand": "Saltair",
     "name": "Multi-Lipid Replenishing Body Butter",
     "type": "Body butter",
@@ -711,7 +711,9 @@ export const products: Product[] = [
   {
     "id": "truly-soft-serve-after-shave-oil",
     "area": "body",
-    "category": "shave",
+    "department": "body",
+    "category": "personal",
+    "sub": "hair-removal",
     "brand": "Truly",
     "name": "Soft Serve After Shave Oil",
     "type": "After-shave oil",
@@ -751,7 +753,9 @@ export const products: Product[] = [
   {
     "id": "osea-undaria-algae-body-oil",
     "area": "body",
+    "department": "body",
     "category": "moisturizers",
+    "sub": "serums-oils",
     "brand": "OSEA",
     "name": "Undaria Algae Body Oil",
     "type": "Body oil",

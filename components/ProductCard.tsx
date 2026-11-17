@@ -1,3 +1,4 @@
+import { Image, type ImageSource } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
@@ -8,13 +9,16 @@ type ProductCardProps = {
   brand?: string;
   fitLabel: string;
   onPress: () => void;
+  // Leave out for the plain placeholder. Explore passes an illustration until real photos are cleared
+  image?: ImageSource | number;
 };
 
-export function ProductCard({ name, brand, fitLabel, onPress }: ProductCardProps) {
+export function ProductCard({ name, brand, fitLabel, onPress, image }: ProductCardProps) {
   return (
     <View style={styles.card}>
-      {/* Placeholder until product images exist. expo-image is not installed yet */}
-      <View style={styles.image} />
+      <View style={styles.image}>
+        {image ? <Image source={image} style={styles.imageFill} contentFit="contain" accessible={false} /> : null}
+      </View>
       <View style={styles.text}>
         {brand ? <Text style={styles.brand}>{brand}</Text> : null}
         <Text style={styles.name}>{name}</Text>
@@ -44,6 +48,13 @@ const styles = StyleSheet.create({
     height: sizes.productImageHeight,
     borderRadius: radius.small,
     backgroundColor: colors.light.surfaceWarm,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageFill: {
+    width: '80%',
+    height: '90%',
   },
   text: {
     gap: space[4],
