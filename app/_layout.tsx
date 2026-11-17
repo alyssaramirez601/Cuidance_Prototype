@@ -63,6 +63,7 @@ export default function RootLayout() {
           <Stack.Screen name="explore/article/[id]" />
           <Stack.Screen name="explore/scan" />
           <Stack.Screen name="explore/barcode/[code]" />
+          <Stack.Screen name="explore/add-product" />
           <Stack.Screen name="proof" />
           <Stack.Screen name="dev" />
           <Stack.Screen name="quiz/[questionId]" />

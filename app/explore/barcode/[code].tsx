@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -57,10 +58,18 @@ export default function BarcodeScreen() {
   if (result.status !== 'open') {
     return (
       <Screen>
-        <PageHeader title={scanCopy.notFoundTitle} intro={scanCopy.notFoundBody} backTo="/explore/scan" />
-        <Text style={styles.code}>{code}</Text>
-        <Button label={scanCopy.searchInstead} onPress={() => router.navigate('/explore')} />
-        <Button label={scanCopy.scanAgain} style="secondary" onPress={() => router.replace('/explore/scan')} />
+        <PageHeader title={scanCopy.notFoundTitle} backTo="/explore/scan" />
+        <Image source={scanCopy.notFoundArt} style={styles.art} contentFit="contain" accessible={false} />
+        <Text style={styles.body}>
+          {scanCopy.notFoundBody} {scanCopy.notFoundAddBody}
+        </Text>
+        <Text style={styles.code}>{scanCopy.barcodeNote(code)}</Text>
+        <Button
+          label={scanCopy.addManually}
+          onPress={() => router.push({ pathname: '/explore/add-product', params: { code } })}
+        />
+        <Button label={scanCopy.searchInstead} style="secondary" onPress={() => router.navigate('/explore')} />
+        <Button label={scanCopy.scanAgain} style="ghost" onPress={() => router.replace('/explore/scan')} />
       </Screen>
     );
   }
@@ -115,8 +124,13 @@ export default function BarcodeScreen() {
 
 const styles = StyleSheet.create({
   code: {
-    ...type.label,
+    ...type.caption,
     color: c.inkMuted,
+  },
+  art: {
+    alignSelf: 'center',
+    width: '70%',
+    aspectRatio: 1,
   },
   notice: {
     gap: space[4],

@@ -83,6 +83,7 @@ export default function ScanScreen() {
         maxLength={14}
       />
       <Button label={scanCopy.lookUp} state={valid ? undefined : 'disabled'} onPress={() => open(typed)} />
+      <Button label={scanCopy.enterManually} style="ghost" onPress={() => router.push('/explore/add-product')} />
     </Screen>
   );
 }

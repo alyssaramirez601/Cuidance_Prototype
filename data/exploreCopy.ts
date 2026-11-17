@@ -127,9 +127,30 @@ export const scanCopy = {
   notFoundBody: 'This product is not in Cuidance yet.',
   searchInstead: 'Search instead',
   scanAgain: 'Scan again',
+  addManually: 'Add manually',
+  // From prototype screen 08C
+  notFoundAddBody: 'You can add it manually so it can be reviewed before appearing in the app.',
+  enterManually: 'Enter product manually',
+  notFoundArt: require('@/assets/art-library/explore-not-found.webp'),
   // DRAFT: for products found in Open Beauty Facts but not in Cuidance
   openTitle: 'Found in Open Beauty Facts',
   openBody: 'This product isn’t in Cuidance yet, so these details come from Open Beauty Facts, a free product database anyone can edit. Check the package too.',
+  // Add a product, from prototype screen 08D
+  addTitle: 'Add a product manually',
+  addIntro: 'Tell us what it is and Cuidance will look for ingredient and product notes.',
+  nameLabel: 'Product name',
+  brandLabel: 'Brand',
+  // DRAFT: the prototype says "Ingredient list or photo (optional)"; photo upload isn't built yet
+  ingredientsLabel: 'Ingredient list (optional)',
+  ingredientsHelper: 'Copy it from the package if you have it.',
+  reviewNote: 'Manual product entries go to admin review before they appear publicly.',
+  addButton: 'Add product',
+  // From the prototype's toast after adding
+  added: 'Product added. Cuidance will look for notes.',
+  // DRAFT
+  nameRequired: 'Enter the product name.',
+  brandRequired: 'Enter the brand.',
+  barcodeNote: (code: string) => `Barcode ${code}`,
   openCredit: 'Product data: Open Beauty Facts, Open Database License',
   openCreditUrl: 'https://world.openbeautyfacts.org',
   noIngredients: 'No ingredient list on file for this product.',
