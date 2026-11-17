@@ -73,6 +73,8 @@ const TYPE_ART: Record<string, number> = {
   'makeup/nails': require('@/assets/art-library/type-nail-polish.png'),
   'makeup/nails/press-on': require('@/assets/art-library/type-press-on-nails.png'),
   'makeup/nails/nail-art': require('@/assets/art-library/type-press-on-nails.png'),
+  'makeup/eyes': require('@/assets/art-library/type-eyeshadow-palette.png'),
+  'makeup/palettes': require('@/assets/art-library/type-eyeshadow-palette.png'),
   fragrance: require('@/assets/art-library/type-fragrance.png'),
   tools: require('@/assets/art-library/explore-tools.png'),
 };
