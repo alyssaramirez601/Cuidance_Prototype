@@ -153,15 +153,17 @@ function AttributesCard({ data }: { data: ProfileData }) {
           >
             {({ pressed }) => (
               <View style={[styles.group, pressed && styles.groupPressed]}>
-                <View style={styles.groupHead}>
-                  <Image source={profileArt.areas[group.area]} style={styles.areaArt} contentFit="contain" accessible={false} />
-                  <Text style={styles.groupTitle}>{capitalize(areaLabels[group.area])}</Text>
-                  <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
-                </View>
-                <View style={styles.tags}>
-                  {group.tags.map((tag) => (
-                    <AnswerTag key={tag} label={tag} />
-                  ))}
+                <Image source={profileArt.areas[group.area]} style={styles.areaArt} contentFit="contain" accessible={false} />
+                <View style={styles.groupBody}>
+                  <View style={styles.groupHead}>
+                    <Text style={styles.groupTitle}>{capitalize(areaLabels[group.area])}</Text>
+                    <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
+                  </View>
+                  <View style={styles.tags}>
+                    {group.tags.map((tag) => (
+                      <AnswerTag key={tag} label={tag} />
+                    ))}
+                  </View>
                 </View>
               </View>
             )}
@@ -263,7 +265,9 @@ const styles = StyleSheet.create({
     color: c.inkMuted,
   },
   group: {
-    gap: space[8],
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space[12],
     paddingTop: space[12],
     borderTopWidth: stroke.default,
     borderTopColor: c.border,
@@ -271,15 +275,20 @@ const styles = StyleSheet.create({
   groupPressed: {
     backgroundColor: c.background,
   },
+  // Big enough to read as the area's picture, with the tags beside it
+  areaArt: {
+    width: space[48] + space[24],
+    height: space[48] + space[32],
+  },
+  groupBody: {
+    flex: 1,
+    gap: space[8],
+  },
   groupHead: {
-    minHeight: layout.minTouchTarget,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: space[12],
-  },
-  areaArt: {
-    width: space[32],
-    height: space[32] + space[4],
+    justifyContent: 'space-between',
+    gap: space[8],
   },
   groupTitle: {
     ...type.label,
