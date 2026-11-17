@@ -50,6 +50,11 @@ export default function RootLayout() {
           <Stack.Screen name="start" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="saved/[id]" />
+          <Stack.Screen name="profile/attributes" />
+          <Stack.Screen name="profile/history" />
+          <Stack.Screen name="profile/privacy" />
+          <Stack.Screen name="profile/notifications" />
+          <Stack.Screen name="profile/account" />
           <Stack.Screen name="proof" />
           <Stack.Screen name="dev" />
           <Stack.Screen name="quiz/[questionId]" />

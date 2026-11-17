@@ -21,12 +21,13 @@ cuidance_prototype/
 │   │   └── result.tsx        Guidance result
 │   ├── (tabs)/               Home, Explore, Saved, Shop, Profile and the tab bar
 │   ├── saved/[id].tsx        A reopened saved result
+│   ├── profile/              Profile pages: attributes, history, privacy, notifications, account
 │   ├── proof.tsx             Old test screen, no longer linked
 │   └── dev.tsx               Temporary screen showing every component
 ├── components/               Shared UI, one file per Figma component
 ├── constants/tokens.ts       The only source of color, type, spacing, radius
 ├── data/                     Quiz questions and result content (local, typed)
-├── hooks/                    useAuth, useQuizAnswer, useQuizNext, useGuidanceResult, useGoBack, useGoogleSignIn
+├── hooks/                    useAuth, useQuizAnswer, useQuizNext, useGuidanceResult, useGoBack, useGoogleSignIn, useProfileData, useDeviceSettings
 ├── lib/                      Supabase client and every database call
 ├── scripts/                  build-outcome-data.mjs (docs/quiz-outcomes → data/)
 ├── supabase/migrations/      SQL for the database
@@ -57,8 +58,13 @@ Signed out
 
 Signed in
 ├── /start                 "Welcome, [name]" (Account created): Start guidance opens the first quiz question
-├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Explore, Shop and Profile are stand-ins until they are built
+├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Explore and Shop are stand-ins until they are built
 ├── /saved/[id]            A saved result, rebuilt from its saved answers. Read-only, back goes to Saved
+├── /profile/attributes    Every quiz answer, grouped by area, with Edit attributes and Retake the quiz
+├── /profile/history       Saved results, newest first (the newest is marked Current)
+├── /profile/privacy       Privacy choices and the Privacy & Trust sheet
+├── /profile/notifications Notification choices
+├── /profile/account       Change the display name, send a password reset link
 ├── /quiz/[questionId]     Any of the 22 questions (which ones depends on the care areas picked)
 ├── /quiz/result           Guidance result: Save result, Change my answers, Start over
 ├── /proof                 Temporary test screen (no longer linked; sign out is on Profile)
@@ -71,6 +77,7 @@ Saved › Guidance reads `saved_results`. Products, Owned and Routines show empt
 
 - **Supabase holds the data:** who is signed in, their answers, and their saved results. If it matters after the app closes, it lives in Supabase.
 - **The app holds UI state only:** which answer is selected before saving, which tab or pop-up is open, loading and error messages.
+- **Privacy and notification choices** are kept on the phone with AsyncStorage (`lib/profile.ts`) for the beta, because nothing reads them yet and there's no database column for them.
 - **The sign-in session** is kept on the phone with AsyncStorage (through `lib/supabase.ts`) so people stay signed in.
 - **The result** is built in the app (`lib/buildResult.ts`) from the saved answers plus the local content in `data/`. It is never stored as text.
 - Screens never call Supabase directly. They use a hook, and the hook uses `lib/`.
@@ -84,4 +91,5 @@ Saved › Guidance reads `saved_results`. Products, Owned and Routines show empt
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).
+- **Profile:** delete account needs a server step (it's a turned-off button for now). Email is read-only. Privacy and notification choices are saved on the phone only and don't change anything yet.
 - **Guest preview:** promised in the feature list, not built yet.
