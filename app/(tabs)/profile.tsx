@@ -58,6 +58,7 @@ function ProfileContent({ userId, email, fallbackName }: { userId: string; email
 
   const rows: { label: string; art: ImageSource; to: Href }[] = [
     { label: profileCopy.rows.history, art: profileArt.history, to: '/profile/history' },
+    { label: profileCopy.rows.products, art: profileArt.products, to: '/profile/products' },
     { label: profileCopy.rows.privacy, art: profileArt.privacy, to: '/profile/privacy' },
     { label: profileCopy.rows.notifications, art: profileArt.notifications, to: '/profile/notifications' },
     { label: profileCopy.rows.account, art: profileArt.account, to: '/profile/account' },

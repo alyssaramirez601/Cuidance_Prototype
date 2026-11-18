@@ -15,6 +15,8 @@ export const profileCopy = {
   noAttributes: 'Take the quiz to add your attributes.',
   rows: {
     history: 'Guidance history',
+    // DRAFT
+    products: 'Products you added',
     privacy: 'Privacy & trust',
     notifications: 'Notifications',
     account: 'Account settings',
@@ -94,6 +96,22 @@ export const accountCopy = {
 };
 
 // Esme's Week 12 marketing illustrations, reused so the app matches the website and emails
+// DRAFT: Products you added (from Scan's Add manually), with the review status from the Admin Web
+export const yourProductsCopy = {
+  title: 'Products you added',
+  intro: 'Products you added from Scan. Each one is reviewed before it appears in Cuidance.',
+  loading: 'Loading the products you added',
+  added: (date: string) => `Added ${date}`,
+  status: {
+    pending: 'Waiting for review',
+    approved: 'Approved',
+    declined: 'Not approved',
+  },
+  emptyTitle: 'No products added yet',
+  emptyBody: 'If Scan can’t find a product, you can add it by hand. It shows here while it’s reviewed.',
+  scan: 'Scan a product',
+};
+
 export const profileArt = {
   banner: require('@/assets/art-library/profile-banner-sun-book.png'),
   attributes: require('@/assets/art-library/profile-attributes.png'),
@@ -101,6 +119,7 @@ export const profileArt = {
   privacy: require('@/assets/art-library/profile-privacy.png'),
   notifications: require('@/assets/art-library/profile-notifications.png'),
   account: require('@/assets/art-library/profile-account.png'),
+  products: require('@/assets/art-library/area-products.png'),
   // One per care area. Skin, hair, makeup and body are Alyssa's ChatGPT set (Nov 17) in the same style;
   // products reuses Esme's bottle-and-jar spot illustration
   areas: {

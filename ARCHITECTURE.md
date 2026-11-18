@@ -68,6 +68,7 @@ Signed in
 ├── /shop/collection/[id]  A partner collection: its partner products in a grid
 ├── /profile/attributes    Every quiz answer, grouped by area, with Edit attributes and Retake the quiz
 ├── /profile/history       Saved results, newest first (the newest is marked Current)
+├── /profile/products      Products they added from Scan, each with its review status (Waiting for review, Approved, Not approved)
 ├── /profile/privacy       Privacy choices and the Privacy & Trust sheet
 ├── /profile/notifications Notification choices
 ├── /profile/account       Change the display name, send a password reset link
@@ -85,7 +86,7 @@ Signed in
 └── /dev                   Temporary component screen
 ```
 
-Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). A saved partner product is stored as `partner:<id>` and can only be saved, not owned or pinned. Saved › Boards reads `boards` and `board_pins` (a pin is a product, article or saved result; Add to board lives on product and article pages). Boards replace Routines. Scan's Add manually writes to `product_submissions` for review in the Admin Web. Shop and Home's Partner Highlights read the local sample file `data/partnerContent.ts` (no partner table yet).
+Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). A saved partner product is stored as `partner:<id>` and can only be saved, not owned or pinned. Saved › Boards reads `boards` and `board_pins` (a pin is a product, article or saved result; Add to board lives on product and article pages). Boards replace Routines. Scan's Add manually writes to `product_submissions` for review in the Admin Web, and Profile › Products you added reads them back with their status. Shop and Home's Partner Highlights read the local sample file `data/partnerContent.ts` (no partner table yet).
 
 ## 4. Where state lives
 

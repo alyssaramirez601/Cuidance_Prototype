@@ -17,3 +17,29 @@ export async function submitProduct(userId: string, entry: NewSubmission): Promi
   });
   return error ? { ok: false, message: SUBMIT_ERROR } : { ok: true };
 }
+
+export type SubmissionStatus = 'pending' | 'approved' | 'declined';
+export type Submission = { id: string; productName: string; brand: string; status: SubmissionStatus; createdAt: string };
+export type SubmissionsResult = { ok: true; submissions: Submission[] } | { ok: false; message: string };
+
+const LOAD_ERROR = 'We couldn’t load the products you added. Check your connection and try again.';
+
+// Their own submissions only (row-level security), newest first, with the review status from the Admin Web
+export async function listSubmissions(userId: string): Promise<SubmissionsResult> {
+  const { data, error } = await supabase
+    .from('product_submissions')
+    .select('id, product_name, brand, status, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+  if (error || !data) return { ok: false, message: LOAD_ERROR };
+  return {
+    ok: true,
+    submissions: data.map((row) => ({
+      id: row.id as string,
+      productName: row.product_name as string,
+      brand: row.brand as string,
+      status: row.status as SubmissionStatus,
+      createdAt: row.created_at as string,
+    })),
+  };
+}
