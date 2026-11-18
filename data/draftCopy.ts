@@ -128,6 +128,13 @@ export const homeCopy = {
   revisit: 'Ready to revisit anytime',
   getGuidance: 'Get your guidance',
   getGuidanceDetail: 'Take the quiz to see what may fit you',
+  // DRAFT: the Ulta and Sephora style Home (Nov 17)
+  searchHint: 'Search products, ingredients, topics',
+  attributesTitle: 'Your attributes',
+  attributesDetail: 'See what shapes your guidance',
+  guidesTitle: 'Guides and tips',
+  seeAll: 'See all',
+  readTime: (minutes: number) => `${minutes} min read`,
 };
 
 // Placeholder partner content from the Week 8 Home hi-fi, until Shop has real partners.

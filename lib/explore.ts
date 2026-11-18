@@ -1,4 +1,5 @@
 import { articles, type Article } from '@/data/education';
+import { findCategory } from '@/data/categories';
 import { profileArt } from '@/data/profileCopy';
 import { ingredientNotes, type IngredientNote } from '@/data/ingredientNotes';
 import type { CareArea } from '@/data/outcomeTypes';
@@ -269,4 +270,24 @@ export function storeLinks(product: Product): StoreLink[] {
 export function searchStoreLinks(query: string): StoreLink[] {
   const q = encodeURIComponent(query);
   return Object.entries(SEARCH_URLS).map(([store, build]) => ({ store, url: build(q), checked: false }));
+}
+
+// The most specific category name, like "Face moisturizer", for small labels under product pictures
+export function productShortLabel(product: Product): string {
+  const cat = findCategory(product.department, product.category);
+  return cat?.subs.find((s) => s.id === product.sub)?.label ?? cat?.label ?? product.type;
+}
+
+// One illustration per article, from the product-type set, until articles get their own art
+const ARTICLE_ART: Record<string, number> = {
+  'read-a-label': require('@/assets/art-library/explore-ingredients.webp'),
+  'ingredient-lists': require('@/assets/art-library/explore-education.webp'),
+  'new-product': require('@/assets/art-library/type-face-wash.webp'),
+  'shades-every-tone': require('@/assets/art-library/type-foundation.webp'),
+  'dye-and-heat': require('@/assets/art-library/type-hair-color.webp'),
+  'body-new-product': require('@/assets/art-library/type-body-lotion.webp'),
+};
+
+export function articleArt(id: string): number {
+  return ARTICLE_ART[id] ?? require('@/assets/art-library/explore-education.webp');
 }

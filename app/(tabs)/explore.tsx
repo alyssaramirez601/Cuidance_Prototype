@@ -6,15 +6,16 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
+import { ProductMiniCard } from '@/components/ProductMiniCard';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
-import { departments, findCategory } from '@/data/categories';
+import { departments } from '@/data/categories';
 import { exploreArt, exploreCopy, productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
-import { productImage, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
+import { productShortLabel, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
 
 const c = colors.light;
@@ -86,24 +87,12 @@ function ExploreContent({ userId }: { userId: string }) {
             {state.status === 'loading' ? null : forYou.length ? (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.carousel}>
                 {forYou.map((product) => (
-                  <Pressable
+                  <ProductMiniCard
                     key={product.id}
+                    product={product}
+                    label={productShortLabel(product)}
                     onPress={() => router.push(`/explore/product/${product.id}`)}
-                    accessibilityRole="button"
-                    accessibilityLabel={`${product.brand} ${product.name}`}
-                    style={styles.mini}
-                  >
-                    <View style={styles.miniArt}>
-                      {productImage(product).kind === 'scene' ? (
-                        <Image source={productImage(product).source} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
-                      ) : (
-                        <Image source={productImage(product).source} style={styles.miniImage} contentFit="contain" accessible={false} />
-                      )}
-                    </View>
-                    <Text style={styles.miniLabel} numberOfLines={2}>
-                      {subLabel(product.department, product.category, product.sub) ?? product.type}
-                    </Text>
-                  </Pressable>
+                  />
                 ))}
               </ScrollView>
             ) : (
@@ -138,12 +127,6 @@ function ExploreContent({ userId }: { userId: string }) {
 
     </Screen>
   );
-}
-
-// The most specific category name, like "Face moisturizer", for the small labels in the For you row
-function subLabel(department: string, category: string, sub?: string): string | undefined {
-  const cat = findCategory(department, category);
-  return cat?.subs.find((s) => s.id === sub)?.label ?? cat?.label;
 }
 
 function SearchResults({ query }: { query: string }) {
@@ -231,27 +214,6 @@ const styles = StyleSheet.create({
   carousel: {
     gap: space[16],
     paddingHorizontal: layout.screenEdge,
-  },
-  mini: {
-    width: space[48] * 2,
-    gap: space[8],
-  },
-  miniArt: {
-    height: space[48] * 2,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius.medium,
-    backgroundColor: c.surfaceWarm,
-  },
-  miniImage: {
-    width: '75%',
-    height: '85%',
-  },
-  miniLabel: {
-    ...type.caption,
-    color: c.ink,
-    textAlign: 'center',
   },
   quizCard: {
     gap: space[12],
