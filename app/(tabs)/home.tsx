@@ -8,12 +8,14 @@ import { Chip } from '@/components/Chip';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Icon } from '@/components/Icon';
 import { ListRow } from '@/components/ListRow';
+import { SwipeRow } from '@/components/SwipeRow';
 import { LoadingState } from '@/components/LoadingState';
 import { PartnerHighlightCard } from '@/components/PartnerHighlightCard';
 import { ProductMiniCard } from '@/components/ProductMiniCard';
 import { Screen } from '@/components/Screen';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
 import { homeCopy, partnerPlaceholders } from '@/data/draftCopy';
+import { partnerProducts } from '@/data/partnerContent';
 import { articles } from '@/data/education';
 import { productsCopy } from '@/data/exploreCopy';
 import { articleArt, productsFor } from '@/lib/explore';
@@ -97,7 +99,7 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
         </View>
       ) : (
         <>
-          <Row title={homeCopy.resumeEyebrow}>
+          <SwipeRow title={homeCopy.resumeEyebrow}>
             {state.data.questionsLeft > 0 && state.data.nextQuestionId ? (
               <View style={[styles.pickCard, styles.pickWarm]}>
                 <Text style={styles.pickTitle}>{homeCopy.resumeTitle}</Text>
@@ -126,11 +128,12 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
               detail={homeCopy.attributesDetail}
               onPress={() => router.push('/profile/attributes')}
             />
-          </Row>
+          </SwipeRow>
 
           {forYou.length ? (
-            <Row
+            <SwipeRow
               title={productsCopy.forYou}
+              seeAllLabel={homeCopy.seeAll}
               onSeeAll={() => router.push({ pathname: '/explore/products', params: { forYou: '1' } })}
             >
               {forYou.map((product) => (
@@ -141,10 +144,10 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
                   onPress={() => router.push(`/explore/product/${product.id}`)}
                 />
               ))}
-            </Row>
+            </SwipeRow>
           ) : null}
 
-          <Row title={homeCopy.guidesTitle} onSeeAll={() => router.push('/explore/education')}>
+          <SwipeRow title={homeCopy.guidesTitle} seeAllLabel={homeCopy.seeAll} onSeeAll={() => router.push('/explore/education')}>
             {articles.map((article) => (
               <Pressable
                 key={article.id}
@@ -162,9 +165,9 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
                 </Text>
               </Pressable>
             ))}
-          </Row>
+          </SwipeRow>
 
-          {/* Placeholder partner content until Shop has real partners. Always labeled Partner content */}
+          {/* Sample partner content until real partners sign on. Always labeled Partner content */}
           <View style={styles.partners}>
             <Text style={styles.partnersTitle} accessibilityRole="header">
               {partnerPlaceholders.title}
@@ -180,12 +183,13 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
               ))}
             </ScrollView>
             <View style={styles.cards}>
-              {partnerPlaceholders.products.map((product) => (
+              {partnerProducts.slice(0, 3).map((product) => (
                 <PartnerHighlightCard
-                  key={product.name}
+                  key={product.id}
                   brand={product.brand}
                   name={product.name}
-                  onPress={() => router.navigate('/shop')}
+                  image={product.image}
+                  onPress={() => router.push({ pathname: '/shop/product/[id]', params: { id: product.id } })}
                 />
               ))}
             </View>
@@ -199,26 +203,6 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
 }
 
 // A titled row that scrolls sideways, with an optional "See all" link, like the Ulta and Sephora Home
-function Row({ title, onSeeAll, children }: { title: string; onSeeAll?: () => void; children: ReactNode }) {
-  return (
-    <View style={styles.section}>
-      <View style={styles.rowHead}>
-        <Text style={styles.sectionTitle} accessibilityRole="header">
-          {title}
-        </Text>
-        {onSeeAll ? (
-          <Pressable onPress={onSeeAll} accessibilityRole="link" accessibilityLabel={`${homeCopy.seeAll}: ${title}`} style={styles.seeAll}>
-            <Text style={styles.link}>{homeCopy.seeAll}</Text>
-          </Pressable>
-        ) : null}
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.rowContent}>
-        {children}
-      </ScrollView>
-    </View>
-  );
-}
-
 function PickCard({ icon, title, detail, onPress }: { icon: ReactNode; title: string; detail: string; onPress: () => void }) {
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={title} style={styles.pickCard}>

@@ -137,17 +137,12 @@ export const homeCopy = {
   readTime: (minutes: number) => `${minutes} min read`,
 };
 
-// Placeholder partner content from the Week 8 Home hi-fi, until Shop has real partners.
+// Partner Highlights copy from the Week 8 Home hi-fi. The products come from data/partnerContent.ts.
 // The note line is draft copy, so nobody mistakes these for real products
 export const partnerPlaceholders = {
   title: 'Partner Highlights',
   filters: ['Today’s trends', 'Best sellers', 'New arrivals'],
-  products: [
-    { brand: 'Partner brand', name: 'Mineral Sunscreen SPF 30' },
-    { brand: 'Partner brand', name: 'Hand Cream' },
-    { brand: 'Partner brand', name: 'Body Oil' },
-  ],
-  note: 'Sample partner content. Real partners appear here once Shop is connected.',
+  note: 'Sample partner content. Cuidance has no real partnerships yet.',
   seeAll: 'See all in Shop',
 };
 
