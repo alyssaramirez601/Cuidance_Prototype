@@ -170,8 +170,25 @@ export const savedCopy = {
   ownedEmptyTitle: 'Nothing here yet',
   ownedEmptyBody: 'Add products you already use to track how they work for you.',
   addOwned: 'Add a product you own',
-  // Draft: the design has no empty Products screen yet
-  productsEmptyBody: 'Products you save from Explore or Shop will show up here.',
+  // From the clickable prototype, screen 16
+  productsEmptyTitle: 'No saved products yet',
+  productsEmptyBody: 'Tap Save on any product to keep it here.',
+  ownedTag: 'Owned',
+  viewProduct: 'View product',
+  // From the clickable prototype, screen 17
+  ownedCount: (n: number) => (n === 1 ? '1 product you own' : `${n} products you own`),
+  addReflection: 'Add a reflection',
+  reflectionQuestion: 'How is it working for you?',
+  reflections: { loved: 'Tried it, loved it', not_for_me: 'Tried it, did not work for me', testing: 'Still testing' },
+  reflectionSaved: 'Reflection saved',
+  productsLoading: 'Loading your products',
+  // DRAFT: product page buttons
+  save: 'Save',
+  savedButton: 'Saved',
+  own: 'I own this',
+  ownedButton: 'Owned',
+  savedToast: 'Saved to your Saved area',
+  ownedToast: 'Added to Owned',
   routinesIntro: 'Your routines and routine notes, in one place.',
   routinesEmptyBody: 'Routines you create will show up here.',
   createRoutine: 'Create a routine',

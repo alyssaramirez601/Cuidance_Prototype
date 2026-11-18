@@ -3,15 +3,23 @@ import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { Chip } from '@/components/Chip';
 import { Icon } from '@/components/Icon';
+import { ListRow } from '@/components/ListRow';
+import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
+import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { Tabs } from '@/components/Tabs';
+import { Toast } from '@/components/Toast';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
 import { savedCopy } from '@/data/draftCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useSavedResults } from '@/hooks/useSavedResults';
+import { useUserProducts } from '@/hooks/useUserProducts';
+import { findProduct } from '@/lib/explore';
 import { savedDateLabel, type SavedResult } from '@/lib/savedResults';
+import type { Reflection } from '@/lib/userProducts';
 
 type SavedTab = 'guidance' | 'products' | 'owned' | 'routines';
 
@@ -32,14 +40,8 @@ export default function SavedScreen() {
         <Tabs tabs={savedCopy.tabs} activeKey={tab} onChange={(key) => setTab(key as SavedTab)} />
       </View>
       {tab === 'guidance' ? <GuidanceTab userId={session.user.id} /> : null}
-      {tab === 'products' ? <EmptyState title={savedCopy.emptyTitle} body={savedCopy.productsEmptyBody} /> : null}
-      {tab === 'owned' ? (
-        <>
-          {/* Adding owned products comes with the product screens; the button shows where it will live */}
-          <Button label={savedCopy.addOwned} style="secondary" state="disabled" onPress={() => {}} />
-          <EmptyState title={savedCopy.ownedEmptyTitle} body={savedCopy.ownedEmptyBody} />
-        </>
-      ) : null}
+      {tab === 'products' ? <ProductsTab userId={session.user.id} /> : null}
+      {tab === 'owned' ? <OwnedTab userId={session.user.id} /> : null}
       {tab === 'routines' ? (
         <>
           <Text style={styles.intro}>{savedCopy.routinesIntro}</Text>
@@ -85,6 +87,118 @@ function GuidanceTab({ userId }: { userId: string }) {
         contentContainerStyle={styles.list}
         renderItem={({ item }) => <SavedResultCard result={item} onPress={() => router.push(`/saved/${item.id}`)} />}
       />
+    </>
+  );
+}
+
+// Prototype screen 16: products saved from a product page, newest first
+function ProductsTab({ userId }: { userId: string }) {
+  const router = useRouter();
+  const { state, retry } = useUserProducts(userId);
+  if (state.status === 'loading') return <LoadingState label={savedCopy.productsLoading} />;
+  if (state.status === 'error') return <LoadError message={state.message} onRetry={retry} />;
+  const saved = state.items.filter((i) => i.saved).map((i) => ({ item: i, product: findProduct(i.productId) }));
+  if (saved.length === 0) {
+    return <EmptyState title={savedCopy.productsEmptyTitle} body={savedCopy.productsEmptyBody} />;
+  }
+  return (
+    <View style={styles.list}>
+      {saved.map(({ item, product }) =>
+        product ? (
+          <ListRow
+            key={product.id}
+            label={product.name}
+            detail={item.owned ? `${product.brand} · ${savedCopy.ownedTag}` : product.brand}
+            leading={<ProductThumb product={product} />}
+            onPress={() => router.push(`/explore/product/${product.id}`)}
+          />
+        ) : null,
+      )}
+    </View>
+  );
+}
+
+// Prototype screen 17: products they own, each with "How is it working for you?"
+function OwnedTab({ userId }: { userId: string }) {
+  const router = useRouter();
+  const { state, retry, update, actionError } = useUserProducts(userId);
+  const [open, setOpen] = useState<string | null>(null);
+  const [toast, setToast] = useState('');
+
+  const addButton = <Button label={savedCopy.addOwned} style="secondary" onPress={() => router.navigate('/explore')} />;
+  if (state.status === 'loading') return <LoadingState label={savedCopy.productsLoading} />;
+  if (state.status === 'error') return <LoadError message={state.message} onRetry={retry} />;
+  const owned = state.items.filter((i) => i.owned);
+  if (owned.length === 0) {
+    return (
+      <>
+        {addButton}
+        <EmptyState title={savedCopy.ownedEmptyTitle} body={savedCopy.ownedEmptyBody} />
+      </>
+    );
+  }
+
+  async function reflect(productId: string, reflection: Reflection) {
+    setToast('');
+    if (await update(productId, { reflection })) setToast(savedCopy.reflectionSaved);
+  }
+
+  return (
+    <>
+      {addButton}
+      <Text style={styles.intro}>{savedCopy.ownedCount(owned.length)}</Text>
+      {toast ? <Toast type="success" message={toast} /> : null}
+      {actionError ? <Toast type="error" message={actionError} /> : null}
+      <View style={styles.list}>
+        {owned.map((item) => {
+          const product = findProduct(item.productId);
+          if (!product) return null;
+          const isOpen = open === product.id;
+          return (
+            <View key={product.id} style={styles.ownedCard}>
+              <Pressable
+                onPress={() => router.push(`/explore/product/${product.id}`)}
+                accessibilityRole="button"
+                accessibilityLabel={`${savedCopy.viewProduct}: ${product.name}`}
+                style={styles.ownedHead}
+              >
+                <ProductThumb product={product} />
+                <View style={styles.cardText}>
+                  <Text style={styles.cardMeta}>{product.brand}</Text>
+                  <Text style={styles.cardTitle}>{product.name}</Text>
+                </View>
+                <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
+              </Pressable>
+              <Pressable
+                onPress={() => setOpen(isOpen ? null : product.id)}
+                accessibilityRole="button"
+                accessibilityState={{ expanded: isOpen }}
+                accessibilityLabel={item.reflection ? savedCopy.reflections[item.reflection] : savedCopy.addReflection}
+                style={styles.reflectToggle}
+              >
+                <Text style={item.reflection ? styles.cardMeta : styles.reflectLink}>
+                  {item.reflection ? savedCopy.reflections[item.reflection] : savedCopy.addReflection}
+                </Text>
+              </Pressable>
+              {isOpen ? (
+                <View style={styles.reflectBox}>
+                  <Text style={styles.cardTitle}>{savedCopy.reflectionQuestion}</Text>
+                  <View style={styles.chips}>
+                    {(Object.keys(savedCopy.reflections) as Reflection[]).map((key) => (
+                      <Chip
+                        key={key}
+                        label={savedCopy.reflections[key]}
+                        state={item.reflection === key ? 'selected' : 'default'}
+                        onPress={() => reflect(product.id, key)}
+                      />
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+            </View>
+          );
+        })}
+      </View>
     </>
   );
 }
@@ -183,6 +297,35 @@ const styles = StyleSheet.create({
   savedTagText: {
     ...type.caption,
     color: c.success,
+  },
+  ownedCard: {
+    gap: space[8],
+    padding: layout.insideComponent,
+    borderRadius: radius.medium,
+    borderWidth: stroke.default,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  ownedHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[12],
+  },
+  reflectToggle: {
+    minHeight: layout.minTouchTarget,
+    justifyContent: 'center',
+  },
+  reflectLink: {
+    ...type.label,
+    color: c.accent,
+  },
+  reflectBox: {
+    gap: space[8],
+  },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space[8],
   },
   empty: {
     flex: 1,

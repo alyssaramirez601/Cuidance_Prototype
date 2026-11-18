@@ -80,7 +80,7 @@ Signed in
 └── /dev                   Temporary component screen
 ```
 
-Saved › Guidance reads `saved_results`. Products, Owned and Routines show empty states until their tables exist.
+Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). Routines shows an empty state until its table exists. Scan's Add manually writes to `product_submissions` for review in the Admin Web.
 
 ## 4. Where state lives
 
