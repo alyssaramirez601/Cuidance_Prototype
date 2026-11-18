@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { AnswerTag } from '@/components/AnswerTag';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
+import { ArtTile } from '@/components/ArtTile';
 import { ListRow } from '@/components/ListRow';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
@@ -184,15 +185,6 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-// A small piece of Esme's Week 12 art in place of a line icon, like the website and emails
-function ArtTile({ art }: { art: ImageSource }) {
-  return (
-    <View style={styles.artTile}>
-      <Image source={art} style={styles.artImage} contentFit="contain" accessible={false} />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   banner: {
     aspectRatio: BANNER_RATIO,
@@ -302,19 +294,6 @@ const styles = StyleSheet.create({
   },
   rows: {
     gap: space[8],
-  },
-  artTile: {
-    width: space[48],
-    height: space[48],
-    borderRadius: radius.small,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: c.background,
-  },
-  artImage: {
-    width: space[48] - space[4],
-    height: space[48] - space[4],
   },
   signOut: {
     gap: space[12],

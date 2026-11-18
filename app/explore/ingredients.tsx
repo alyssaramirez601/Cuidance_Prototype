@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { ArtTile } from '@/components/ArtTile';
 import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
@@ -9,7 +10,7 @@ import { TextInput } from '@/components/TextInput';
 import { colors, space, type } from '@/constants/tokens';
 import { exploreCopy, ingredientsCopy } from '@/data/exploreCopy';
 import { ingredientNotes } from '@/data/ingredientNotes';
-import { searchIngredients } from '@/lib/explore';
+import { ingredientArt, searchIngredients } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -29,7 +30,7 @@ export default function IngredientsScreen() {
         <View style={styles.list}>
           {results.length === 0 ? <Text style={styles.body}>{exploreCopy.noResults}</Text> : null}
           {results.slice(0, 30).map((name) => (
-            <ListRow key={name} label={name} onPress={() => open(name)} />
+            <ListRow key={name} label={name} leading={<ArtTile art={ingredientArt(name)} />} onPress={() => open(name)} />
           ))}
         </View>
       ) : (
@@ -38,7 +39,13 @@ export default function IngredientsScreen() {
             {ingredientsCopy.withNotes}
           </Text>
           {ingredientNotes.map((note) => (
-            <ListRow key={note.name} label={note.name} detail={note.role} onPress={() => open(note.name)} />
+            <ListRow
+              key={note.name}
+              label={note.name}
+              detail={note.role}
+              leading={<ArtTile art={ingredientArt(note.name)} />}
+              onPress={() => open(note.name)}
+            />
           ))}
         </View>
       )}

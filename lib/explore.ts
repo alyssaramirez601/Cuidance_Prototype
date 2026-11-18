@@ -209,6 +209,26 @@ export function noteFor(ingredient: string, area?: CareArea): IngredientNote | u
   return ingredientNotes.find((note) => (!area || noteArea(note) === area) && note.matches.some((m) => n.includes(m)));
 }
 
+// Alyssa's ingredient illustrations (batch I), one per reviewed note
+const INGREDIENT_ART: Record<string, number> = {
+  Glycerin: require('@/assets/art-library/ingredient-glycerin.webp'),
+  Petrolatum: require('@/assets/art-library/ingredient-petrolatum.webp'),
+  Dimethicone: require('@/assets/art-library/ingredient-dimethicone.webp'),
+  Ceramides: require('@/assets/art-library/ingredient-ceramides.webp'),
+  'Cetrimonium chloride': require('@/assets/art-library/ingredient-cetrimonium-chloride.webp'),
+  'Behentrimonium chloride': require('@/assets/art-library/ingredient-behentrimonium-chloride.webp'),
+  'Cetyl alcohol': require('@/assets/art-library/ingredient-cetyl-alcohol.webp'),
+  'Iron oxide pigments': require('@/assets/art-library/ingredient-iron-oxide-pigments.webp'),
+  'Titanium dioxide pigment': require('@/assets/art-library/ingredient-titanium-dioxide-pigment.webp'),
+  'Aluminum-based antiperspirant actives': require('@/assets/art-library/ingredient-aluminum-antiperspirant-actives.webp'),
+};
+
+// The picture for an ingredient with a reviewed note; other ingredients get the general ingredients art
+export function ingredientArt(ingredient: string): number {
+  const note = notesFor(ingredient)[0];
+  return (note && INGREDIENT_ART[note.name]) ?? require('@/assets/art-library/explore-ingredients.webp');
+}
+
 // Every reviewed note that covers this ingredient, across areas, for the ingredient page
 export function notesFor(ingredient: string): IngredientNote[] {
   const n = norm(ingredient);
@@ -290,13 +310,14 @@ export function productShortLabel(product: Product): string {
 }
 
 // One illustration per article, from the product-type set, until articles get their own art
+// Alyssa's Education illustrations (batch J), one per article
 const ARTICLE_ART: Record<string, number> = {
-  'read-a-label': require('@/assets/art-library/explore-ingredients.webp'),
-  'ingredient-lists': require('@/assets/art-library/explore-education.webp'),
-  'new-product': require('@/assets/art-library/type-face-wash.webp'),
-  'shades-every-tone': require('@/assets/art-library/type-foundation.webp'),
-  'dye-and-heat': require('@/assets/art-library/type-hair-color.webp'),
-  'body-new-product': require('@/assets/art-library/type-body-lotion.webp'),
+  'read-a-label': require('@/assets/art-library/article-read-a-label.webp'),
+  'ingredient-lists': require('@/assets/art-library/article-ingredient-lists.webp'),
+  'new-product': require('@/assets/art-library/article-new-product.webp'),
+  'shades-every-tone': require('@/assets/art-library/article-shades-every-tone.webp'),
+  'dye-and-heat': require('@/assets/art-library/article-dye-and-heat.webp'),
+  'body-new-product': require('@/assets/art-library/article-body-new-product.webp'),
 };
 
 export function articleArt(id: string): number {

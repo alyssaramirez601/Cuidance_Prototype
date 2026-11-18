@@ -10,7 +10,7 @@ import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { areaLabels } from '@/data/draftCopy';
 import { ingredientsCopy } from '@/data/exploreCopy';
-import { noteArea, notesFor, productsWithIngredient } from '@/lib/explore';
+import { ingredientArt, noteArea, notesFor, productsWithIngredient } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -32,7 +32,7 @@ export default function IngredientScreen() {
 
   return (
     <Screen>
-      <PageHeader title={name} backTo="/explore/ingredients" />
+      <PageHeader title={name} art={ingredientArt(name)} backTo="/explore/ingredients" />
 
       <View style={styles.section}>
         <Text style={styles.eyebrow} accessibilityRole="header">

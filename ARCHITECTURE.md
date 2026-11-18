@@ -85,7 +85,7 @@ Signed in
 └── /dev                   Temporary component screen
 ```
 
-Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). Saved › Boards reads `boards` and `board_pins` (a pin is a product, article or saved result; Add to board lives on product and article pages). Boards replace Routines. Scan's Add manually writes to `product_submissions` for review in the Admin Web. Shop and Home's Partner Highlights read the local sample file `data/partnerContent.ts` (no partner table yet).
+Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). A saved partner product is stored as `partner:<id>` and can only be saved, not owned or pinned. Saved › Boards reads `boards` and `board_pins` (a pin is a product, article or saved result; Add to board lives on product and article pages). Boards replace Routines. Scan's Add manually writes to `product_submissions` for review in the Admin Web. Shop and Home's Partner Highlights read the local sample file `data/partnerContent.ts` (no partner table yet).
 
 ## 4. Where state lives
 
@@ -100,7 +100,7 @@ Saved › Guidance reads `saved_results`. Saved › Products and Owned read `use
 
 - **Week 11 loop:** which action in the Admin Web should show up on Mobile (or the other way around)? Waiting on Alyssa and Esme.
 - **Admin Web on Supabase:** the Admin Web uses seeded, browser-only data. The loop needs it to read and write the same Supabase project.
-- **Shop and Partner Highlights:** made-up sample partners from the prototype, with dates moved to December (team call, Nov 17). When real partners sign on, replace `data/partnerContent.ts` with a table the Admin Web writes to. Copy code only copies on the web preview: phones need `expo-clipboard` (not approved yet).
+- **Shop and Partner Highlights:** made-up sample partners from the prototype, with dates moved to December (team call, Nov 17). When real partners sign on, replace `data/partnerContent.ts` with a table the Admin Web writes to.
 - **Saved › Boards:** replaced Routines (team call, Nov 18). Board copy is DRAFT in `data/draftCopy.ts`.
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.

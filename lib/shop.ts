@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import {
   partnerCollections,
@@ -11,6 +11,18 @@ export function findPartnerProduct(id: string | undefined): PartnerProduct | und
   return partnerProducts.find((product) => product.id === id);
 }
 
+// Saved partner products share user_products with catalog products, so their ids carry a
+// prefix that can never clash with a catalog id
+const PARTNER_PREFIX = 'partner:';
+
+export function partnerRef(id: string): string {
+  return PARTNER_PREFIX + id;
+}
+
+export function partnerFromRef(ref: string): PartnerProduct | undefined {
+  return ref.startsWith(PARTNER_PREFIX) ? findPartnerProduct(ref.slice(PARTNER_PREFIX.length)) : undefined;
+}
+
 export function findCollection(id: string | undefined): PartnerCollection | undefined {
   return partnerCollections.find((collection) => collection.id === id);
 }
@@ -21,13 +33,10 @@ export function collectionProducts(collection: PartnerCollection): PartnerProduc
     .filter((product): product is PartnerProduct => Boolean(product));
 }
 
-// Copies the code where the browser allows it. On phones this needs expo-clipboard,
-// which isn't approved yet, so the caller says the code wasn't copied instead of pretending
+// Copies the code so people can paste it on the partner's site
 export async function copyCode(code: string): Promise<boolean> {
-  if (Platform.OS !== 'web' || typeof navigator === 'undefined' || !navigator.clipboard) return false;
   try {
-    await navigator.clipboard.writeText(code);
-    return true;
+    return await Clipboard.setStringAsync(code);
   } catch {
     return false;
   }

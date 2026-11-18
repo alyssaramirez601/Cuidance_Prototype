@@ -3,7 +3,7 @@
 // copied from the clickable prototype's Shop screen (s19) and partner products (pa, pb, pc, pbo),
 // with the expired October dates moved into December. Swap this file for a table that the
 // Admin Web writes to once real partners sign on.
-// Lines marked DRAFT are new copy the prototype doesn't have. Alyssa and Esme to review.
+// Lines marked DRAFT are new copy the prototype doesn't have. Alyssa approved them on Nov 17.
 
 export type PartnerProduct = {
   id: string;
@@ -141,7 +141,7 @@ export const partnerWorkshops: PartnerWorkshop[] = [
     id: 'read-a-label',
     title: 'How to read a product label',
     meta: 'Recorded · 12 min',
-    image: require('@/assets/art-library/explore-education.webp'),
+    image: require('@/assets/art-library/article-read-a-label.webp'),
   },
 ];
 
@@ -175,8 +175,8 @@ export const shopCopy = {
   openSite: 'Open partner site',
   opensSite: 'Opens partner site',
   collectionCount: (count: number, detail: string) => `${count} ${count === 1 ? 'product' : 'products'} ${detail}`,
-  // Prototype toast, used when the code really was copied
-  codeCopied: (code: string) => `Code ${code} copied. Opens partner site.`,
+  // Prototype toast, with the sample-partner line in place of "Opens partner site"
+  codeCopied: (code: string) => `Code ${code} copied. This is a sample partner, so there is no partner site to open yet.`,
   // DRAFT: these partners are made up, so there is no site to open
   noSite: 'This is a sample partner, so there is no partner site to open yet.',
   // Partner product page (prototype 14B, from Shop)

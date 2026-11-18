@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -11,7 +12,7 @@ import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
 import { areaLabels, savedCopy } from '@/data/draftCopy';
 import { educationCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
-import { findArticle } from '@/lib/explore';
+import { articleArt, findArticle } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -40,6 +41,7 @@ export default function ArticleScreen() {
         intro={`${label.charAt(0).toUpperCase() + label.slice(1)} · ${article.kind} · ${educationCopy.readTime(article.minutes)}`}
         backTo="/explore/education"
       />
+      <Image source={articleArt(article.id)} style={styles.hero} contentFit="cover" accessible={false} />
       {session ? (
         <>
           <Button label={savedCopy.addToBoard} style="secondary" onPress={() => setBoardOpen(true)} />
@@ -86,6 +88,12 @@ export default function ArticleScreen() {
 }
 
 const styles = StyleSheet.create({
+  hero: {
+    width: '100%',
+    aspectRatio: 3 / 2,
+    borderRadius: radius.medium,
+    backgroundColor: colors.light.surfaceWarm,
+  },
   body: {
     ...type.body,
     color: c.ink,

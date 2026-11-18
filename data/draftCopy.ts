@@ -168,6 +168,8 @@ export const savedCopy = {
   // From the clickable prototype, screen 16
   productsEmptyTitle: 'No saved products yet',
   productsEmptyBody: 'Tap Save on any product to keep it here.',
+  // DRAFT: marks a saved partner product in Saved > Products
+  partnerTag: 'Partner content',
   ownedTag: 'Owned',
   viewProduct: 'View product',
   // From the clickable prototype, screen 17

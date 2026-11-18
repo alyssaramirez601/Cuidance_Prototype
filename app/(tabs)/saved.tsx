@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Image } from 'expo-image';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { ArtTile } from '@/components/ArtTile';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { Icon } from '@/components/Icon';
@@ -24,6 +25,7 @@ import { useUserProducts } from '@/hooks/useUserProducts';
 import { createBoard } from '@/lib/boards';
 import { findProduct, pinView } from '@/lib/explore';
 import { savedDateLabel, type SavedResult } from '@/lib/savedResults';
+import { partnerFromRef } from '@/lib/shop';
 import type { Reflection } from '@/lib/userProducts';
 
 type SavedTab = 'guidance' | 'products' | 'owned' | 'boards';
@@ -96,14 +98,22 @@ function ProductsTab({ userId }: { userId: string }) {
   const { state, retry } = useUserProducts(userId);
   if (state.status === 'loading') return <LoadingState label={savedCopy.productsLoading} />;
   if (state.status === 'error') return <LoadError message={state.message} onRetry={retry} />;
-  const saved = state.items.filter((i) => i.saved).map((i) => ({ item: i, product: findProduct(i.productId) }));
+  const saved = state.items.filter((i) => i.saved).map((i) => ({ item: i, product: findProduct(i.productId), partner: partnerFromRef(i.productId) }));
   if (saved.length === 0) {
     return <EmptyState title={savedCopy.productsEmptyTitle} body={savedCopy.productsEmptyBody} />;
   }
   return (
     <View style={styles.list}>
-      {saved.map(({ item, product }) =>
-        product ? (
+      {saved.map(({ item, product, partner }) =>
+        partner ? (
+          <ListRow
+            key={item.productId}
+            label={partner.name}
+            detail={`${partner.brand} · ${savedCopy.partnerTag}`}
+            leading={<ArtTile art={partner.image} />}
+            onPress={() => router.push({ pathname: '/shop/product/[id]', params: { id: partner.id } })}
+          />
+        ) : product ? (
           <ListRow
             key={product.id}
             label={product.name}

@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { ArtTile } from '@/components/ArtTile';
 import { Chip } from '@/components/Chip';
 import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
@@ -11,7 +12,7 @@ import { colors, layout, space, type } from '@/constants/tokens';
 import { areaLabels } from '@/data/draftCopy';
 import { articles, type ArticleKind } from '@/data/education';
 import { educationCopy, exploreCopy } from '@/data/exploreCopy';
-import { searchArticles } from '@/lib/explore';
+import { articleArt, searchArticles } from '@/lib/explore';
 
 const c = colors.light;
 
@@ -44,6 +45,7 @@ export default function EducationScreen() {
             key={article.id}
             label={article.title}
             detail={`${capitalize(areaLabels[article.area])} · ${article.kind} · ${educationCopy.readTime(article.minutes)}`}
+            leading={<ArtTile art={articleArt(article.id)} />}
             onPress={() => router.push(`/explore/article/${article.id}`)}
           />
         ))}

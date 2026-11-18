@@ -3,19 +3,16 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AddToBoardSheet } from '@/components/AddToBoardSheet';
 import { Button } from '@/components/Button';
 import { EvidenceDots } from '@/components/EvidenceDots';
-import { Toast } from '@/components/Toast';
 import { ListRow } from '@/components/ListRow';
+import { ProductActions } from '@/components/ProductActions';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { findCategory, findDepartment } from '@/data/categories';
-import { savedCopy } from '@/data/draftCopy';
 import { productCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
-import { useUserProducts } from '@/hooks/useUserProducts';
 import { findProduct, notedIngredients, productImage, storeLinks } from '@/lib/explore';
 
 const c = colors.light;
@@ -55,7 +52,7 @@ export default function ProductScreen() {
         )}
       </View>
 
-      {session ? <SaveOwnButtons userId={session.user.id} productId={product.id} /> : null}
+      {session ? <ProductActions userId={session.user.id} productId={product.id} /> : null}
 
       <View style={styles.facts}>
         <Text style={styles.brand}>{product.brand}</Text>
@@ -133,53 +130,6 @@ export default function ProductScreen() {
 }
 
 // Save and "I own this", like the heart on Ulta's and Sephora's product pages
-function SaveOwnButtons({ userId, productId }: { userId: string; productId: string }) {
-  const { state, find, update, actionError } = useUserProducts(userId);
-  const [busy, setBusy] = useState<'saved' | 'owned' | null>(null);
-  const [toast, setToast] = useState('');
-  const [boardOpen, setBoardOpen] = useState(false);
-  const mine = find(productId);
-  const ready = state.status === 'ready';
-
-  async function toggle(field: 'saved' | 'owned') {
-    setToast('');
-    setBusy(field);
-    const turningOn = !mine?.[field];
-    const ok = await update(productId, { [field]: turningOn });
-    setBusy(null);
-    if (ok && turningOn) setToast(field === 'saved' ? savedCopy.savedToast : savedCopy.ownedToast);
-  }
-
-  return (
-    <View style={styles.actions}>
-      <View style={styles.actionRow}>
-        <View style={styles.actionCell}>
-          <Button
-            label={mine?.saved ? savedCopy.savedButton : savedCopy.save}
-            style={mine?.saved ? 'primary' : 'secondary'}
-            state={ready ? undefined : 'disabled'}
-            loading={busy === 'saved'}
-            onPress={() => toggle('saved')}
-          />
-        </View>
-        <View style={styles.actionCell}>
-          <Button
-            label={mine?.owned ? savedCopy.ownedButton : savedCopy.own}
-            style={mine?.owned ? 'primary' : 'secondary'}
-            state={ready ? undefined : 'disabled'}
-            loading={busy === 'owned'}
-            onPress={() => toggle('owned')}
-          />
-        </View>
-      </View>
-      <Button label={savedCopy.addToBoard} style="ghost" onPress={() => setBoardOpen(true)} />
-      {toast ? <Toast type="success" message={toast} /> : null}
-      {actionError ? <Toast type="error" message={actionError} /> : null}
-      <AddToBoardSheet visible={boardOpen} onClose={() => setBoardOpen(false)} userId={userId} kind="product" pinRef={productId} />
-    </View>
-  );
-}
-
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.fact}>
@@ -204,16 +154,6 @@ const styles = StyleSheet.create({
   },
   facts: {
     gap: space[8],
-  },
-  actions: {
-    gap: space[8],
-  },
-  actionRow: {
-    flexDirection: 'row',
-    gap: space[8],
-  },
-  actionCell: {
-    flex: 1,
   },
   brand: {
     ...type.label,

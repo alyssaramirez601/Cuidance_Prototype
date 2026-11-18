@@ -9,7 +9,7 @@ type PageHeaderProps = {
   title: string;
   intro?: string;
   // Leave out on pages without a picture
-  art?: ImageSource;
+  art?: ImageSource | number;
   // Where Back goes when there's no history, like after opening a link straight to the page
   backTo?: Href;
 };

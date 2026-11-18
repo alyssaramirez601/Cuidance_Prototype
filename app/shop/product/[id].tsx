@@ -7,10 +7,12 @@ import { Button } from '@/components/Button';
 import { DisclosureLabel } from '@/components/DisclosureLabel';
 import { Note } from '@/components/Note';
 import { PageHeader } from '@/components/PageHeader';
+import { ProductActions } from '@/components/ProductActions';
 import { Screen } from '@/components/Screen';
 import { colors, layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
 import { shopCopy } from '@/data/partnerContent';
-import { findPartnerProduct } from '@/lib/shop';
+import { useAuth } from '@/hooks/useAuth';
+import { findPartnerProduct, partnerRef } from '@/lib/shop';
 
 const c = colors.light;
 
@@ -21,6 +23,7 @@ export default function PartnerProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const product = findPartnerProduct(id);
   const [message, setMessage] = useState('');
+  const { session } = useAuth();
 
   if (!product) {
     return (
@@ -54,6 +57,7 @@ export default function PartnerProductScreen() {
         <Text style={styles.brand}>{product.brand}</Text>
         <Text style={styles.detail}>{product.type}</Text>
       </View>
+      {session ? <ProductActions userId={session.user.id} productId={partnerRef(product.id)} saveOnly /> : null}
       <View style={styles.box}>
         <Text style={styles.detail}>{shopCopy.partnerBox}</Text>
       </View>
