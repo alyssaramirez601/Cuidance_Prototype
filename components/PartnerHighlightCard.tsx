@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { DisclosureLabel } from '@/components/DisclosureLabel';
@@ -7,20 +8,26 @@ import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
 type PartnerHighlightCardProps = {
   brand: string;
   name: string;
+  // Leave out for the neutral placeholder tile
+  image?: number;
   onPress: () => void;
 };
 
 const c = colors.light;
 
 // "Partner Highlight Card" from the Week 8 Step 4 component kit. Always labeled Partner content.
-// The image is a neutral placeholder until partner photography exists (the design flags photos as open).
+// Uses the partner product's illustration, or a neutral placeholder tile when there is none.
 // Not in docs/design-system/components.md yet, so Esme should add it
-export function PartnerHighlightCard({ brand, name, onPress }: PartnerHighlightCardProps) {
+export function PartnerHighlightCard({ brand, name, image, onPress }: PartnerHighlightCardProps) {
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Partner content: ${name}`} style={styles.card}>
-      <View style={styles.image}>
-        <Icon name="shop" size={sizes.icon.large} color={c.inkMuted} />
-      </View>
+      {image ? (
+        <Image source={image} style={styles.image} contentFit="cover" accessible={false} />
+      ) : (
+        <View style={styles.image}>
+          <Icon name="shop" size={sizes.icon.large} color={c.inkMuted} />
+        </View>
+      )}
       <DisclosureLabel type="partner" />
       <Text style={styles.brand}>{brand}</Text>
       <Text style={styles.name}>{name}</Text>

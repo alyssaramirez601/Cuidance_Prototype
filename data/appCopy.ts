@@ -1,6 +1,6 @@
-// DRAFT COPY, NEEDS TEAM APPROVAL. docs/quiz-outcomes/ describes these pieces but doesn't give the words,
-// so they were drafted for review on the preview link. Replace them here once Alyssa and Esme approve
-// or rewrite them, then add the final wording to the outcome docs.
+// App copy that docs/quiz-outcomes/ describes but doesn't give the words for. Written for the beta
+// and approved by Alyssa (Nov 17). If the team rewrites a line, change it here and add the final
+// wording to the outcome docs.
 
 export const areaLabels: Record<string, string> = {
   skin: 'skin care',
@@ -112,7 +112,7 @@ export const resultLabels = {
 };
 
 // Home, from the Week 8 Step 5 Home hi-fi (07 and 07B). "Good afternoon" and "Good evening"
-// are draft lines that follow "Good morning" from the design, waiting for team approval
+// follow "Good morning" from the design
 export const homeCopy = {
   loading: 'Loading Home',
   loadError: 'We couldn’t load your Home screen. Check your connection and try again.',
@@ -128,19 +128,21 @@ export const homeCopy = {
   revisit: 'Ready to revisit anytime',
   getGuidance: 'Get your guidance',
   getGuidanceDetail: 'Take the quiz to see what may fit you',
+  // New: the Ulta and Sephora style Home (Nov 17)
+  searchHint: 'Search products, ingredients, topics',
+  attributesTitle: 'Your attributes',
+  attributesDetail: 'See what shapes your guidance',
+  guidesTitle: 'Guides and tips',
+  seeAll: 'See all',
+  readTime: (minutes: number) => `${minutes} min read`,
 };
 
-// Placeholder partner content from the Week 8 Home hi-fi, until Shop has real partners.
-// The note line is draft copy, so nobody mistakes these for real products
+// Partner Highlights copy from the Week 8 Home hi-fi. The products come from data/partnerContent.ts.
+// The note line makes sure nobody mistakes these for real products
 export const partnerPlaceholders = {
   title: 'Partner Highlights',
   filters: ['Today’s trends', 'Best sellers', 'New arrivals'],
-  products: [
-    { brand: 'Partner brand', name: 'Mineral Sunscreen SPF 30' },
-    { brand: 'Partner brand', name: 'Hand Cream' },
-    { brand: 'Partner brand', name: 'Body Oil' },
-  ],
-  note: 'Sample partner content. Real partners appear here once Shop is connected.',
+  note: 'Sample partner content. Cuidance has no real partnerships yet.',
   seeAll: 'See all in Shop',
 };
 
@@ -152,7 +154,7 @@ export const savedCopy = {
     { key: 'guidance', label: 'Guidance' },
     { key: 'products', label: 'Products' },
     { key: 'owned', label: 'Owned' },
-    { key: 'routines', label: 'Routines' },
+    { key: 'boards', label: 'Boards' },
   ],
   guidanceIntro: 'Saved results and explainers you want to return to.',
   resultLine: (date: string) => `Result · saved ${date}`,
@@ -163,11 +165,50 @@ export const savedCopy = {
   ownedEmptyTitle: 'Nothing here yet',
   ownedEmptyBody: 'Add products you already use to track how they work for you.',
   addOwned: 'Add a product you own',
-  // Draft: the design has no empty Products screen yet
-  productsEmptyBody: 'Products you save from Explore or Shop will show up here.',
-  routinesIntro: 'Your routines and routine notes, in one place.',
-  routinesEmptyBody: 'Routines you create will show up here.',
-  createRoutine: 'Create a routine',
+  // From the clickable prototype, screen 16
+  productsEmptyTitle: 'No saved products yet',
+  productsEmptyBody: 'Tap Save on any product to keep it here.',
+  // New: marks a saved partner product in Saved > Products
+  partnerTag: 'Partner content',
+  ownedTag: 'Owned',
+  viewProduct: 'View product',
+  // From the clickable prototype, screen 17
+  ownedCount: (n: number) => (n === 1 ? '1 product you own' : `${n} products you own`),
+  addReflection: 'Add a reflection',
+  reflectionQuestion: 'How is it working for you?',
+  reflections: { loved: 'Tried it, loved it', not_for_me: 'Tried it, did not work for me', testing: 'Still testing' },
+  reflectionSaved: 'Reflection saved',
+  productsLoading: 'Loading your products',
+  // New: product page buttons
+  save: 'Save',
+  savedButton: 'Saved',
+  own: 'I own this',
+  ownedButton: 'Owned',
+  savedToast: 'Saved to your Saved area',
+  ownedToast: 'Added to Owned',
+  // Boards replace Routines (Nov 17). Lines adapted from the prototype's routine boards (18 to 18C)
+  boardsIntro: 'Collect products, guides and results in boards, like a routine or a wishlist.',
+  boardsEmptyTitle: 'No boards yet',
+  boardsEmptyBody: 'Create one to keep your steps and products in one place.',
+  createBoard: 'Create a board',
+  newBoard: 'New board',
+  boardName: 'Board name',
+  boardNameHelper: 'For example: Morning skin care, Wash day, Wishlist',
+  boardNameError: 'Give the board a name.',
+  create: 'Create board',
+  pinCount: (n: number) => (n === 1 ? '1 pin' : `${n} pins`),
+  boardsLoading: 'Loading your boards',
+  addToBoard: 'Add to board',
+  chooseBoard: 'Choose a board',
+  pinned: (board: string) => `Added to ${board}`,
+  alreadyPinned: 'On this board',
+  boardEmpty: 'Nothing pinned yet. Use Add to board on a product or guide.',
+  removePin: 'Remove',
+  deleteBoard: 'Delete board',
+  confirmDelete: 'Tap again to delete this board',
+  boardNotFoundTitle: 'Board not found',
+  boardNotFoundBody: 'It may have been deleted.',
+  resultPin: 'Your result',
   backToSaved: 'Back to Saved',
   notFoundTitle: 'We couldn’t find that saved result',
   notFoundBody: 'It may have been removed. Head back to Saved to see what’s there.',

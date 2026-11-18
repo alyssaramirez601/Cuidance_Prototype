@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
 import { colors, radius, space, type } from '@/constants/tokens';
-import { savedCopy } from '@/data/draftCopy';
+import { savedCopy } from '@/data/appCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { buildResult } from '@/lib/buildResult';
 import { getSavedResult, type SavedResult } from '@/lib/savedResults';

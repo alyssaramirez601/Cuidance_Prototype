@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { colors, radius, space, stroke } from '@/constants/tokens';
 import type { Evidence } from '@/data/outcomeTypes';
-import { evidenceKey } from '@/data/draftCopy';
+import { evidenceKey } from '@/data/appCopy';
 
 // How many of the three dots fill in. The count carries the meaning, so color is never the only signal
 const filled: Record<Evidence, number> = { Strong: 3, Moderate: 2, Limited: 1, Assumption: 0 };

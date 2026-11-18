@@ -19,7 +19,7 @@ type Row = {
   result_name: string | null;
   result_subtitle: string | null;
   answers_snapshot: unknown;
-  created_at: string;
+  saved_at: string;
 };
 
 function toSavedResult(row: Row): SavedResult {
@@ -32,12 +32,12 @@ function toSavedResult(row: Row): SavedResult {
     id: row.id,
     name: row.result_name ?? '',
     subtitle: row.result_subtitle ?? '',
-    savedAt: row.created_at,
+    savedAt: row.saved_at,
     answers,
   };
 }
 
-const COLUMNS = 'id, result_name, result_subtitle, answers_snapshot, created_at';
+const COLUMNS = 'id, result_name, result_subtitle, answers_snapshot, saved_at';
 
 // Newest first, so the latest save is on top in Saved and on Home
 export async function listSavedResults(userId: string): Promise<SavedResultsLoad> {
@@ -45,7 +45,7 @@ export async function listSavedResults(userId: string): Promise<SavedResultsLoad
     .from('saved_results')
     .select(COLUMNS)
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    .order('saved_at', { ascending: false });
   if (error) {
     return { ok: false, message: LOAD_ERROR };
   }
