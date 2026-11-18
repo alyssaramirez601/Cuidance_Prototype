@@ -40,7 +40,7 @@ Cuidance is a mobile app that helps people figure out what may fit their hair, s
 - **Results that change with your answers.** Each answer has its own guidance card, and mixing rules decide what happens when two answers meet.
 - **"Why this may fit you."** Every suggestion comes with the reason, in plain language.
 - **Ingredient and label help.** Learn what is in a product and how to read a label.
-- **Saved guidance.** Keep results and routine notes to come back to later.
+- **Saved guidance.** Keep results, products and boards to come back to later.
 
 ## Tech stack
 

@@ -21,6 +21,7 @@ cuidance_prototype/
 │   │   └── result.tsx        Guidance result
 │   ├── (tabs)/               Home, Explore, Saved, Shop, Profile and the tab bar
 │   ├── saved/[id].tsx        A reopened saved result
+│   ├── saved/board/[id].tsx  One board: pins in two columns, remove pin, delete board
 │   ├── profile/              Profile pages: attributes, history, privacy, notifications, account
 │   ├── explore/              Explore pages: products, product detail, ingredients, ingredient, education, article
 │   ├── proof.tsx             Old test screen, no longer linked
@@ -61,6 +62,7 @@ Signed in
 ├── /start                 "Welcome, [name]" (Account created): Start guidance opens the first quiz question
 ├── /home, /explore, /saved, /shop, /profile   The five tabs (app/(tabs)/). Shop is a stand-in until it is built
 ├── /saved/[id]            A saved result, rebuilt from its saved answers. Read-only, back goes to Saved
+├── /saved/board/[id]      One board (Pinterest style). Pins open their product, article or result
 ├── /profile/attributes    Every quiz answer, grouped by area, with Edit attributes and Retake the quiz
 ├── /profile/history       Saved results, newest first (the newest is marked Current)
 ├── /profile/privacy       Privacy choices and the Privacy & Trust sheet
@@ -80,7 +82,7 @@ Signed in
 └── /dev                   Temporary component screen
 ```
 
-Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). Routines shows an empty state until its table exists. Scan's Add manually writes to `product_submissions` for review in the Admin Web.
+Saved › Guidance reads `saved_results`. Saved › Products and Owned read `user_products` (saved, owned and the owned-product reflection). Saved › Boards reads `boards` and `board_pins` (a pin is a product, article or saved result; Add to board lives on product and article pages). Boards replace Routines. Scan's Add manually writes to `product_submissions` for review in the Admin Web.
 
 ## 4. Where state lives
 
@@ -96,7 +98,7 @@ Saved › Guidance reads `saved_results`. Saved › Products and Owned read `use
 - **Week 11 loop:** which action in the Admin Web should show up on Mobile (or the other way around)? Waiting on Alyssa and Esme.
 - **Admin Web on Supabase:** the Admin Web uses seeded, browser-only data. The loop needs it to read and write the same Supabase project.
 - **Home:** Partner Highlights are labeled placeholders until Shop has real partners.
-- **Saved › Products, Owned, Routines:** need new Supabase tables (build part 2).
+- **Saved › Boards:** replaced Routines (team call, Nov 18). Board copy is DRAFT in `data/draftCopy.ts`.
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
 - **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).

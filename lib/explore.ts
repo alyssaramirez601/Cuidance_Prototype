@@ -302,3 +302,23 @@ const ARTICLE_ART: Record<string, number> = {
 export function articleArt(id: string): number {
   return ARTICLE_ART[id] ?? require('@/assets/art-library/explore-education.webp');
 }
+
+// What a board pin shows: title, a small line, its picture and where it opens
+export type PinView = { title: string; detail: string; image: number; href: string; square: boolean };
+
+const RESULT_ART: number = require('@/assets/images/result-hero.png');
+
+export function pinView(kind: 'product' | 'article' | 'result', ref: string, resultName?: string): PinView | null {
+  if (kind === 'product') {
+    const product = findProduct(ref);
+    if (!product) return null;
+    return { title: product.name, detail: product.brand, image: productArt(product), href: `/explore/product/${product.id}`, square: true };
+  }
+  if (kind === 'article') {
+    const article = findArticle(ref);
+    if (!article) return null;
+    return { title: article.title, detail: article.kind, image: articleArt(article.id), href: `/explore/article/${article.id}`, square: false };
+  }
+  if (!resultName) return null;
+  return { title: resultName, detail: '', image: RESULT_ART, href: `/saved/${ref}`, square: false };
+}

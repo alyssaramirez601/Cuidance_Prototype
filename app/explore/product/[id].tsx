@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AddToBoardSheet } from '@/components/AddToBoardSheet';
 import { Button } from '@/components/Button';
 import { EvidenceDots } from '@/components/EvidenceDots';
 import { Toast } from '@/components/Toast';
@@ -136,6 +137,7 @@ function SaveOwnButtons({ userId, productId }: { userId: string; productId: stri
   const { state, find, update, actionError } = useUserProducts(userId);
   const [busy, setBusy] = useState<'saved' | 'owned' | null>(null);
   const [toast, setToast] = useState('');
+  const [boardOpen, setBoardOpen] = useState(false);
   const mine = find(productId);
   const ready = state.status === 'ready';
 
@@ -170,8 +172,10 @@ function SaveOwnButtons({ userId, productId }: { userId: string; productId: stri
           />
         </View>
       </View>
+      <Button label={savedCopy.addToBoard} style="ghost" onPress={() => setBoardOpen(true)} />
       {toast ? <Toast type="success" message={toast} /> : null}
       {actionError ? <Toast type="error" message={actionError} /> : null}
+      <AddToBoardSheet visible={boardOpen} onClose={() => setBoardOpen(false)} userId={userId} kind="product" pinRef={productId} />
     </View>
   );
 }

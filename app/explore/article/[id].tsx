@@ -1,13 +1,16 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AddToBoardSheet } from '@/components/AddToBoardSheet';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
-import { areaLabels } from '@/data/draftCopy';
+import { areaLabels, savedCopy } from '@/data/draftCopy';
 import { educationCopy } from '@/data/exploreCopy';
+import { useAuth } from '@/hooks/useAuth';
 import { findArticle } from '@/lib/explore';
 
 const c = colors.light;
@@ -17,6 +20,8 @@ export default function ArticleScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const article = findArticle(id);
+  const { session } = useAuth();
+  const [boardOpen, setBoardOpen] = useState(false);
 
   if (!article) {
     return (
@@ -35,6 +40,18 @@ export default function ArticleScreen() {
         intro={`${label.charAt(0).toUpperCase() + label.slice(1)} · ${article.kind} · ${educationCopy.readTime(article.minutes)}`}
         backTo="/explore/education"
       />
+      {session ? (
+        <>
+          <Button label={savedCopy.addToBoard} style="secondary" onPress={() => setBoardOpen(true)} />
+          <AddToBoardSheet
+            visible={boardOpen}
+            onClose={() => setBoardOpen(false)}
+            userId={session.user.id}
+            kind="article"
+            pinRef={article.id}
+          />
+        </>
+      ) : null}
       {article.paragraphs.map((paragraph) => (
         <Text key={paragraph.slice(0, 40)} style={styles.body}>
           {paragraph}
