@@ -55,6 +55,7 @@ export default function RootLayout() {
           <Stack.Screen name="profile/privacy" />
           <Stack.Screen name="profile/notifications" />
           <Stack.Screen name="profile/account" />
+          <Stack.Screen name="explore/department/[id]" />
           <Stack.Screen name="explore/products" />
           <Stack.Screen name="explore/product/[id]" />
           <Stack.Screen name="explore/ingredients" />

@@ -157,3 +157,15 @@ export const scanCopy = {
   ingredientsTitle: 'Ingredients',
   sizeLabel: 'Size',
 };
+
+// DRAFT: a department's landing page (Nov 17), modeled on Ulta's and Sephora's category pages
+export const departmentCopy = {
+  shopAll: (department: string) => `Shop all ${department.toLowerCase()}`,
+  seeAll: 'See all',
+  seeAllIn: (category: string) => `See all ${category.toLowerCase()}`,
+  more: 'More',
+  count: (n: number) => (n === 1 ? '1 product' : `${n} products`),
+  notFoundTitle: 'Category not found',
+  notFoundBody: 'This category may have moved.',
+  backToExplore: 'Back to Explore',
+};

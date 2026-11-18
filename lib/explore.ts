@@ -161,6 +161,17 @@ export function productImage(product: Product): ProductImage {
   return { source: profileArt.areas[product.area] ?? profileArt.areas.products, kind: 'arch' };
 }
 
+// The picture for a category tile: the subcategory's own art, else its category's, else the department's.
+// null when nothing specific exists yet, so the tile can use the care-area arch instead
+export function categoryArt(department: string, category?: string, sub?: string): number | null {
+  return (
+    (sub ? TYPE_ART[`${department}/${category}/${sub}`] : undefined) ??
+    (category ? TYPE_ART[`${department}/${category}`] : undefined) ??
+    TYPE_ART[department] ??
+    null
+  );
+}
+
 export function productArt(product: Product) {
   return productImage(product).source;
 }

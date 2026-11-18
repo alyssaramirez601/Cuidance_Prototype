@@ -7,7 +7,7 @@ import { productImage } from '@/lib/explore';
 
 type ProductMiniCardProps = {
   product: Product;
-  // The short line under the picture, like "Face moisturizer"
+  // The line under the picture: the product name
   label: string;
   onPress: () => void;
 };
@@ -34,12 +34,13 @@ export function ProductMiniCard({ product, label, onPress }: ProductMiniCardProp
 }
 
 const styles = StyleSheet.create({
+  // Wide enough for a two-line product name
   card: {
-    width: space[48] * 2,
+    width: space[48] * 2 + space[24],
     gap: space[8],
   },
   art: {
-    height: space[48] * 2,
+    aspectRatio: 1,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',

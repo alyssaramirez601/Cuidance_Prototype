@@ -15,7 +15,7 @@ import { departments } from '@/data/categories';
 import { exploreArt, exploreCopy, productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
-import { productShortLabel, productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
+import { productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
 
 const c = colors.light;
@@ -43,7 +43,7 @@ function ExploreContent({ userId }: { userId: string }) {
       key: d.id,
       label: d.label,
       art: exploreArt[d.id],
-      go: () => router.push({ pathname: '/explore/products', params: { department: d.id } }),
+      go: () => router.push({ pathname: '/explore/department/[id]', params: { id: d.id } }),
     })),
     { key: 'ingredients', label: exploreCopy.shortcuts.ingredients, art: exploreArt.ingredients, go: () => router.push('/explore/ingredients') },
     { key: 'education', label: exploreCopy.shortcuts.education, art: exploreArt.education, go: () => router.push('/explore/education') },
@@ -90,7 +90,7 @@ function ExploreContent({ userId }: { userId: string }) {
                   <ProductMiniCard
                     key={product.id}
                     product={product}
-                    label={productShortLabel(product)}
+                    label={product.name}
                     onPress={() => router.push(`/explore/product/${product.id}`)}
                   />
                 ))}

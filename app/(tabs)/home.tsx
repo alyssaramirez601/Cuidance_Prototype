@@ -16,7 +16,7 @@ import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } fro
 import { homeCopy, partnerPlaceholders } from '@/data/draftCopy';
 import { articles } from '@/data/education';
 import { productsCopy } from '@/data/exploreCopy';
-import { articleArt, productShortLabel, productsFor } from '@/lib/explore';
+import { articleArt, productsFor } from '@/lib/explore';
 import { useAuth } from '@/hooks/useAuth';
 import { firstNameFrom } from '@/lib/auth';
 import { loadAllAnswers } from '@/lib/quizAnswers';
@@ -137,7 +137,7 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
                 <ProductMiniCard
                   key={product.id}
                   product={product}
-                  label={productShortLabel(product)}
+                  label={product.name}
                   onPress={() => router.push(`/explore/product/${product.id}`)}
                 />
               ))}
