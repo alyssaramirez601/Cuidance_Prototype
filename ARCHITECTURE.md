@@ -102,9 +102,9 @@ Saved › Guidance reads `saved_results`. Saved › Products and Owned read `use
 - **Week 11 loop:** which action in the Admin Web should show up on Mobile (or the other way around)? Waiting on Alyssa and Esme.
 - **Admin Web on Supabase:** the Admin Web uses seeded, browser-only data. The loop needs it to read and write the same Supabase project.
 - **Shop and Partner Highlights:** made-up sample partners from the prototype, with dates moved to December (team call, Nov 17). When real partners sign on, replace `data/partnerContent.ts` with a table the Admin Web writes to.
-- **Saved › Boards:** replaced Routines (team call, Nov 18). Board copy is DRAFT in `data/draftCopy.ts`.
+- **Saved › Boards:** replaced Routines (team call, Nov 18). Board copy is in `data/appCopy.ts`.
 - **Tabs:** peer testing found five tabs a bit much. Keep, merge or move them? Don't change until the team decides.
-- **Draft copy:** the lines in `data/draftCopy.ts` are waiting for team approval.
+- **App copy:** lines not in the prototype live in `data/appCopy.ts` (and are marked "New" in the other copy files). Alyssa approved them on Nov 17.
 - **Quiz decisions:** 15 open items on the Decisions page of the Outcomes Board (`docs/quiz-outcomes/11-decisions.md`).
 - **Explore:** products, categories, ingredient notes and articles are local data in `data/` for the beta (`products.ts`, `categories.ts`, `ingredientNotes.ts`, `education.ts`). Products show illustrations until photo permission is sorted out. Other stores get search links, not confirmed stock. Scan looks barcodes up in Open Beauty Facts (`lib/barcode.ts`); new dependency `expo-camera` needs Esme's OK.
 - **Profile:** delete account needs a server step (it's a turned-off button for now). Email is read-only. Privacy and notification choices are saved on the phone only and don't change anything yet.

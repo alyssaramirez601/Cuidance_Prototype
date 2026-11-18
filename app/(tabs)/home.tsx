@@ -14,7 +14,7 @@ import { PartnerHighlightCard } from '@/components/PartnerHighlightCard';
 import { ProductMiniCard } from '@/components/ProductMiniCard';
 import { Screen } from '@/components/Screen';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { homeCopy, partnerPlaceholders } from '@/data/draftCopy';
+import { homeCopy, partnerPlaceholders } from '@/data/appCopy';
 import { partnerProducts } from '@/data/partnerContent';
 import { articles } from '@/data/education';
 import { productsCopy } from '@/data/exploreCopy';

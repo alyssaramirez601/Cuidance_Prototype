@@ -7,7 +7,7 @@ import { Sheet } from '@/components/Sheet';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
 import { colors, space, type } from '@/constants/tokens';
-import { savedCopy } from '@/data/draftCopy';
+import { savedCopy } from '@/data/appCopy';
 import { useBoards } from '@/hooks/useBoards';
 import { addPin, createBoard, type PinKind } from '@/lib/boards';
 

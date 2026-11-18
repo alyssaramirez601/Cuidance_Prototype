@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
 import { colors, layout, radius, space, type } from '@/constants/tokens';
-import { savedCopy } from '@/data/draftCopy';
+import { savedCopy } from '@/data/appCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useBoards } from '@/hooks/useBoards';
 import { useSavedResults } from '@/hooks/useSavedResults';

@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
-import { areaLabels } from '@/data/draftCopy';
+import { areaLabels } from '@/data/appCopy';
 import { ingredientsCopy } from '@/data/exploreCopy';
 import { ingredientArt, noteArea, notesFor, productsWithIngredient } from '@/lib/explore';
 

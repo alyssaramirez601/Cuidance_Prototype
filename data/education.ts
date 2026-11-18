@@ -1,7 +1,7 @@
 // Education articles for Explore. Every paragraph is copied word for word from reviewed content in
 // docs/quiz-outcomes/ (the label explainer, answer-card explainers, safety lines and the every-skin-tone
-// wording), so nothing here is new advice. DRAFT: the titles, the grouping into articles and the
-// read times are new and need Alyssa and Esme's OK.
+// wording), so nothing here is new advice. The titles, the grouping into articles and the
+// read times are new (approved by Alyssa, Nov 17).
 
 import type { CareArea } from '@/data/outcomeTypes';
 import { emergencyLine } from '@/data/safety';

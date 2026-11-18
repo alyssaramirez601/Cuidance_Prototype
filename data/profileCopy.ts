@@ -1,6 +1,6 @@
 // Profile copy, from the clickable prototype screens 20 to 25 (Profile, Your Attributes,
 // Guidance History, Privacy / Trust Settings, Notifications, Account Settings).
-// Lines marked DRAFT aren't in the prototype and need Alyssa and Esme's OK.
+// Lines marked "New" aren't in the prototype (approved by Alyssa, Nov 17).
 
 export const profileCopy = {
   title: 'Profile',
@@ -11,11 +11,11 @@ export const profileCopy = {
   updated: (date: string) => `Updated ${date}`,
   attributesHelper: 'These details help Cuidance explain fit.',
   viewAttributes: 'View attributes',
-  // DRAFT: the prototype always has a sample person, so it never shows an empty attributes card
+  // New: the prototype always has a sample person, so it never shows an empty attributes card
   noAttributes: 'Take the quiz to add your attributes.',
   rows: {
     history: 'Guidance history',
-    // DRAFT
+    // New
     products: 'Products you added',
     privacy: 'Privacy & trust',
     notifications: 'Notifications',
@@ -35,11 +35,11 @@ export const attributesCopy = {
   // Alyssa's wording (Nov 17), replacing the prototype's "Used in Explore" and "Used in your results"
   explore: 'Explore',
   inResults: 'Based on your results',
-  // DRAFT: shown when one area is opened from Profile
+  // New: shown when one area is opened from Profile
   showAll: 'Show all attributes',
   editAttributes: 'Edit attributes',
   retake: 'Retake the quiz',
-  // DRAFT: group titles reuse the quiz's own area names
+  // New: group titles reuse the quiz's own area names
   startingTitle: 'Getting started',
 };
 
@@ -49,7 +49,7 @@ export const historyCopy = {
   current: 'Current',
   reopenResult: 'Reopen result',
   reopen: 'Reopen',
-  // DRAFT: the prototype always has history, so it has no empty line
+  // New: the prototype always has history, so it has no empty line
   empty: 'Results you save will show up here.',
   takeQuiz: 'Take the quiz',
 };
@@ -91,12 +91,12 @@ export const accountCopy = {
   deleteDetail: 'Removes your account and saved guidance',
   save: 'Save account changes',
   saved: 'Account changes saved',
-  // DRAFT: the prototype has no error states
+  // New: the prototype has no error states
   nameRequired: 'Enter your name.',
 };
 
 // Esme's Week 12 marketing illustrations, reused so the app matches the website and emails
-// DRAFT: Products you added (from Scan's Add manually), with the review status from the Admin Web
+// New: Products you added (from Scan's Add manually), with the review status from the Admin Web
 export const yourProductsCopy = {
   title: 'Products you added',
   intro: 'Products you added from Scan. Each one is reviewed before it appears in Cuidance.',

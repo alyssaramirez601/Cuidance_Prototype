@@ -1,6 +1,6 @@
-// DRAFT COPY, NEEDS TEAM APPROVAL. docs/quiz-outcomes/ describes these pieces but doesn't give the words,
-// so they were drafted for review on the preview link. Replace them here once Alyssa and Esme approve
-// or rewrite them, then add the final wording to the outcome docs.
+// App copy that docs/quiz-outcomes/ describes but doesn't give the words for. Written for the beta
+// and approved by Alyssa (Nov 17). If the team rewrites a line, change it here and add the final
+// wording to the outcome docs.
 
 export const areaLabels: Record<string, string> = {
   skin: 'skin care',
@@ -112,7 +112,7 @@ export const resultLabels = {
 };
 
 // Home, from the Week 8 Step 5 Home hi-fi (07 and 07B). "Good afternoon" and "Good evening"
-// are draft lines that follow "Good morning" from the design, waiting for team approval
+// follow "Good morning" from the design
 export const homeCopy = {
   loading: 'Loading Home',
   loadError: 'We couldn’t load your Home screen. Check your connection and try again.',
@@ -128,7 +128,7 @@ export const homeCopy = {
   revisit: 'Ready to revisit anytime',
   getGuidance: 'Get your guidance',
   getGuidanceDetail: 'Take the quiz to see what may fit you',
-  // DRAFT: the Ulta and Sephora style Home (Nov 17)
+  // New: the Ulta and Sephora style Home (Nov 17)
   searchHint: 'Search products, ingredients, topics',
   attributesTitle: 'Your attributes',
   attributesDetail: 'See what shapes your guidance',
@@ -138,7 +138,7 @@ export const homeCopy = {
 };
 
 // Partner Highlights copy from the Week 8 Home hi-fi. The products come from data/partnerContent.ts.
-// The note line is draft copy, so nobody mistakes these for real products
+// The note line makes sure nobody mistakes these for real products
 export const partnerPlaceholders = {
   title: 'Partner Highlights',
   filters: ['Today’s trends', 'Best sellers', 'New arrivals'],
@@ -168,7 +168,7 @@ export const savedCopy = {
   // From the clickable prototype, screen 16
   productsEmptyTitle: 'No saved products yet',
   productsEmptyBody: 'Tap Save on any product to keep it here.',
-  // DRAFT: marks a saved partner product in Saved > Products
+  // New: marks a saved partner product in Saved > Products
   partnerTag: 'Partner content',
   ownedTag: 'Owned',
   viewProduct: 'View product',
@@ -179,14 +179,14 @@ export const savedCopy = {
   reflections: { loved: 'Tried it, loved it', not_for_me: 'Tried it, did not work for me', testing: 'Still testing' },
   reflectionSaved: 'Reflection saved',
   productsLoading: 'Loading your products',
-  // DRAFT: product page buttons
+  // New: product page buttons
   save: 'Save',
   savedButton: 'Saved',
   own: 'I own this',
   ownedButton: 'Owned',
   savedToast: 'Saved to your Saved area',
   ownedToast: 'Added to Owned',
-  // Boards replace Routines (Nov 17). Lines adapted from the prototype's routine boards (18 to 18C); DRAFT
+  // Boards replace Routines (Nov 17). Lines adapted from the prototype's routine boards (18 to 18C)
   boardsIntro: 'Collect products, guides and results in boards, like a routine or a wishlist.',
   boardsEmptyTitle: 'No boards yet',
   boardsEmptyBody: 'Create one to keep your steps and products in one place.',

@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { colors, layout, space, type } from '@/constants/tokens';
-import { areaLabels } from '@/data/draftCopy';
+import { areaLabels } from '@/data/appCopy';
 import { articles, type ArticleKind } from '@/data/education';
 import { educationCopy, exploreCopy } from '@/data/exploreCopy';
 import { articleArt, searchArticles } from '@/lib/explore';

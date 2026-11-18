@@ -14,7 +14,7 @@ import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { Toast } from '@/components/Toast';
 import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels, emptyResult, savedCopy, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/draftCopy';
+import { areaLabels, emptyResult, savedCopy, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/appCopy';
 import { labelGuide } from '@/data/labelGuide';
 import type { CareArea, Evidence } from '@/data/outcomeTypes';
 import { emergencyLine } from '@/data/safety';

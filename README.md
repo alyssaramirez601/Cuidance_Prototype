@@ -134,7 +134,7 @@ What exists today:
 /app          Screens and navigation (Expo Router): welcome, create account, sign in, a start route that opens the first quiz question after sign-in, the quiz question and result screens in app/quiz, the Profile pages in app/profile, the Explore pages in app/explore, the Saved board page in app/saved, the partner product and collection pages in app/shop, and a temporary proof screen behind Save and exit, plus a temporary dev screen that shows every component
 /components   Reusable UI, one file per Figma component (see docs/design-system/components.md), plus Screen and LoadingState
 /constants    tokens.ts, the only source of color, type, spacing and radius
-/data         Quiz questions for every section, plus the result content: answer cards, mixing rules and sources (generated from docs/quiz-outcomes by scripts/build-outcome-data.mjs), result names, the emergency line, and draft copy waiting for approval (draftCopy.ts)
+/data         Quiz questions for every section, plus the result content: answer cards, mixing rules and sources (generated from docs/quiz-outcomes by scripts/build-outcome-data.mjs), result names, the emergency line, and app copy that the outcome docs describe but do not word (appCopy.ts)
 /hooks        useAuth, useQuizAnswer, useQuizNext, useGuidanceResult and useGoBack
 /lib          Supabase client, sign-in helpers, saving quiz answers, quizFlow (which questions each person sees) buildResult (turns answers into a result) and results (Save result and Start over)
 /assets       App icon and splash images (Expo placeholders for now), Welcome artwork cut from the Week 8 hi-fi design (assets/images/welcome-*), the logo (assets/logo), and spare artwork not used on any screen yet, kept for later (assets/art-library)
@@ -174,7 +174,7 @@ Cuidance is designed for everyone, from very deep to very light skin tones and a
 
 We use AI tools to support research, design exploration, coding and documentation. Every claim, citation, design decision and line of code is reviewed and verified by the team. Material AI use is logged in our AI disclosure log.
 
-- **Claude:** research synthesis, prompt drafting, Figma board building, documentation
+- **Claude:** research synthesis, prompt writing, Figma board building, documentation
 - **ChatGPT:** image generation for style tiles, logo and brand elements; token architecture
 - **Perplexity:** sourced secondary research for the competitive landscape and quiz outcome library
 

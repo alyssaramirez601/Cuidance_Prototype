@@ -3,7 +3,7 @@
 // copied from the clickable prototype's Shop screen (s19) and partner products (pa, pb, pc, pbo),
 // with the expired October dates moved into December. Swap this file for a table that the
 // Admin Web writes to once real partners sign on.
-// Lines marked DRAFT are new copy the prototype doesn't have. Alyssa approved them on Nov 17.
+// Lines marked "New" aren't in the prototype (approved by Alyssa, Nov 17).
 
 export type PartnerProduct = {
   id: string;
@@ -148,7 +148,7 @@ export const partnerWorkshops: PartnerWorkshop[] = [
 export const shopCopy = {
   title: 'Shop',
   notice: 'Everything in Shop is paid or commercial content. Free guidance lives in Home and Explore.',
-  // DRAFT: tells beta testers these partners are made up
+  // New: tells beta testers these partners are made up
   sampleNote: 'Sample partners for the beta. Cuidance has no real partnerships yet.',
   tabs: [
     { key: 'all', label: 'All' },
@@ -156,7 +156,7 @@ export const shopCopy = {
     { key: 'collections', label: 'Collections' },
     { key: 'workshops', label: 'Workshops' },
   ],
-  // DRAFT: row titles on the All tab
+  // New: row titles on the All tab
   productsRow: 'Partner products',
   offersRow: 'Offers',
   collectionsRow: 'Collections',
@@ -177,7 +177,7 @@ export const shopCopy = {
   collectionCount: (count: number, detail: string) => `${count} ${count === 1 ? 'product' : 'products'} ${detail}`,
   // Prototype toast, with the sample-partner line in place of "Opens partner site"
   codeCopied: (code: string) => `Code ${code} copied. This is a sample partner, so there is no partner site to open yet.`,
-  // DRAFT: these partners are made up, so there is no site to open
+  // New: these partners are made up, so there is no site to open
   noSite: 'This is a sample partner, so there is no partner site to open yet.',
   // Partner product page (prototype 14B, from Shop)
   fromShop: 'From Shop · Partner content',
@@ -187,7 +187,7 @@ export const shopCopy = {
   fragrance: 'Fragrance',
   texture: 'Texture',
   siteHelper: "Opens the partner's site. No checkout in Cuidance.",
-  // DRAFT: not found states
+  // New: not found states
   productNotFoundTitle: 'Partner product not found',
   collectionNotFoundTitle: 'Collection not found',
   notFoundBody: 'It may have ended. Head back to Shop to see what is running now.',

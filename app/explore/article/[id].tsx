@@ -9,7 +9,7 @@ import { Icon } from '@/components/Icon';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
-import { areaLabels, savedCopy } from '@/data/draftCopy';
+import { areaLabels, savedCopy } from '@/data/appCopy';
 import { educationCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { articleArt, findArticle } from '@/lib/explore';

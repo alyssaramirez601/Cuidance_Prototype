@@ -12,7 +12,7 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels } from '@/data/draftCopy';
+import { areaLabels } from '@/data/appCopy';
 import { profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData, type ProfileData } from '@/hooks/useProfileData';

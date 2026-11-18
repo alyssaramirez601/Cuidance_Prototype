@@ -10,7 +10,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
-import { areaLabels } from '@/data/draftCopy';
+import { areaLabels } from '@/data/appCopy';
 import { attributesCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { AREA_ORDER, quizQuestions, type QuizQuestion } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';

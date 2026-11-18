@@ -5,7 +5,7 @@ import { AddToBoardSheet } from '@/components/AddToBoardSheet';
 import { Button } from '@/components/Button';
 import { Toast } from '@/components/Toast';
 import { space } from '@/constants/tokens';
-import { savedCopy } from '@/data/draftCopy';
+import { savedCopy } from '@/data/appCopy';
 import { useUserProducts } from '@/hooks/useUserProducts';
 
 type ProductActionsProps = {

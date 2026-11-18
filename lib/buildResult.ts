@@ -1,5 +1,5 @@
 import { answerCards } from '@/data/answerCards';
-import { clarify, explorationSentence, openLines, twoAreaSubtitle } from '@/data/draftCopy';
+import { clarify, explorationSentence, openLines, twoAreaSubtitle } from '@/data/appCopy';
 import type { AnswerCard, CareArea, Evidence, MixingRule, ResultName } from '@/data/outcomeTypes';
 import { quizQuestions } from '@/data/quiz';
 import {
