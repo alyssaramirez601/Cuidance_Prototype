@@ -6,13 +6,12 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { historyCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useSavedResults } from '@/hooks/useSavedResults';
 import type { SavedResult } from '@/lib/savedResults';
-
-const c = colors.light;
 
 function longDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -26,6 +25,7 @@ export default function HistoryScreen() {
 }
 
 function HistoryContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useSavedResults(userId);
 
@@ -85,7 +85,7 @@ function HistoryContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   empty: {
     gap: space[16],
   },
@@ -154,4 +154,4 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.accent,
   },
-});
+}));

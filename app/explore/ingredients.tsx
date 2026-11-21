@@ -7,15 +7,15 @@ import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { exploreCopy, ingredientsCopy } from '@/data/exploreCopy';
 import { ingredientNotes } from '@/data/ingredientNotes';
 import { ingredientArt, searchIngredients } from '@/lib/explore';
 
-const c = colors.light;
-
 // Prototype screen 10. Before typing, it lists the ingredients Cuidance has reviewed notes for
 export default function IngredientsScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [query, setQuery] = useState('');
   const results = searchIngredients(query);
@@ -55,7 +55,7 @@ export default function IngredientsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   list: {
     gap: space[8],
   },
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

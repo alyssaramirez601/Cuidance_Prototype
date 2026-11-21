@@ -9,7 +9,8 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { areaLabels } from '@/data/appCopy';
 import { attributesCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { AREA_ORDER, quizQuestions, type QuizQuestion } from '@/data/quiz';
@@ -19,7 +20,6 @@ import { shortDate } from '@/lib/profile';
 import { visibleQuestionIds, type SavedAnswers } from '@/lib/quizFlow';
 import { clearAnswers } from '@/lib/results';
 
-const c = colors.light;
 const CONFIDENCE_ID = 'u3_confidence';
 
 type Group = { key: string; title: string; questions: QuizQuestion[] };
@@ -59,6 +59,7 @@ export default function AttributesScreen() {
 }
 
 function AttributesContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   // Set when someone taps one care area on Profile, so the page opens on just that area
   const { area } = useLocalSearchParams<{ area?: string }>();
@@ -174,6 +175,7 @@ function AnswerWithLinks({
   onExplore: () => void;
   onResult: () => void;
 }) {
+  const styles = useStyles();
   return (
     <View style={styles.answerBlock}>
       <Text style={styles.answer}>{label}</Text>
@@ -188,6 +190,8 @@ function AnswerWithLinks({
 }
 
 function SmallLink({ label, a11y, onPress }: { label: string; a11y: string; onPress: () => void }) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <Pressable onPress={onPress} accessibilityRole="link" accessibilityLabel={a11y} style={styles.smallLink}>
       <Text style={styles.linkText}>{label}</Text>
@@ -196,7 +200,7 @@ function SmallLink({ label, a11y, onPress }: { label: string; a11y: string; onPr
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   group: {
     gap: space[8],
   },
@@ -276,4 +280,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.inkMuted,
   },
-});
+}));

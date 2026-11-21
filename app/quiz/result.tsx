@@ -13,7 +13,8 @@ import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
 import { Sheet } from '@/components/Sheet';
 import { Toast } from '@/components/Toast';
-import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { areaLabels, emptyResult, savedCopy, evidenceIntro, evidenceKey, resultLabels, sectionTitles } from '@/data/appCopy';
 import { labelGuide } from '@/data/labelGuide';
 import type { CareArea, Evidence } from '@/data/outcomeTypes';
@@ -27,7 +28,6 @@ import type { SavedAnswers } from '@/lib/quizFlow';
 import { visibleQuestionIds, answerTags } from '@/lib/quizFlow';
 import { clearAnswers, saveResult } from '@/lib/results';
 
-const c = colors.light;
 // Three visible at once; the rest stay one tap deeper, never dropped
 const VISIBLE_AT_ONCE = 3;
 const evidenceOrder: Evidence[] = ['Strong', 'Moderate', 'Limited', 'Assumption'];
@@ -64,6 +64,7 @@ export default function ResultScreen() {
 }
 
 function ResultContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useGuidanceResult(userId);
 
@@ -103,6 +104,8 @@ type ResultViewProps = {
 };
 
 export function ResultView({ userId, result, answers, savedMode }: ResultViewProps) {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const [activeArea, setActiveArea] = useState<CareArea>(result.areas[0]);
   const [sheet, setSheet] = useState<SheetContent | null>(null);
@@ -414,6 +417,7 @@ export function ResultView({ userId, result, answers, savedMode }: ResultViewPro
 }
 
 function SheetBody({ content }: { content: SheetContent }) {
+  const styles = useStyles();
   return (
     <>
       {content.lead ? <Text style={styles.body}>{content.lead}</Text> : null}
@@ -440,6 +444,7 @@ function SheetBody({ content }: { content: SheetContent }) {
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
+  const styles = useStyles();
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle} accessibilityRole="header">
@@ -451,6 +456,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 function Group({ title, helper, children }: { title: string; helper?: string; children: ReactNode }) {
+  const styles = useStyles();
   return (
     <View style={styles.group}>
       <Text style={styles.label}>{title}</Text>
@@ -461,6 +467,7 @@ function Group({ title, helper, children }: { title: string; helper?: string; ch
 }
 
 function Point({ point }: { point: ResultPoint }) {
+  const styles = useStyles();
   return (
     <View style={styles.point}>
       <Text style={[styles.body, styles.flex]}>{point.text}</Text>
@@ -476,6 +483,7 @@ function Point({ point }: { point: ResultPoint }) {
 
 // "Show 6 more" opens the rest of the same list in place, so it's clear they belong together
 function MoreList<T>({ items, render }: { items: T[]; render: (item: T) => ReactNode }) {
+  const styles = useStyles();
   const [expanded, setExpanded] = useState(false);
   const hidden = items.length - VISIBLE_AT_ONCE;
   const visible = expanded ? items : items.slice(0, VISIBLE_AT_ONCE);
@@ -494,6 +502,7 @@ function MoreList<T>({ items, render }: { items: T[]; render: (item: T) => React
 }
 
 function Sources() {
+  const styles = useStyles();
   const [open, setOpen] = useState(false);
   return (
     <View style={styles.list}>
@@ -523,7 +532,7 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   flex: { flex: 1 },
   topBar: {
     flexDirection: 'row',
@@ -714,4 +723,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.error,
   },
-});
+}));

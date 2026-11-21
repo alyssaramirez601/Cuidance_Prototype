@@ -1,6 +1,8 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Animated, Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
+import { usePressBounce } from '@/hooks/useMotion';
 
 export type ButtonStyle = 'primary' | 'secondary' | 'ghost';
 export type ButtonState = 'default' | 'hover' | 'pressed' | 'disabled';
@@ -16,10 +18,8 @@ type ButtonProps = {
 
 type Look = { fill: string; border: string | null; text: string };
 
-const c = colors.light;
-
 // One row per Figma Style and State, from docs/design-system/components.md
-const looks: Record<ButtonStyle, Record<ButtonState, Look>> = {
+const looks = (c: Palette): Record<ButtonStyle, Record<ButtonState, Look>> => ({
   primary: {
     default: { fill: c.accent, border: null, text: c.onAccent },
     hover: { fill: c.accentHover, border: null, text: c.onAccent },
@@ -38,19 +38,25 @@ const looks: Record<ButtonStyle, Record<ButtonState, Look>> = {
     pressed: { fill: c.border, border: null, text: c.accent },
     disabled: { fill: 'transparent', border: null, text: c.disabledInk },
   },
-};
+});
 
 export function Button({ label, onPress, style = 'primary', state, loading = false }: ButtonProps) {
+  const c = useColors();
+  const styles = useStyles();
   const isDisabled = state === 'disabled' || loading;
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce();
 
   function lookFor(pressed: boolean): Look {
     const current: ButtonState = isDisabled ? 'disabled' : (state ?? (pressed ? 'pressed' : 'default'));
-    return looks[style][current];
+    return looks(c)[style][current];
   }
 
   return (
+    <Animated.View style={bounceStyle}>
     <Pressable
       onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       disabled={isDisabled}
       accessibilityRole="button"
       accessibilityLabel={label}
@@ -77,10 +83,11 @@ export function Button({ label, onPress, style = 'primary', state, loading = fal
         );
       }}
     </Pressable>
+    </Animated.View>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   base: {
     minHeight: layout.buttonHeight,
     flexDirection: 'row',
@@ -94,4 +101,4 @@ const styles = StyleSheet.create({
   label: {
     ...type.label,
   },
-});
+}));

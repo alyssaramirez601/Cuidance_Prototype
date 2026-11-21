@@ -8,16 +8,17 @@ import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { areaLabels, savedCopy } from '@/data/appCopy';
 import { educationCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { articleArt, findArticle } from '@/lib/explore';
 
-const c = colors.light;
-
 // Prototype screen 13. The safety line sits in its own box, never inside the paragraphs
 export default function ArticleScreen() {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const article = findArticle(id);
@@ -87,12 +88,12 @@ export default function ArticleScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   hero: {
     width: '100%',
     aspectRatio: 3 / 2,
     borderRadius: radius.medium,
-    backgroundColor: colors.light.surfaceWarm,
+    backgroundColor: c.surfaceWarm,
   },
   body: {
     ...type.body,
@@ -125,4 +126,4 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.accent,
   },
-});
+}));

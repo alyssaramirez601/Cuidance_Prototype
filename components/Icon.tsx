@@ -1,6 +1,7 @@
 import Svg, { Path } from 'react-native-svg';
 
-import { colors, sizes, stroke } from '@/constants/tokens';
+import { sizes, stroke } from '@/constants/tokens';
+import { useColors } from '@/hooks/useTheme';
 
 // Path data copied from docs/design-system/icons.md. Change it there first.
 const iconPaths = {
@@ -46,7 +47,9 @@ type IconProps = {
 };
 
 // Icons are decorative. The control that holds one carries the accessibility label
-export function Icon({ name, size = sizes.icon.large, color = colors.light.ink }: IconProps) {
+export function Icon({ name, size = sizes.icon.large, color }: IconProps) {
+  const c = useColors();
+  const ink = color ?? c.ink;
   return (
     <Svg
       width={size}
@@ -57,7 +60,7 @@ export function Icon({ name, size = sizes.icon.large, color = colors.light.ink }
       importantForAccessibility="no-hide-descendants"
     >
       {iconPaths[name].map((d) => (
-        <Path key={d} d={d} stroke={color} strokeWidth={stroke.icon} strokeLinecap="round" strokeLinejoin="round" />
+        <Path key={d} d={d} stroke={ink} strokeWidth={stroke.icon} strokeLinecap="round" strokeLinejoin="round" />
       ))}
     </Svg>
   );

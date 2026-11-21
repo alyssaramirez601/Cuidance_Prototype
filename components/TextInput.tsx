@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 export type TextInputState = 'default' | 'focus' | 'error' | 'disabled';
 
@@ -22,8 +23,6 @@ type TextInputProps = Omit<NativeProps, 'style' | 'secureTextEntry' | 'editable'
   isPassword?: boolean;
 };
 
-const c = colors.light;
-
 export function TextInput({
   label,
   state,
@@ -34,6 +33,8 @@ export function TextInput({
   onBlur,
   ...inputProps
 }: TextInputProps) {
+  const styles = useStyles();
+  const c = useColors();
   const [isFocused, setIsFocused] = useState(false);
   const [isHidden, setIsHidden] = useState(isPassword);
 
@@ -89,7 +90,7 @@ export function TextInput({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   field: {
     gap: space[8],
   },
@@ -130,4 +131,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     flexShrink: 1,
   },
-});
+}));

@@ -2,7 +2,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { HelpButton } from '@/components/HelpButton';
 import { Icon } from '@/components/Icon';
-import { colors, layout, sizes, space, type } from '@/constants/tokens';
+import { layout, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 type TopBarProps = {
   onBack: () => void;
@@ -11,10 +12,12 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack, onHelp }: TopBarProps) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <View style={styles.bar}>
       <Pressable onPress={onBack} accessibilityRole="button" accessibilityLabel="Back" style={styles.back}>
-        <Icon name="back" size={sizes.icon.large} color={colors.light.ink} />
+        <Icon name="back" size={sizes.icon.large} color={c.ink} />
         <Text style={styles.backLabel}>Back</Text>
       </Pressable>
       {onHelp ? <HelpButton onPress={onHelp} /> : null}
@@ -22,7 +25,7 @@ export function TopBar({ onBack, onHelp }: TopBarProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   bar: {
     minHeight: sizes.topBarHeight,
     flexDirection: 'row',
@@ -30,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: space[8],
     paddingHorizontal: space[16],
-    backgroundColor: colors.light.background,
+    backgroundColor: c.background,
   },
   back: {
     minHeight: layout.minTouchTarget,
@@ -40,6 +43,6 @@ const styles = StyleSheet.create({
   },
   backLabel: {
     ...type.label,
-    color: colors.light.ink,
+    color: c.ink,
   },
-});
+}));

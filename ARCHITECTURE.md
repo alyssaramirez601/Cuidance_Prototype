@@ -10,7 +10,7 @@ _Last updated: Nov 11, 2026 (Week 11, after the guidance result merged in PR #18
 ```
 cuidance_prototype/
 ├── app/                      Screens (Expo Router: file name = route)
-│   ├── _layout.tsx           Root layout: fonts, auth gate, screen stack
+│   ├── _layout.tsx           Root layout: theme (light/dark), fonts, auth gate, screen stack, animated splash
 │   ├── index.tsx             Welcome (signed out)
 │   ├── start.tsx             Sends signed-in people to the first quiz question
 │   ├── (auth)/
@@ -27,10 +27,11 @@ cuidance_prototype/
 │   ├── shop/                 Partner product and partner collection pages (sample partners)
 │   ├── proof.tsx             Old test screen, no longer linked
 │   └── dev.tsx               Temporary screen showing every component
-├── components/               Shared UI, one file per Figma component
+├── components/               Shared UI, one file per Figma component (plus AppSplash and Appear for the Nov 20 redesign)
 ├── constants/tokens.ts       The only source of color, type, spacing, radius
+├── assets/splash/            Splash art, one image per layer in light and dark, and the logo mark cut into bowl and circle
 ├── data/                     Quiz questions and result content (local, typed)
-├── hooks/                    useAuth, useQuizAnswer, useQuizNext, useGuidanceResult, useGoBack, useGoogleSignIn, useProfileData, useDeviceSettings
+├── hooks/                    useAuth, useQuizAnswer, useQuizNext, useGuidanceResult, useGoBack, useGoogleSignIn, useProfileData, useDeviceSettings, useTheme (light/dark), useMotion (bounce, reduced motion), useSplash
 ├── lib/                      Supabase client and every database call
 ├── scripts/                  build-outcome-data.mjs (docs/quiz-outcomes → data/)
 ├── supabase/migrations/      SQL for the database
@@ -93,6 +94,7 @@ Saved › Guidance reads `saved_results`. Saved › Products and Owned read `use
 - **Supabase holds the data:** who is signed in, their answers, and their saved results. If it matters after the app closes, it lives in Supabase.
 - **The app holds UI state only:** which answer is selected before saving, which tab or pop-up is open, loading and error messages.
 - **Privacy and notification choices** are kept on the phone with AsyncStorage (`lib/profile.ts`) for the beta, because nothing reads them yet and there's no database column for them.
+- **Light or dark mode** (Match my phone, Light, Dark) is kept on the phone with AsyncStorage (`hooks/useTheme.tsx`, key `cuidance.appearance`). So is the day the full splash last played (`hooks/useSplash.ts`, key `cuidance.splash.lastFullDay`).
 - **The sign-in session** is kept on the phone with AsyncStorage (through `lib/supabase.ts`) so people stay signed in.
 - **The result** is built in the app (`lib/buildResult.ts`) from the saved answers plus the local content in `data/`. It is never stored as text.
 - Screens never call Supabase directly. They use a hook, and the hook uses `lib/`.

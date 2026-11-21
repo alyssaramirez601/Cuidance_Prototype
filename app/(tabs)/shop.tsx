@@ -9,7 +9,8 @@ import { Screen } from '@/components/Screen';
 import { SwipeRow } from '@/components/SwipeRow';
 import { Tabs } from '@/components/Tabs';
 import { Toast } from '@/components/Toast';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import {
   partnerCollections,
   partnerOffers,
@@ -22,11 +23,10 @@ import { collectionProducts, copyCode } from '@/lib/shop';
 
 type ShopTab = 'all' | 'offers' | 'collections' | 'workshops';
 
-const c = colors.light;
-
 // Shop holds only labeled partner content, kept apart from guidance. No checkout:
 // everything opens on the partner's site
 export default function ShopScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [tab, setTab] = useState<ShopTab>('all');
   const [toast, setToast] = useState('');
@@ -150,7 +150,7 @@ export default function ShopScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   title: {
     ...type.heading,
     color: c.ink,
@@ -167,4 +167,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.inkMuted,
   },
-});
+}));

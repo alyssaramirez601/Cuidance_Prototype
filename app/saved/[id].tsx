@@ -5,7 +5,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
-import { colors, radius, space, type } from '@/constants/tokens';
+import { radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { savedCopy } from '@/data/appCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { buildResult } from '@/lib/buildResult';
@@ -26,6 +27,7 @@ function stateFrom(loaded: Awaited<ReturnType<typeof getSavedResult>>): State {
 
 // A saved result, rebuilt from the answers it was saved with, so it reads the way it did that day
 export default function SavedResultScreen() {
+  const styles = useStyles();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { session } = useAuth();
   const router = useRouter();
@@ -86,23 +88,23 @@ export default function SavedResultScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   title: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   body: {
     ...type.body,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   errorBox: {
     gap: space[12],
     padding: space[16],
     borderRadius: radius.medium,
-    backgroundColor: colors.light.errorSurface,
+    backgroundColor: c.errorSurface,
   },
   errorText: {
     ...type.body,
-    color: colors.light.error,
+    color: c.error,
   },
-});
+}));

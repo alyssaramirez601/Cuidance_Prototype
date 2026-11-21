@@ -18,7 +18,8 @@ import { TabItem } from '@/components/TabItem';
 import { TextInput, type TextInputState } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
 import { TopBar } from '@/components/TopBar';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { useGoBack } from '@/hooks/useGoBack';
 
 // Temporary developer screen. It shows each component in each Figma variant, labeled with the Figma name.
@@ -36,6 +37,7 @@ const checkboxStates: CheckboxState[] = ['unchecked', 'checked', 'error', 'disab
 const typeScale = ['display', 'heading', 'title', 'body', 'label', 'caption'] as const;
 
 export default function DevScreen() {
+  const styles = useStyles();
   const goBack = useGoBack();
   const [tab, setTab] = useState<TabId>('home');
 
@@ -204,6 +206,7 @@ type SectionProps = {
 };
 
 function Section({ title, children }: SectionProps) {
+  const styles = useStyles();
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle} accessibilityRole="header">
@@ -221,6 +224,7 @@ type VariantProps = {
 
 // The caption is the Figma variant name, so a screenshot can be checked against Figma
 function Variant({ name, children }: VariantProps) {
+  const styles = useStyles();
   return (
     <View style={styles.variant}>
       <Text style={styles.caption}>{name}</Text>
@@ -229,10 +233,10 @@ function Variant({ name, children }: VariantProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   pageTitle: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   section: {
     gap: space[12],
@@ -240,17 +244,17 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...type.title,
-    color: colors.light.ink,
+    color: c.ink,
   },
   variant: {
     gap: space[4],
   },
   caption: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   ink: {
-    color: colors.light.ink,
+    color: c.ink,
   },
   wrap: {
     flexDirection: 'row',
@@ -266,4 +270,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: space[16],
   },
-});
+}));

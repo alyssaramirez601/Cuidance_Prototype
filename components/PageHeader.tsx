@@ -3,7 +3,8 @@ import { useRouter, type Href } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { TopBar } from '@/components/TopBar';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type PageHeaderProps = {
   title: string;
@@ -17,6 +18,7 @@ type PageHeaderProps = {
 // Top of each inner page (Profile and Explore): a Back bar, an illustration if there is one, then the title and intro.
 // The art is decoration, so screen readers skip it and read the title instead
 export function PageHeader({ title, intro, art, backTo = '/profile' }: PageHeaderProps) {
+  const styles = useStyles();
   const router = useRouter();
   return (
     <View style={styles.header}>
@@ -33,7 +35,7 @@ export function PageHeader({ title, intro, art, backTo = '/profile' }: PageHeade
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   header: {
     gap: space[8],
   },
@@ -48,10 +50,10 @@ const styles = StyleSheet.create({
   },
   title: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   intro: {
     ...type.body,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
-});
+}));

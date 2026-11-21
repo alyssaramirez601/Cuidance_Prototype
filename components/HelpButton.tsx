@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 export type HelpButtonState = 'default' | 'pressed';
 
@@ -11,9 +12,9 @@ type HelpButtonProps = {
   state?: HelpButtonState;
 };
 
-const c = colors.light;
-
 export function HelpButton({ onPress, state }: HelpButtonProps) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel="Help" style={styles.hug}>
       {({ pressed }) => {
@@ -29,7 +30,7 @@ export function HelpButton({ onPress, state }: HelpButtonProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // Hugs its content in any parent, so it never stretches full width
   hug: {
     alignSelf: 'flex-start',
@@ -49,4 +50,4 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.ink,
   },
-});
+}));

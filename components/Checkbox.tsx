@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
 
 export type CheckboxState = 'unchecked' | 'checked' | 'error' | 'disabled';
 
@@ -16,17 +17,17 @@ type CheckboxProps = {
   onLinkPress?: () => void;
 };
 
-const c = colors.light;
-
-const boxLooks = {
+const boxLooks = (c: Palette) => ({
   unchecked: { fill: c.surface, border: c.borderStrong, borderWidth: stroke.default },
   checked: { fill: c.accent, border: c.accent, borderWidth: stroke.default },
   error: { fill: c.surface, border: c.error, borderWidth: stroke.strong },
   disabled: { fill: c.disabledSurface, border: c.disabledInk, borderWidth: stroke.default },
-} as const;
+} as const);
 
 export function Checkbox({ label, onPress, state = 'unchecked', error, linkText, onLinkPress }: CheckboxProps) {
-  const look = boxLooks[state];
+  const styles = useStyles();
+  const c = useColors();
+  const look = boxLooks(c)[state];
   const isDisabled = state === 'disabled';
 
   return (
@@ -43,7 +44,7 @@ export function Checkbox({ label, onPress, state = 'unchecked', error, linkText,
       </View>
       <View style={styles.textColumn}>
         <Text style={[styles.label, { color: isDisabled ? c.disabledInk : c.ink }]}>
-          {renderLabel(label, linkText, onLinkPress)}
+          {renderLabel(styles.link, label, linkText, onLinkPress)}
         </Text>
         {state === 'error' && error ? (
           <Text accessibilityLiveRegion="polite" style={styles.error}>
@@ -55,7 +56,7 @@ export function Checkbox({ label, onPress, state = 'unchecked', error, linkText,
   );
 }
 
-function renderLabel(label: string, linkText?: string, onLinkPress?: () => void) {
+function renderLabel(linkStyle: object, label: string, linkText?: string, onLinkPress?: () => void) {
   const start = linkText ? label.indexOf(linkText) : -1;
   if (!linkText || !onLinkPress || start === -1) {
     return label;
@@ -63,7 +64,7 @@ function renderLabel(label: string, linkText?: string, onLinkPress?: () => void)
   return (
     <>
       {label.slice(0, start)}
-      <Text onPress={onLinkPress} accessibilityRole="link" style={styles.link}>
+      <Text onPress={onLinkPress} accessibilityRole="link" style={linkStyle}>
         {linkText}
       </Text>
       {label.slice(start + linkText.length)}
@@ -71,7 +72,7 @@ function renderLabel(label: string, linkText?: string, onLinkPress?: () => void)
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   link: {
     color: c.accent,
     textDecorationLine: 'underline',
@@ -98,4 +99,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.error,
   },
-});
+}));

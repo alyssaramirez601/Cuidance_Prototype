@@ -7,15 +7,15 @@ import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { areaLabels } from '@/data/appCopy';
 import { ingredientsCopy } from '@/data/exploreCopy';
 import { ingredientArt, noteArea, notesFor, productsWithIngredient } from '@/lib/explore';
 
-const c = colors.light;
-
 // Prototype screen 11. Shows only reviewed notes (with their care area and evidence), never a guessed role
 export default function IngredientScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { name = '' } = useLocalSearchParams<{ name: string }>();
   const notes = notesFor(name);
@@ -79,7 +79,7 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   section: {
     gap: space[8],
   },
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
     width: space[32] + space[8],
     height: space[48],
   },
-});
+}));

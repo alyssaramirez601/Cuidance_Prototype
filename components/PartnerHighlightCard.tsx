@@ -3,7 +3,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { DisclosureLabel } from '@/components/DisclosureLabel';
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 type PartnerHighlightCardProps = {
   brand: string;
@@ -13,12 +14,12 @@ type PartnerHighlightCardProps = {
   onPress: () => void;
 };
 
-const c = colors.light;
-
 // "Partner Highlight Card" from the Week 8 Step 4 component kit. Always labeled Partner content.
 // Uses the partner product's illustration, or a neutral placeholder tile when there is none.
 // Not in docs/design-system/components.md yet, so Esme should add it
 export function PartnerHighlightCard({ brand, name, image, onPress }: PartnerHighlightCardProps) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Partner content: ${name}`} style={styles.card}>
       {image ? (
@@ -35,7 +36,7 @@ export function PartnerHighlightCard({ brand, name, image, onPress }: PartnerHig
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   card: {
     flex: 1,
     minHeight: layout.minTouchTarget,
@@ -61,4 +62,4 @@ const styles = StyleSheet.create({
     fontFamily: type.label.fontFamily,
     color: c.ink,
   },
-});
+}));

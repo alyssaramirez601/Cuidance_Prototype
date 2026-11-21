@@ -4,7 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { quizQuestions } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
 import { firstNameFrom } from '@/lib/auth';
@@ -22,6 +23,7 @@ const FOOTER_MAX_HEIGHT = 88;
 // Where signed-in people land, until Home exists: "Welcome, [name]" from the design,
 // then Start guidance opens the first quiz question
 export default function StartScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { session } = useAuth();
   const firstName = firstNameFrom(session?.user.user_metadata);
@@ -58,9 +60,7 @@ export default function StartScreen() {
   );
 }
 
-const c = colors.light;
-
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // The artwork shrinks before any text does, so the screen fits in one view
   heroWrap: {
     flex: 3,
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
     marginHorizontal: -layout.screenEdge,
     marginBottom: -space[8],
   },
-});
+}));

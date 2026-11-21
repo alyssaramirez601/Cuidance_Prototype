@@ -9,7 +9,8 @@ import { LoadingState } from '@/components/LoadingState';
 import { AnswerOption, type AnswerOptionState } from '@/components/AnswerOption';
 import { QuizProgress } from '@/components/QuizProgress';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { quizQuestions } from '@/data/quiz';
 import type { QuizQuestion } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
@@ -39,6 +40,7 @@ export default function QuizQuestionScreen() {
 }
 
 function QuestionNotFound() {
+  const styles = useStyles();
   const goBack = useGoBack();
   return (
     <Screen centered>
@@ -57,6 +59,8 @@ type QuestionContentProps = {
 };
 
 function QuestionContent({ userId, question }: QuestionContentProps) {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const goBack = useGoBack();
   const { height: windowHeight } = useWindowDimensions();
@@ -115,7 +119,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
           accessibilityLabel="Save and exit"
           style={styles.saveExit}
         >
-          <Icon name="back" size={sizes.icon.large} color={colors.light.ink} />
+          <Icon name="back" size={sizes.icon.large} color={c.ink} />
           <Text style={styles.saveExitLabel}>Save and exit</Text>
         </Pressable>
         {/* Help has no content yet, so it shows but stays inactive until the team decides what it opens */}
@@ -148,9 +152,11 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
       </View>
 
       <View style={styles.options} accessibilityRole={isSingle ? 'radiogroup' : undefined}>
-        {question.options.map((option) => (
+        {question.options.map((option, index) => (
           <AnswerOption
             key={option.id}
+            look="row"
+            letter={String.fromCharCode(97 + index)}
             label={option.label}
             indicator={isSingle ? 'radio' : 'checkbox'}
             state={optionState(option.id)}
@@ -164,7 +170,7 @@ function QuestionContent({ userId, question }: QuestionContentProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -184,7 +190,7 @@ const styles = StyleSheet.create({
   },
   saveExitLabel: {
     ...type.label,
-    color: colors.light.ink,
+    color: c.ink,
   },
   footerArt: {
     height: FOOTER_ART_HEIGHT,
@@ -193,25 +199,26 @@ const styles = StyleSheet.create({
   },
   topLabel: {
     ...type.label,
-    color: colors.light.accent,
+    color: c.accent,
   },
   topLabelInactive: {
-    color: colors.light.disabledInk,
+    color: c.disabledInk,
   },
   header: {
     gap: space[4],
   },
-  // Newsreader heading, like the Week 8 hi-fi question
+  // Redesign (Nov 20): the question set large in Newsreader, direction B's editorial layout
   prompt: {
-    ...type.heading,
-    color: colors.light.ink,
+    ...type.display,
+    color: c.ink,
   },
   helper: {
     ...type.body,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   options: {
-    gap: space[4],
+    borderTopWidth: stroke.strong,
+    borderTopColor: c.ink,
   },
   flex: {
     flex: 1,
@@ -223,17 +230,17 @@ const styles = StyleSheet.create({
   },
   statusText: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   errorBox: {
     gap: space[12],
     padding: space[16],
     borderRadius: radius.medium,
-    backgroundColor: colors.light.errorSurface,
+    backgroundColor: c.errorSurface,
   },
   errorText: {
     ...type.body,
-    color: colors.light.error,
+    color: c.error,
   },
   actions: {
     flexDirection: 'row',
@@ -245,4 +252,4 @@ const styles = StyleSheet.create({
   actionNext: {
     flex: 2,
   },
-});
+}));

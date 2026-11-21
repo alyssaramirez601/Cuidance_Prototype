@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type SwipeRowProps = {
   title: string;
@@ -11,10 +12,9 @@ type SwipeRowProps = {
   onSeeAll?: () => void;
 };
 
-const c = colors.light;
-
 // A titled row of cards you swipe sideways, like the rows on Ulta and Sephora. Used on Home and Shop
 export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowProps) {
+  const styles = useStyles();
   return (
     <View style={styles.section}>
       <View style={styles.head}>
@@ -34,7 +34,7 @@ export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowPro
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   section: {
     gap: space[12],
   },
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    ...type.title,
+    ...type.heading,
     color: c.ink,
   },
   seeAll: {
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
     gap: space[12],
     paddingHorizontal: layout.screenEdge,
   },
-});
+}));

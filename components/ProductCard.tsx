@@ -1,7 +1,8 @@
 import { Image, type ImageSource } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type ProductCardProps = {
   name: string;
@@ -14,6 +15,7 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ name, brand, fitLabel, onPress, image }: ProductCardProps) {
+  const styles = useStyles();
   return (
     <View style={styles.card}>
       <View style={styles.image}>
@@ -33,21 +35,21 @@ export function ProductCard({ name, brand, fitLabel, onPress, image }: ProductCa
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   card: {
     width: sizes.productCardWidth,
     gap: space[8],
     padding: space[12],
     borderRadius: radius.medium,
     borderWidth: stroke.default,
-    borderColor: colors.light.border,
-    backgroundColor: colors.light.surface,
+    borderColor: c.border,
+    backgroundColor: c.surface,
   },
   image: {
     width: sizes.productImageWidth,
     height: sizes.productImageHeight,
     borderRadius: radius.small,
-    backgroundColor: colors.light.surfaceWarm,
+    backgroundColor: c.surfaceWarm,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
@@ -61,22 +63,22 @@ const styles = StyleSheet.create({
   },
   brand: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   name: {
     ...type.label,
-    color: colors.light.ink,
+    color: c.ink,
   },
   tag: {
     alignSelf: 'flex-start',
     paddingVertical: space[4],
     paddingHorizontal: space[8],
     borderRadius: radius.small,
-    backgroundColor: colors.light.successSurface,
+    backgroundColor: c.successSurface,
   },
   tagLabel: {
     ...type.caption,
-    color: colors.light.ink,
+    color: c.ink,
   },
   link: {
     minHeight: layout.minTouchTarget,
@@ -84,6 +86,6 @@ const styles = StyleSheet.create({
   },
   linkLabel: {
     ...type.label,
-    color: colors.light.accent,
+    color: c.accent,
   },
-});
+}));

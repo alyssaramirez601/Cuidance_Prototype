@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, space, stroke, type } from '@/constants/tokens';
+import { space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 // Sits between the main button and another way to sign in
 export function OrDivider() {
+  const styles = useStyles();
   return (
     <View style={styles.row} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
       <View style={styles.line} />
@@ -13,7 +15,7 @@ export function OrDivider() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -22,10 +24,10 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: stroke.default,
-    backgroundColor: colors.light.border,
+    backgroundColor: c.border,
   },
   label: {
     ...type.label,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
-});
+}));

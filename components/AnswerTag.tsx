@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, space, stroke, type } from '@/constants/tokens';
+import { radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type AnswerTagProps = {
   label: string;
 };
 
-const c = colors.light;
-
 // A read-only answer, like "Shiny in some areas" on the result. "Answer Tag" in the Week 8
 // Step 4 component kit. Not in docs/design-system/components.md yet, so Esme should add it
 export function AnswerTag({ label }: AnswerTagProps) {
+  const styles = useStyles();
   return (
     <View style={styles.tag}>
       <Text style={styles.text}>{label}</Text>
@@ -18,7 +18,7 @@ export function AnswerTag({ label }: AnswerTagProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   tag: {
     alignSelf: 'flex-start',
     paddingVertical: space[8],
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.ink,
   },
-});
+}));

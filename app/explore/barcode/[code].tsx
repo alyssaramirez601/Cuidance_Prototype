@@ -9,15 +9,15 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { productCopy, scanCopy } from '@/data/exploreCopy';
 import { lookupBarcode, type BarcodeLookup } from '@/lib/barcode';
 import { searchStoreLinks } from '@/lib/explore';
 
-const c = colors.light;
-
 // What a scanned or typed barcode turned up. A Cuidance product opens its own page instead
 export default function BarcodeScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { code = '' } = useLocalSearchParams<{ code: string }>();
   const [result, setResult] = useState<BarcodeLookup | null>(null);
@@ -122,7 +122,7 @@ export default function BarcodeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   code: {
     ...type.caption,
     color: c.inkMuted,
@@ -176,4 +176,4 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.accent,
   },
-});
+}));

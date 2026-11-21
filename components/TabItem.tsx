@@ -1,7 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text } from 'react-native';
 
 import { Icon, type IconName } from '@/components/Icon';
-import { colors, radius, sizes, space, type } from '@/constants/tokens';
+import { radius, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
+import { usePop, usePressBounce } from '@/hooks/useMotion';
 
 export type TabItemState = 'default' | 'active';
 
@@ -12,27 +14,31 @@ type TabItemProps = {
   state?: TabItemState;
 };
 
-const c = colors.light;
-
 export function TabItem({ label, icon, onPress, state = 'default' }: TabItemProps) {
+  const styles = useStyles();
+  const c = useColors();
   const isActive = state === 'active';
+  const popStyle = usePop(isActive);
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.9);
   return (
     <Pressable
       onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       accessibilityRole="tab"
       accessibilityLabel={label}
       accessibilityState={{ selected: isActive }}
       style={styles.item}
     >
-      <View style={[styles.pill, isActive && styles.pillActive]}>
+      <Animated.View style={[styles.pill, isActive && styles.pillActive, isActive ? popStyle : bounceStyle]}>
         <Icon name={icon} size={sizes.icon.large} color={isActive ? c.selected : c.inkMuted} />
-      </View>
+      </Animated.View>
       <Text style={[styles.label, { color: isActive ? c.selected : c.inkMuted }]}>{label}</Text>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   item: {
     width: sizes.tabItemWidth,
     minHeight: sizes.tabItemHeight,
@@ -54,4 +60,4 @@ const styles = StyleSheet.create({
   label: {
     ...type.caption,
   },
-});
+}));

@@ -16,7 +16,8 @@ import { Sheet } from '@/components/Sheet';
 import { Tabs } from '@/components/Tabs';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { savedCopy } from '@/data/appCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useBoards } from '@/hooks/useBoards';
@@ -30,9 +31,8 @@ import type { Reflection } from '@/lib/userProducts';
 
 type SavedTab = 'guidance' | 'products' | 'owned' | 'boards';
 
-const c = colors.light;
-
 export default function SavedScreen() {
+  const styles = useStyles();
   const { session } = useAuth();
   const [tab, setTab] = useState<SavedTab>('guidance');
   if (!session) {
@@ -55,6 +55,7 @@ export default function SavedScreen() {
 }
 
 function GuidanceTab({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useSavedResults(userId);
 
@@ -94,6 +95,7 @@ function GuidanceTab({ userId }: { userId: string }) {
 
 // Prototype screen 16: products saved from a product page, newest first
 function ProductsTab({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useUserProducts(userId);
   if (state.status === 'loading') return <LoadingState label={savedCopy.productsLoading} />;
@@ -129,6 +131,8 @@ function ProductsTab({ userId }: { userId: string }) {
 
 // Prototype screen 17: products they own, each with "How is it working for you?"
 function OwnedTab({ userId }: { userId: string }) {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const { state, retry, update, actionError } = useUserProducts(userId);
   const [open, setOpen] = useState<string | null>(null);
@@ -214,6 +218,7 @@ function OwnedTab({ userId }: { userId: string }) {
 
 // Pinterest-style boards (Nov 17), in place of Routines: a two-column grid of covers made from each board's newest pins
 function BoardsTab({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry, reload } = useBoards(userId);
   const saved = useSavedResults(userId);
@@ -301,6 +306,8 @@ function BoardsTab({ userId }: { userId: string }) {
 }
 
 function SavedResultCard({ result, onPress }: { result: SavedResult; onPress: () => void }) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Open saved result: ${result.name}`}>
       {({ pressed }) => (
@@ -323,6 +330,8 @@ function SavedResultCard({ result, onPress }: { result: SavedResult; onPress: ()
 }
 
 function EmptyState({ title, body, action }: { title: string; body: string; action?: { label: string; onPress: () => void } }) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <View style={styles.empty}>
       <View style={styles.emptyIcon}>
@@ -335,7 +344,7 @@ function EmptyState({ title, body, action }: { title: string; body: string; acti
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   title: {
     ...type.heading,
     color: c.ink,
@@ -489,4 +498,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.error,
   },
-});
+}));

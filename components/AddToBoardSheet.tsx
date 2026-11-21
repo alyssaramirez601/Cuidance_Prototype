@@ -6,7 +6,8 @@ import { ListRow } from '@/components/ListRow';
 import { Sheet } from '@/components/Sheet';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { savedCopy } from '@/data/appCopy';
 import { useBoards } from '@/hooks/useBoards';
 import { addPin, createBoard, type PinKind } from '@/lib/boards';
@@ -21,6 +22,7 @@ type AddToBoardSheetProps = {
 
 // "Add to board", like Pinterest's save: pick a board, or name a new one and pin to it in one go
 export function AddToBoardSheet({ visible, onClose, userId, kind, pinRef }: AddToBoardSheetProps) {
+  const styles = useStyles();
   const { state, reload } = useBoards(userId);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
@@ -80,12 +82,12 @@ export function AddToBoardSheet({ visible, onClose, userId, kind, pinRef }: AddT
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   body: {
     gap: space[12],
   },
   heading: {
     ...type.label,
-    color: colors.light.ink,
+    color: c.ink,
   },
-});
+}));

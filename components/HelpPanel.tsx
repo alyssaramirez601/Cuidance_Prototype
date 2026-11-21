@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type HelpPanelProps = {
   title: string;
@@ -13,6 +14,7 @@ type HelpPanelProps = {
 
 // The panel itself. The screen decides how it slides in, and what the help copy says
 export function HelpPanel({ title, body, buttonLabel, onButtonPress, onClose }: HelpPanelProps) {
+  const styles = useStyles();
   return (
     <View style={styles.panel}>
       <Text style={styles.title} accessibilityRole="header">
@@ -27,23 +29,23 @@ export function HelpPanel({ title, body, buttonLabel, onButtonPress, onClose }: 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   panel: {
     gap: space[16],
     padding: space[24],
     borderTopLeftRadius: radius.medium,
     borderTopRightRadius: radius.medium,
     borderTopWidth: stroke.default,
-    borderTopColor: colors.light.border,
-    backgroundColor: colors.light.surface,
+    borderTopColor: c.border,
+    backgroundColor: c.surface,
   },
   title: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   body: {
     ...type.body,
-    color: colors.light.ink,
+    color: c.ink,
   },
   close: {
     minHeight: layout.minTouchTarget,
@@ -52,6 +54,6 @@ const styles = StyleSheet.create({
   },
   closeLabel: {
     ...type.label,
-    color: colors.light.accent,
+    color: c.accent,
   },
-});
+}));

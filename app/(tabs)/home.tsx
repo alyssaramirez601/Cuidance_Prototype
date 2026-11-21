@@ -1,8 +1,9 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
 import { Image } from 'expo-image';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Appear } from '@/components/Appear';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { HomeHeader } from '@/components/HomeHeader';
@@ -13,7 +14,9 @@ import { LoadingState } from '@/components/LoadingState';
 import { PartnerHighlightCard } from '@/components/PartnerHighlightCard';
 import { ProductMiniCard } from '@/components/ProductMiniCard';
 import { Screen } from '@/components/Screen';
-import { colors, layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { usePressBounce } from '@/hooks/useMotion';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { homeCopy, partnerPlaceholders } from '@/data/appCopy';
 import { partnerProducts } from '@/data/partnerContent';
 import { articles } from '@/data/education';
@@ -27,8 +30,6 @@ import { listSavedResults, type SavedResult } from '@/lib/savedResults';
 
 type HomeData = { questionsLeft: number; nextQuestionId: string | null; latest: SavedResult | null; answers: Record<string, string[]> };
 type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; data: HomeData };
-
-const c = colors.light;
 
 function greetingFor(hour: number): string {
   if (hour < 12) return homeCopy.morning;
@@ -45,6 +46,8 @@ export default function HomeScreen() {
 }
 
 function HomeContent({ userId, name }: { userId: string; name: string }) {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const [state, setState] = useState<State>({ status: 'loading' });
   const [partnerFilter, setPartnerFilter] = useState(partnerPlaceholders.filters[1]);
@@ -77,20 +80,20 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
 
   return (
     <Screen>
-      <View style={styles.headerWrap}>
-        <HomeHeader greeting={greetingFor(new Date().getHours())} name={name} onProfilePress={() => router.navigate('/profile')} />
-      </View>
+      <HomeHeader greeting={greetingFor(new Date().getHours())} name={name} onProfilePress={() => router.navigate('/profile')} />
 
       {/* Looks like a search field, like Ulta's and Sephora's Home, and opens Explore where search lives */}
-      <Pressable
-        onPress={() => router.navigate('/explore')}
-        accessibilityRole="search"
-        accessibilityLabel={homeCopy.searchHint}
-        style={styles.search}
-      >
-        <Icon name="explore" size={sizes.icon.medium} color={c.inkMuted} />
-        <Text style={styles.searchText}>{homeCopy.searchHint}</Text>
-      </Pressable>
+      <Appear order={1} style={styles.searchWrap}>
+        <Pressable
+          onPress={() => router.navigate('/explore')}
+          accessibilityRole="search"
+          accessibilityLabel={homeCopy.searchHint}
+          style={styles.search}
+        >
+          <Icon name="explore" size={sizes.icon.medium} color={c.inkMuted} />
+          <Text style={styles.searchText}>{homeCopy.searchHint}</Text>
+        </Pressable>
+      </Appear>
 
       {state.status === 'error' ? (
         <View style={styles.errorBox} accessibilityLiveRegion="polite">
@@ -99,11 +102,13 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
         </View>
       ) : (
         <>
+          <Appear order={2}>
           <SwipeRow title={homeCopy.resumeEyebrow}>
             {state.data.questionsLeft > 0 && state.data.nextQuestionId ? (
-              <View style={[styles.pickCard, styles.pickWarm]}>
-                <Text style={styles.pickTitle}>{homeCopy.resumeTitle}</Text>
-                <Text style={styles.pickMeta}>{homeCopy.questionsLeft(state.data.questionsLeft)}</Text>
+              <View style={[styles.pickCard, styles.pickBrand]}>
+                <View style={styles.pickSun} />
+                <Text style={styles.pickBrandTitle}>{homeCopy.resumeTitle}</Text>
+                <Text style={styles.pickBrandMeta}>{homeCopy.questionsLeft(state.data.questionsLeft)}</Text>
                 <Button label={homeCopy.resumeButton} onPress={() => router.push(`/quiz/${state.data.nextQuestionId}`)} />
               </View>
             ) : null}
@@ -127,10 +132,13 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
               title={homeCopy.attributesTitle}
               detail={homeCopy.attributesDetail}
               onPress={() => router.push('/profile/attributes')}
+              tone="blue"
             />
           </SwipeRow>
+          </Appear>
 
           {forYou.length ? (
+            <Appear order={3}>
             <SwipeRow
               title={productsCopy.forYou}
               seeAllLabel={homeCopy.seeAll}
@@ -145,8 +153,10 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
                 />
               ))}
             </SwipeRow>
+            </Appear>
           ) : null}
 
+          <Appear order={4}>
           <SwipeRow title={homeCopy.guidesTitle} seeAllLabel={homeCopy.seeAll} onSeeAll={() => router.push('/explore/education')}>
             {articles.map((article) => (
               <Pressable
@@ -166,9 +176,10 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
               </Pressable>
             ))}
           </SwipeRow>
+          </Appear>
 
           {/* Sample partner content until real partners sign on. Always labeled Partner content */}
-          <View style={styles.partners}>
+          <Appear order={5} style={styles.partners}>
             <Text style={styles.partnersTitle} accessibilityRole="header">
               {partnerPlaceholders.title}
             </Text>
@@ -195,7 +206,7 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
             </View>
             <Text style={styles.placeholderNote}>{partnerPlaceholders.note}</Text>
             <ListRow label={partnerPlaceholders.seeAll} onPress={() => router.navigate('/shop')} />
-          </View>
+          </Appear>
         </>
       )}
     </Screen>
@@ -203,19 +214,33 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
 }
 
 // A titled row that scrolls sideways, with an optional "See all" link, like the Ulta and Sephora Home
-function PickCard({ icon, title, detail, onPress }: { icon: ReactNode; title: string; detail: string; onPress: () => void }) {
+function PickCard({ icon, title, detail, onPress, tone }: { icon: ReactNode; title: string; detail: string; onPress: () => void; tone?: 'blue' }) {
+  const styles = useStyles();
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.96);
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={title} style={styles.pickCard}>
-      {icon}
-      <Text style={styles.pickTitle} numberOfLines={2}>
-        {title}
-      </Text>
-      <Text style={styles.pickMeta}>{detail}</Text>
-    </Pressable>
+    <Animated.View style={bounceStyle}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        style={[styles.pickCard, tone === 'blue' && styles.pickBlue]}
+      >
+        {icon}
+        <Text style={styles.pickTitle} numberOfLines={2}>
+          {title}
+        </Text>
+        {/* Muted gray is too faint on the blue card, so the detail uses full ink there */}
+        <Text style={[styles.pickMeta, tone === 'blue' && styles.pickMetaStrong]}>{detail}</Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 
 function IconTile({ name, tone }: { name: 'saved' | 'help' | 'profile'; tone: 'success' | 'warm' }) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <View style={[styles.tile, { backgroundColor: tone === 'success' ? c.successSurface : c.surfaceWarm }]}>
       <Icon name={name} size={sizes.icon.large} color={c.ink} />
@@ -223,9 +248,10 @@ function IconTile({ name, tone }: { name: 'saved' | 'help' | 'profile'; tone: 's
   );
 }
 
-const styles = StyleSheet.create({
-  headerWrap: {
-    marginTop: -space[24],
+const useStyles = makeStyles((c, g) => StyleSheet.create({
+  // Overlaps the bottom of the terracotta header, like the A mockup
+  searchWrap: {
+    marginTop: -(space[48] + space[16]),
   },
   section: {
     gap: space[12],
@@ -242,18 +268,19 @@ const styles = StyleSheet.create({
     letterSpacing: letterSpacing.eyebrow,
   },
   search: {
-    minHeight: layout.buttonHeight,
+    minHeight: space[48] + space[8],
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[8],
     paddingHorizontal: space[16],
     borderRadius: radius.pill,
-    borderWidth: stroke.default,
-    borderColor: c.borderStrong,
+    borderWidth: stroke.strong,
+    borderColor: c.ink,
     backgroundColor: c.surface,
   },
   searchText: {
     ...type.body,
+    flex: 1,
     color: c.inkMuted,
   },
   rowHead: {
@@ -286,15 +313,41 @@ const styles = StyleSheet.create({
   pickCard: {
     width: space[48] * 5,
     gap: space[8],
-    padding: layout.insideComponent,
+    padding: space[24],
     borderRadius: radius.medium,
     borderWidth: stroke.default,
     borderColor: c.border,
     backgroundColor: c.surface,
   },
-  pickWarm: {
-    borderColor: c.surfaceWarm,
-    backgroundColor: c.surfaceWarm,
+  pickBrand: {
+    overflow: 'hidden',
+    borderColor: c.brand,
+    backgroundColor: c.brand,
+  },
+  pickSun: {
+    position: 'absolute',
+    right: -space[24],
+    bottom: -space[24],
+    width: space[48] * 2,
+    height: space[48] * 2,
+    borderRadius: radius.pill,
+    backgroundColor: g.green,
+    opacity: 0.35,
+  },
+  pickBrandTitle: {
+    ...type.heading,
+    color: c.onBrand,
+  },
+  pickBrandMeta: {
+    ...type.caption,
+    color: c.onBrand,
+  },
+  pickMetaStrong: {
+    color: c.ink,
+  },
+  pickBlue: {
+    borderColor: g.waveBlue,
+    backgroundColor: g.waveBlue,
   },
   pickTitle: {
     ...type.label,
@@ -308,10 +361,14 @@ const styles = StyleSheet.create({
     width: space[48] * 4,
     gap: space[4],
   },
+  // Arch-topped art, the brand's signature shape
   guideArt: {
     width: '100%',
     aspectRatio: 4 / 3,
-    borderRadius: radius.medium,
+    borderTopLeftRadius: radius.pill,
+    borderTopRightRadius: radius.pill,
+    borderBottomLeftRadius: radius.medium,
+    borderBottomRightRadius: radius.medium,
     marginBottom: space[4],
   },
   guideTitle: {
@@ -356,4 +413,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.error,
   },
-});
+}));

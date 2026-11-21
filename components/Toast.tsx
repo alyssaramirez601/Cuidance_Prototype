@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
 
 export type ToastType = 'success' | 'error';
 
@@ -12,15 +13,15 @@ type ToastProps = {
   onActionPress?: () => void;
 };
 
-const c = colors.light;
-
-const looks = {
+const looks = (c: Palette) => ({
   success: { fill: c.successSurface, border: c.success, icon: 'check' },
   error: { fill: c.errorSurface, border: c.error, icon: 'alert' },
-} as const;
+} as const);
 
 export function Toast({ type: toastType, message, actionLabel, onActionPress }: ToastProps) {
-  const look = looks[toastType];
+  const c = useColors();
+  const styles = useStyles();
+  const look = looks(c)[toastType];
   return (
     <View
       accessibilityRole="alert"
@@ -38,7 +39,7 @@ export function Toast({ type: toastType, message, actionLabel, onActionPress }: 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   toast: {
     minHeight: sizes.toastMinHeight,
     flexDirection: 'row',
@@ -58,4 +59,4 @@ const styles = StyleSheet.create({
     ...type.label,
     color: c.accent,
   },
-});
+}));

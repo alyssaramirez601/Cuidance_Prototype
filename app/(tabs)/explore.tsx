@@ -10,15 +10,14 @@ import { ProductMiniCard } from '@/components/ProductMiniCard';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { departments } from '@/data/categories';
 import { exploreArt, exploreCopy, productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { productsFor, searchArticles, searchIngredients, searchProducts } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
-
-const c = colors.light;
 
 // Prototype screen 08. Searching shows results right here, grouped by products, ingredients and articles
 export default function ExploreScreen() {
@@ -28,6 +27,7 @@ export default function ExploreScreen() {
 }
 
 function ExploreContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state } = useProfileData(userId);
   const [query, setQuery] = useState('');
@@ -72,7 +72,7 @@ function ExploreContent({ userId }: { userId: string }) {
           accessibilityLabel={exploreCopy.scan}
           style={({ pressed }) => [styles.scan, pressed && styles.pressed]}
         >
-          <Text style={styles.scanText}>{exploreCopy.scanShort}</Text>
+          <Text style={styles.scanText}>{exploreCopy.scan}</Text>
         </Pressable>
       </View>
 
@@ -130,6 +130,7 @@ function ExploreContent({ userId }: { userId: string }) {
 }
 
 function SearchResults({ query }: { query: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const found = searchProducts(query);
   const ingredients = searchIngredients(query).slice(0, 6);
@@ -166,21 +167,21 @@ function SearchResults({ query }: { query: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   title: {
     ...type.heading,
     color: c.ink,
   },
+  // Search gets the full width so its placeholder is never cut off, with Scan on its own line below
   searchRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
     gap: space[8],
   },
   searchField: {
-    flex: 1,
+    alignSelf: 'stretch',
   },
   // Same height as the input, so the two line up
   scan: {
+    alignSelf: 'flex-start',
     height: layout.buttonHeight,
     paddingHorizontal: space[16],
     alignItems: 'center',
@@ -265,4 +266,4 @@ const styles = StyleSheet.create({
   sheetBody: {
     gap: space[16],
   },
-});
+}));

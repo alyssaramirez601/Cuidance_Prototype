@@ -2,7 +2,8 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { DisclosureLabel } from '@/components/DisclosureLabel';
-import { colors, letterSpacing, radius, space, type } from '@/constants/tokens';
+import { letterSpacing, radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type PartnerTileProps = {
   title: string;
@@ -17,10 +18,9 @@ type PartnerTileProps = {
   layout?: 'row' | 'grid' | 'banner';
 };
 
-const c = colors.light;
-
 // A picture tile for partner products, collections and workshops. Always labeled Partner content
 export function PartnerTile({ title, image, onPress, detail, eyebrow, layout = 'row' }: PartnerTileProps) {
+  const styles = useStyles();
   const words = (
     <>
       <DisclosureLabel type="partner" />
@@ -44,7 +44,7 @@ export function PartnerTile({ title, image, onPress, detail, eyebrow, layout = '
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   tile: {
     gap: space[4],
   },
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     gap: space[16],
     padding: space[12],
     borderRadius: radius.medium,
-    backgroundColor: colors.light.surface,
+    backgroundColor: c.surface,
   },
   bannerArt: {
     width: space[48] * 2,
     aspectRatio: 1,
     borderRadius: radius.small,
-    backgroundColor: colors.light.surfaceWarm,
+    backgroundColor: c.surfaceWarm,
   },
   bannerWords: {
     flex: 1,
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
+import { usePressBounce } from '@/hooks/useMotion';
 
 type ListRowProps = {
   label: string;
@@ -15,14 +17,15 @@ type ListRowProps = {
   detail?: string;
 };
 
-const c = colors.light;
-
 // The one tappable row (CLAUDE.md names it). Not in the Figma design system yet, so Esme should add it there
 export function ListRow({ label, onPress, leading, trailing, detail }: ListRowProps) {
+  const styles = useStyles();
+  const c = useColors();
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.97);
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} accessibilityHint="Opens more detail">
+    <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut} accessibilityRole="button" accessibilityLabel={label} accessibilityHint="Opens more detail">
       {({ pressed }) => (
-        <View style={[styles.row, pressed && styles.pressed]}>
+        <Animated.View style={[styles.row, pressed && styles.pressed, bounceStyle]}>
           {leading}
           <View style={styles.middle}>
             <View style={styles.text}>
@@ -32,13 +35,13 @@ export function ListRow({ label, onPress, leading, trailing, detail }: ListRowPr
             {trailing}
           </View>
           <Icon name="arrow" size={sizes.icon.medium} color={c.accent} />
-        </View>
+        </Animated.View>
       )}
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   row: {
     minHeight: layout.minTouchTarget,
     flexDirection: 'row',
@@ -68,4 +71,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

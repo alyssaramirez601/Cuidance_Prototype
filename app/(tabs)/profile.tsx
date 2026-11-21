@@ -11,7 +11,8 @@ import { ListRow } from '@/components/ListRow';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { areaLabels } from '@/data/appCopy';
 import { profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,7 +21,6 @@ import { firstNameFrom, signOut } from '@/lib/auth';
 import { shortDate } from '@/lib/profile';
 import { answerTagsByArea } from '@/lib/quizFlow';
 
-const c = colors.light;
 const BANNER_RATIO = 1400 / 467;
 
 // Prototype screen 20. Each row opens its own page in app/profile/
@@ -39,6 +39,7 @@ export default function ProfileScreen() {
 }
 
 function ProfileContent({ userId, email, fallbackName }: { userId: string; email: string; fallbackName: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useProfileData(userId);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -107,6 +108,8 @@ function ProfileContent({ userId, email, fallbackName }: { userId: string; email
 }
 
 function PersonCard({ name, email, onEdit }: { name: string; email: string; onEdit: () => void }) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <View style={styles.card}>
       <View style={styles.personRow}>
@@ -115,7 +118,8 @@ function PersonCard({ name, email, onEdit }: { name: string; email: string; onEd
         </View>
         <View style={styles.personText}>
           {name ? <Text style={styles.personName}>{name}</Text> : null}
-          <Text style={styles.personEmail}>{email}</Text>
+          {/* Long emails can break after the @ or a dot instead of in the middle of a word */}
+          <Text style={styles.personEmail}>{email.replace(/([@.])/g, '$1\u200B')}</Text>
         </View>
         <Pressable
           onPress={onEdit}
@@ -131,6 +135,8 @@ function PersonCard({ name, email, onEdit }: { name: string; email: string; onEd
 }
 
 function AttributesCard({ data }: { data: ProfileData }) {
+  const styles = useStyles();
+  const c = useColors();
   const router = useRouter();
   const groups = answerTagsByArea(data.answers);
   const updated = data.profile.quizCompletedAt;
@@ -186,7 +192,7 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   banner: {
     aspectRatio: BANNER_RATIO,
     marginHorizontal: -layout.screenEdge,
@@ -304,4 +310,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.error,
   },
-});
+}));

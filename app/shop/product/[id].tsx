@@ -9,16 +9,16 @@ import { Note } from '@/components/Note';
 import { PageHeader } from '@/components/PageHeader';
 import { ProductActions } from '@/components/ProductActions';
 import { Screen } from '@/components/Screen';
-import { colors, layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { shopCopy } from '@/data/partnerContent';
 import { useAuth } from '@/hooks/useAuth';
 import { findPartnerProduct, partnerRef } from '@/lib/shop';
 
-const c = colors.light;
-
 // A partner product (prototype 14B, from Shop). Its own page, apart from the guidance
 // product pages, so partner content never mixes with Cuidance's notes
 export default function PartnerProductScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const product = findPartnerProduct(id);
@@ -78,7 +78,7 @@ export default function PartnerProductScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   eyebrow: {
     ...type.caption,
     fontFamily: type.label.fontFamily,
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
     color: c.inkMuted,
     textAlign: 'center',
   },
-});
+}));

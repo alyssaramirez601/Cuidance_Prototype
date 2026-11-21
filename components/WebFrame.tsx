@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { colors, layout, stroke } from '@/constants/tokens';
+import { layout, stroke } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type WebFrameProps = {
   children: ReactNode;
@@ -9,6 +10,7 @@ type WebFrameProps = {
 
 // On a wide browser window the app sits in a phone-width column. On phones it renders as is.
 export function WebFrame({ children }: WebFrameProps) {
+  const styles = useStyles();
   if (Platform.OS !== 'web') {
     return <>{children}</>;
   }
@@ -20,19 +22,19 @@ export function WebFrame({ children }: WebFrameProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   backdrop: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.light.surfaceWarm,
+    backgroundColor: c.surfaceWarm,
   },
   column: {
     flex: 1,
     width: '100%',
     maxWidth: layout.webMaxWidth,
-    backgroundColor: colors.light.background,
-    borderColor: colors.light.border,
+    backgroundColor: c.background,
+    borderColor: c.border,
     borderLeftWidth: stroke.default,
     borderRightWidth: stroke.default,
   },
-});
+}));

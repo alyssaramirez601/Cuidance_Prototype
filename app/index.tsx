@@ -4,7 +4,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { colors, layout, letterSpacing, radius, space, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 // Artwork is cut straight from the Week 8 hi-fi Welcome screen (Figma "01 · Welcome + Intro (updated Oct 15)"),
 // so the collage matches the approved design instead of being redrawn
@@ -40,6 +41,7 @@ const helps = [
 ];
 
 export default function WelcomeScreen() {
+  const styles = useStyles();
   const router = useRouter();
 
   return (
@@ -89,9 +91,7 @@ export default function WelcomeScreen() {
   );
 }
 
-const c = colors.light;
-
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // The artwork runs edge to edge, so it steps out of the screen padding
   heroWrap: {
     marginHorizontal: -layout.screenEdge,
@@ -180,4 +180,4 @@ const styles = StyleSheet.create({
     marginBottom: -space[24],
     aspectRatio: FOOTER_RATIO,
   },
-});
+}));

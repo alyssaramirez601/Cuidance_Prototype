@@ -93,6 +93,12 @@ export const accountCopy = {
   saved: 'Account changes saved',
   // New: the prototype has no error states
   nameRequired: 'Enter your name.',
+  // New (Nov 20): light and dark mode. System follows the phone's setting
+  appearanceTitle: 'Appearance',
+  appearanceSystem: 'Match my phone',
+  appearanceLight: 'Light',
+  appearanceDark: 'Dark',
+  appearanceDetail: 'Saved on this device only.',
 };
 
 // Esme's Week 12 marketing illustrations, reused so the app matches the website and emails

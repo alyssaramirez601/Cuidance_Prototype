@@ -2,7 +2,8 @@ import { StyleSheet, View } from 'react-native';
 
 import type { IconName } from '@/components/Icon';
 import { TabItem } from '@/components/TabItem';
-import { colors, sizes, space, stroke } from '@/constants/tokens';
+import { sizes, space, stroke } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 // Order is fixed by the design system. A team decision on merging tabs is still pending (see CLAUDE.md)
 const tabs: { id: TabId; label: string; icon: IconName }[] = [
@@ -21,6 +22,7 @@ type TabBarProps = {
 };
 
 export function TabBar({ active, onSelect }: TabBarProps) {
+  const styles = useStyles();
   return (
     <View accessibilityRole="tablist" style={styles.bar}>
       {tabs.map((tab) => (
@@ -36,7 +38,7 @@ export function TabBar({ active, onSelect }: TabBarProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   bar: {
     minHeight: sizes.tabBarHeight,
     flexDirection: 'row',
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
     paddingVertical: space[8],
     paddingHorizontal: space[16],
     borderTopWidth: stroke.default,
-    borderTopColor: colors.light.border,
-    backgroundColor: colors.light.surface,
+    borderTopColor: c.border,
+    backgroundColor: c.surface,
   },
-});
+}));

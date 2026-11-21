@@ -5,7 +5,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { LoadingState } from '@/components/LoadingState';
 import { Screen } from '@/components/Screen';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import { signOut } from '@/lib/auth';
 
@@ -19,6 +20,7 @@ export default function ProofScreen() {
 }
 
 function AccountTest({ email }: { email: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
@@ -58,20 +60,20 @@ function AccountTest({ email }: { email: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   testNote: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   errorText: {
     ...type.body,
-    color: colors.light.error,
+    color: c.error,
   },
   account: {
     gap: space[12],
   },
   signedInAs: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
-});
+}));

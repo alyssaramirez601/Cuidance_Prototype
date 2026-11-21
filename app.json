@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "cuidance",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#F4F2EC",
@@ -21,9 +21,13 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#F4F2EC",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#F3E6D3",
+          "image": "./assets/splash/mark.png",
+          "imageWidth": 96,
+          "dark": {
+            "backgroundColor": "#26221D",
+            "image": "./assets/splash/mark-light.png"
+          }
         }
       ],
       "expo-font",

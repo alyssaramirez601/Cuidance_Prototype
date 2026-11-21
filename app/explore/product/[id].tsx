@@ -3,22 +3,23 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Appear } from '@/components/Appear';
 import { Button } from '@/components/Button';
 import { EvidenceDots } from '@/components/EvidenceDots';
 import { ListRow } from '@/components/ListRow';
 import { ProductActions } from '@/components/ProductActions';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { findCategory, findDepartment } from '@/data/categories';
 import { productCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { findProduct, notedIngredients, productImage, storeLinks } from '@/lib/explore';
 
-const c = colors.light;
-
 // Prototype screen 14 (product detail), with label facts only and links out to stores
 export default function ProductScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const product = findProduct(id);
@@ -44,22 +45,35 @@ export default function ProductScreen() {
     <Screen>
       <PageHeader title={product.name} backTo="/explore" />
 
-      <View style={styles.hero}>
-        {image.kind === 'scene' ? (
-          <Image source={image.source} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
-        ) : (
-          <Image source={image.source} style={styles.heroArt} contentFit="contain" accessible={false} />
-        )}
-      </View>
+      {/* Direction A (Nov 20 redesign): a clay color block with the brand's sun and arch, and the
+          product art in an arch window */}
+      <Appear style={styles.hero}>
+        <View style={styles.heroSun} />
+        <View style={styles.heroArch} />
+        <View style={styles.window}>
+          {image.kind === 'scene' ? (
+            <Image source={image.source} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
+          ) : (
+            <Image source={image.source} style={styles.heroArt} contentFit="contain" accessible={false} />
+          )}
+        </View>
+      </Appear>
 
-      {session ? <ProductActions userId={session.user.id} productId={product.id} /> : null}
-
-      <View style={styles.facts}>
+      <Appear order={1} style={styles.facts}>
         <Text style={styles.brand}>{product.brand}</Text>
         <Text style={styles.path}>{[department?.label, category?.label, sub?.label].filter(Boolean).join(' › ')}</Text>
+      </Appear>
+
+      {session ? (
+        <Appear order={2}>
+          <ProductActions userId={session.user.id} productId={product.id} />
+        </Appear>
+      ) : null}
+
+      <Appear order={3} style={styles.factGrid}>
         <Fact label={productCopy.typeLabel} value={product.type} />
         <Fact label={productCopy.sizeLabel} value={product.size} />
-      </View>
+      </Appear>
 
       {product.hasShades ? (
         <View style={styles.shadeBox}>
@@ -69,7 +83,7 @@ export default function ProductScreen() {
       ) : null}
 
       {noted.length ? (
-        <View style={styles.section}>
+        <Appear order={4} style={styles.section}>
           <Text style={styles.sectionTitle} accessibilityRole="header">
             {productCopy.keyTitle}
           </Text>
@@ -83,7 +97,7 @@ export default function ProductScreen() {
               <Text style={styles.body}>{note.role}</Text>
             </View>
           ))}
-        </View>
+        </Appear>
       ) : null}
 
       <View style={styles.section}>
@@ -131,6 +145,7 @@ export default function ProductScreen() {
 
 // Save and "I own this", like the heart on Ulta's and Sephora's product pages
 function Fact({ label, value }: { label: string; value: string }) {
+  const styles = useStyles();
   return (
     <View style={styles.fact}>
       <Text style={styles.caption}>{label}</Text>
@@ -139,43 +154,79 @@ function Fact({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c, g) => StyleSheet.create({
   hero: {
-    aspectRatio: 1,
+    marginHorizontal: -layout.screenEdge,
+    paddingVertical: space[32],
+    alignItems: 'center',
     overflow: 'hidden',
+    backgroundColor: g.clay,
+  },
+  // Decorative shapes behind the art, never behind text
+  heroSun: {
+    position: 'absolute',
+    left: -space[48],
+    bottom: -space[48],
+    width: space[48] * 4,
+    height: space[48] * 4,
+    borderRadius: radius.pill,
+    backgroundColor: g.orange,
+  },
+  heroArch: {
+    position: 'absolute',
+    right: -space[24],
+    bottom: 0,
+    width: space[48] * 3,
+    height: space[48] * 4,
+    borderTopLeftRadius: radius.pill,
+    borderTopRightRadius: radius.pill,
+    backgroundColor: g.greenBold,
+  },
+  window: {
+    width: '55%',
+    aspectRatio: 3 / 4,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: radius.medium,
+    overflow: 'hidden',
+    borderTopLeftRadius: radius.pill,
+    borderTopRightRadius: radius.pill,
+    borderBottomLeftRadius: radius.medium,
+    borderBottomRightRadius: radius.medium,
+    borderWidth: space[4] + space[4],
+    borderColor: g.paper,
     backgroundColor: c.surfaceWarm,
   },
   heroArt: {
-    width: '60%',
+    width: '80%',
     height: '80%',
   },
   facts: {
-    gap: space[8],
+    gap: space[4],
   },
   brand: {
     ...type.label,
-    color: c.ink,
+    color: c.highlight,
+    textTransform: 'uppercase',
+    letterSpacing: letterSpacing.eyebrow,
+  },
+  factGrid: {
+    flexDirection: 'row',
+    gap: space[12],
   },
   path: {
     ...type.caption,
     color: c.inkMuted,
   },
   fact: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: space[12],
-    paddingVertical: space[8],
-    borderTopWidth: stroke.default,
-    borderTopColor: c.border,
+    flex: 1,
+    gap: space[4],
+    padding: layout.insideComponent,
+    borderRadius: radius.medium,
+    backgroundColor: c.surfaceWarm,
   },
   factValue: {
     ...type.label,
     color: c.ink,
-    flexShrink: 1,
-    textAlign: 'right',
   },
   shadeBox: {
     gap: space[8],
@@ -189,16 +240,14 @@ const styles = StyleSheet.create({
     gap: space[8],
   },
   sectionTitle: {
-    ...type.title,
+    ...type.heading,
     color: c.ink,
   },
   noteRow: {
     gap: space[4],
     padding: layout.insideComponent,
     borderRadius: radius.medium,
-    backgroundColor: c.surface,
-    borderWidth: stroke.default,
-    borderColor: c.border,
+    backgroundColor: c.surfaceWarm,
   },
   noteHead: {
     flexDirection: 'row',
@@ -229,4 +278,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));
