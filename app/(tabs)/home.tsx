@@ -382,10 +382,14 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Runs edge to edge as its own band, so partner content reads as a separate section
   partners: {
     gap: space[12],
-    padding: layout.insideComponent,
-    borderRadius: radius.medium,
+    marginHorizontal: -layout.screenEdge,
+    // Runs to the bottom of the page too, instead of stopping above the screen's bottom padding
+    marginBottom: -space[24],
+    paddingHorizontal: layout.screenEdge,
+    paddingVertical: space[24],
     backgroundColor: c.partnerSurface,
   },
   partnersTitle: {
