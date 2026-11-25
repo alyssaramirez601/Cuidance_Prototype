@@ -4,14 +4,27 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { layout, letterSpacing, radius, space, type } from '@/constants/tokens';
-import { makeStyles } from '@/hooks/useTheme';
+import { colors, layout, letterSpacing, radius, space, type } from '@/constants/tokens';
+import { makeStyles, useTheme } from '@/hooks/useTheme';
 
 // Artwork is cut straight from the Week 8 hi-fi Welcome screen (Figma "01 · Welcome + Intro (updated Oct 15)"),
 // so the collage matches the approved design instead of being redrawn
-const hero = require('@/assets/images/welcome-hero.png');
-const footerArt = require('@/assets/images/welcome-footer.png');
-const logo = require('@/assets/logo/logo-horizontal-green.png');
+// Dark mode uses the same art with the paper behind it turned Grounded Green, matching Alyssa's
+// Nov 25 light and dark Welcome designs. Everything else in the art is unchanged
+const art = {
+  light: {
+    hero: require('@/assets/images/welcome-hero.png'),
+    footer: require('@/assets/images/welcome-footer.png'),
+    logo: require('@/assets/logo/logo-horizontal-green.png'),
+  },
+  dark: {
+    hero: require('@/assets/images/welcome-hero-dark.png'),
+    footer: require('@/assets/images/welcome-footer-dark.png'),
+    logo: require('@/assets/logo/logo-horizontal-light.png'),
+  },
+};
+// The dark Welcome sits on the brand green instead of the usual dark page color, as designed
+const DARK_WELCOME_BACKGROUND = colors.light.brand;
 
 // Width / height of each image file, so they scale without stretching
 const HERO_RATIO = 853 / 577;
@@ -43,9 +56,11 @@ const helps = [
 export default function WelcomeScreen() {
   const styles = useStyles();
   const router = useRouter();
+  const { scheme } = useTheme();
+  const { hero, footer: footerArt, logo } = art[scheme];
 
   return (
-    <Screen>
+    <Screen background={scheme === 'dark' ? DARK_WELCOME_BACKGROUND : undefined}>
       <View style={styles.heroWrap}>
         <Image source={hero} style={styles.hero} contentFit="cover" accessible={false} />
         <Image source={logo} style={styles.logo} contentFit="contain" accessibilityLabel="Cuidance" />
@@ -75,7 +90,7 @@ export default function WelcomeScreen() {
       </View>
 
       <View style={[styles.actions, styles.buttonInset]}>
-        <Button label="Create account" onPress={() => router.push('/create-account')} />
+        <Button label="Create account" lightColors onPress={() => router.push('/create-account')} />
         <Pressable
           onPress={() => router.push('/sign-in')}
           accessibilityRole="link"

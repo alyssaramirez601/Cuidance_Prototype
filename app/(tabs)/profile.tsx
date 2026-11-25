@@ -10,6 +10,7 @@ import { ArtTile } from '@/components/ArtTile';
 import { ListRow } from '@/components/ListRow';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
+import { CollageHeader } from '@/components/CollageHeader';
 import { Screen } from '@/components/Screen';
 import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
 import { makeStyles, useColors } from '@/hooks/useTheme';
@@ -21,7 +22,6 @@ import { firstNameFrom, signOut } from '@/lib/auth';
 import { shortDate } from '@/lib/profile';
 import { answerTagsByArea } from '@/lib/quizFlow';
 
-const BANNER_RATIO = 1400 / 467;
 
 // Prototype screen 20. Each row opens its own page in app/profile/
 export default function ProfileScreen() {
@@ -67,10 +67,7 @@ function ProfileContent({ userId, email, fallbackName }: { userId: string; email
 
   return (
     <Screen>
-      <Image source={profileArt.banner} style={styles.banner} contentFit="cover" accessible={false} />
-      <Text style={styles.title} accessibilityRole="header">
-        {profileCopy.title}
-      </Text>
+      <CollageHeader variant="profile" title={profileCopy.title} art={profileArt.banner} />
 
       {state.status === 'error' ? (
         <LoadError message={state.message} onRetry={retry} />
@@ -192,23 +189,13 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const useStyles = makeStyles((c) => StyleSheet.create({
-  banner: {
-    aspectRatio: BANNER_RATIO,
-    marginHorizontal: -layout.screenEdge,
-    marginTop: -space[24],
-  },
-  title: {
-    ...type.heading,
-    color: c.ink,
-  },
+const useStyles = makeStyles((c, g) => StyleSheet.create({
   card: {
     gap: space[12],
     padding: layout.insideComponent,
     borderRadius: radius.medium,
-    borderWidth: stroke.default,
-    borderColor: c.border,
     backgroundColor: c.surface,
+    boxShadow: g.shadowLift,
   },
   personRow: {
     flexDirection: 'row',

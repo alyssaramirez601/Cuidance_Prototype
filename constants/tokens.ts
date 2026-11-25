@@ -98,6 +98,11 @@ export const graphic = {
     blueBold: '#152B91',
     dot: '#A8432A',
     paper: '#FBF6EE',
+    // Depth (Nov 25): cut-paper shadows so cards and shapes lift off the page instead of sitting flat.
+    // A thin light top edge, a tight contact shadow and a soft long one. Never a gradient wash
+    shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 4px rgba(52, 36, 20, 0.14), 0 14px 28px -10px rgba(52, 36, 20, 0.22)',
+    shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(52, 36, 20, 0.14), 0 8px 18px -8px rgba(52, 36, 20, 0.22)',
+    shadowShape: '0 6px 12px rgba(52, 36, 20, 0.22), 0 1px 2px rgba(52, 36, 20, 0.14)',
   },
   dark: {
     terracotta: '#83321F',
@@ -111,6 +116,9 @@ export const graphic = {
     blueBold: '#8396F2',
     dot: '#F2A68F',
     paper: '#1F2622',
+    shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 4px rgba(0, 0, 0, 0.35), 0 14px 28px -10px rgba(0, 0, 0, 0.5)',
+    shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 18px -8px rgba(0, 0, 0, 0.5)',
+    shadowShape: '0 6px 12px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3)',
   },
 } as const;
 

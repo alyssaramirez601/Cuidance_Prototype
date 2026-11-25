@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Image } from 'expo-image';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { CollageHeader } from '@/components/CollageHeader';
 import { ArtTile } from '@/components/ArtTile';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
@@ -40,9 +41,7 @@ export default function SavedScreen() {
   }
   return (
     <Screen>
-      <Text style={styles.title} accessibilityRole="header">
-        {savedCopy.title}
-      </Text>
+      <CollageHeader variant="saved" title={savedCopy.title} intro={savedCopy.intro} />
       <View style={styles.tabs}>
         <Tabs tabs={savedCopy.tabs} activeKey={tab} onChange={(key) => setTab(key as SavedTab)} />
       </View>
@@ -344,11 +343,7 @@ function EmptyState({ title, body, action }: { title: string; body: string; acti
   );
 }
 
-const useStyles = makeStyles((c) => StyleSheet.create({
-  title: {
-    ...type.heading,
-    color: c.ink,
-  },
+const useStyles = makeStyles((c, g) => StyleSheet.create({
   tabs: {
     marginHorizontal: -layout.screenEdge,
     paddingHorizontal: space[8],
@@ -366,9 +361,8 @@ const useStyles = makeStyles((c) => StyleSheet.create({
     gap: space[16],
     padding: layout.insideComponent,
     borderRadius: radius.medium,
-    borderWidth: stroke.default,
-    borderColor: c.border,
     backgroundColor: c.surface,
+    boxShadow: g.shadowLift,
   },
   cardPressed: {
     backgroundColor: c.background,
@@ -438,9 +432,8 @@ const useStyles = makeStyles((c) => StyleSheet.create({
     gap: space[8],
     padding: layout.insideComponent,
     borderRadius: radius.medium,
-    borderWidth: stroke.default,
-    borderColor: c.border,
     backgroundColor: c.surface,
+    boxShadow: g.shadowLift,
   },
   ownedHead: {
     flexDirection: 'row',

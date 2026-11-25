@@ -1,6 +1,6 @@
 import { ActivityIndicator, Animated, Pressable, StyleSheet, Text } from 'react-native';
 
-import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
 import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
 import { usePressBounce } from '@/hooks/useMotion';
 
@@ -14,6 +14,10 @@ type ButtonProps = {
   // Leave out to follow the real press. Set it to pin a state, for example on the dev screen
   state?: ButtonState;
   loading?: boolean;
+  // Keeps the light-mode colors in dark mode. Only for the Welcome screen, where the design puts
+  // Compass Blue with white text on Grounded Green. The label is 7.8:1 on the blue, and the label
+  // (not the fill) is what marks it as a button, so the fill doesn't need 3:1 against the green
+  lightColors?: boolean;
 };
 
 type Look = { fill: string; border: string | null; text: string };
@@ -40,8 +44,9 @@ const looks = (c: Palette): Record<ButtonStyle, Record<ButtonState, Look>> => ({
   },
 });
 
-export function Button({ label, onPress, style = 'primary', state, loading = false }: ButtonProps) {
-  const c = useColors();
+export function Button({ label, onPress, style = 'primary', state, loading = false, lightColors = false }: ButtonProps) {
+  const themed = useColors();
+  const c = lightColors ? colors.light : themed;
   const styles = useStyles();
   const isDisabled = state === 'disabled' || loading;
   const { bounceStyle, onPressIn, onPressOut } = usePressBounce();

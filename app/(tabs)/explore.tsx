@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { CollageHeader } from '@/components/CollageHeader';
 import { ListRow } from '@/components/ListRow';
 import { LoadingState } from '@/components/LoadingState';
 import { ProductMiniCard } from '@/components/ProductMiniCard';
@@ -51,9 +52,7 @@ function ExploreContent({ userId }: { userId: string }) {
 
   return (
     <Screen>
-      <Text style={styles.title} accessibilityRole="header">
-        {exploreCopy.title}
-      </Text>
+      <CollageHeader variant="explore" title={exploreCopy.title} intro={exploreCopy.intro} />
 
       <View style={styles.searchRow}>
         <View style={styles.searchField}>
@@ -108,7 +107,7 @@ function ExploreContent({ userId }: { userId: string }) {
               {exploreCopy.allCategories}
             </Text>
             <View style={styles.grid}>
-              {tiles.map((tile) => (
+              {tiles.map((tile, index) => (
                 <Pressable
                   key={tile.key}
                   onPress={tile.go}
@@ -117,6 +116,8 @@ function ExploreContent({ userId }: { userId: string }) {
                   style={({ pressed }) => [styles.tile, pressed && styles.pressed]}
                 >
                   <Text style={styles.tileLabel}>{tile.label}</Text>
+                  {/* A colored arch window behind each tile's art, like the cut-paper canvas */}
+                  <View style={[styles.tileWindow, styles[TILE_WINDOWS[index % TILE_WINDOWS.length]]]} />
                   <Image source={tile.art} style={styles.tileArt} contentFit="contain" accessible={false} />
                 </Pressable>
               ))}
@@ -167,11 +168,9 @@ function SearchResults({ query }: { query: string }) {
   );
 }
 
-const useStyles = makeStyles((c) => StyleSheet.create({
-  title: {
-    ...type.heading,
-    color: c.ink,
-  },
+const TILE_WINDOWS = ['windowBlue', 'windowClay', 'windowGreen', 'windowOlive'] as const;
+
+const useStyles = makeStyles((c, g) => StyleSheet.create({
   // Search gets the full width so its placeholder is never cut off, with Scan on its own line below
   searchRow: {
     gap: space[8],
@@ -221,6 +220,7 @@ const useStyles = makeStyles((c) => StyleSheet.create({
     padding: layout.insideComponent,
     borderRadius: radius.medium,
     backgroundColor: c.surfaceWarm,
+    boxShadow: g.shadowPaper,
   },
   grid: {
     flexDirection: 'row',
@@ -234,11 +234,26 @@ const useStyles = makeStyles((c) => StyleSheet.create({
     height: space[48] * 2 + space[24],
     padding: space[12],
     borderRadius: radius.medium,
-    borderWidth: stroke.default,
-    borderColor: c.border,
     backgroundColor: c.surface,
     overflow: 'hidden',
+    boxShadow: g.shadowLift,
   },
+  tileWindow: {
+    position: 'absolute',
+    right: space[8],
+    bottom: -space[8],
+    width: space[48] + space[24],
+    height: space[48] * 2,
+    borderTopLeftRadius: radius.pill,
+    borderTopRightRadius: radius.pill,
+    borderBottomLeftRadius: radius.small,
+    borderBottomRightRadius: radius.small,
+    boxShadow: g.shadowShape,
+  },
+  windowBlue: { backgroundColor: g.waveBlue },
+  windowClay: { backgroundColor: g.clay },
+  windowGreen: { backgroundColor: g.green },
+  windowOlive: { backgroundColor: g.olive },
   tileLabel: {
     ...type.label,
     color: c.ink,

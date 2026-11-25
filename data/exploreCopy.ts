@@ -3,6 +3,7 @@
 
 export const exploreCopy = {
   title: 'Explore',
+  intro: 'Products, ingredients and guides, explained.',
   searchLabel: 'Search',
   searchPlaceholder: 'Search products, ingredients, topics',
   shortcuts: { guidance: 'Guidance', products: 'Products', ingredients: 'Ingredients', education: 'Education' },

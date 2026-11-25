@@ -14,12 +14,14 @@ type ScreenProps = {
   compact?: boolean;
   // The line above the footer. The quiz hi-fi has none
   footerDivider?: boolean;
+  // Replaces the page color. Only the Welcome screen uses it, for Grounded Green in dark mode
+  background?: string;
 };
 
-export function Screen({ children, centered = false, footer, compact = false, footerDivider = true }: ScreenProps) {
+export function Screen({ children, centered = false, footer, compact = false, footerDivider = true, background }: ScreenProps) {
   const styles = useStyles();
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={[styles.safe, background ? { backgroundColor: background } : null]}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
           contentContainerStyle={[styles.content, compact && styles.compact, centered && styles.centered]}

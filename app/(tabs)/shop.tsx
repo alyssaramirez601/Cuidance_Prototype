@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Note } from '@/components/Note';
+import { CollageHeader } from '@/components/CollageHeader';
 import { PartnerOfferCard } from '@/components/PartnerOfferCard';
 import { PartnerTile } from '@/components/PartnerTile';
 import { Screen } from '@/components/Screen';
@@ -55,9 +56,7 @@ export default function ShopScreen() {
 
   return (
     <Screen>
-      <Text style={styles.title} accessibilityRole="header">
-        {shopCopy.title}
-      </Text>
+      <CollageHeader variant="shop" title={shopCopy.title} />
       <Note text={shopCopy.notice} />
       <Text style={styles.sample}>{shopCopy.sampleNote}</Text>
       <View style={styles.tabs}>
@@ -151,10 +150,6 @@ export default function ShopScreen() {
 }
 
 const useStyles = makeStyles((c) => StyleSheet.create({
-  title: {
-    ...type.heading,
-    color: c.ink,
-  },
   sample: {
     ...type.caption,
     color: c.inkMuted,

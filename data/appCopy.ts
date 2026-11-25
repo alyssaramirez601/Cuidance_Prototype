@@ -149,6 +149,7 @@ export const partnerPlaceholders = {
 // Saved, from the Week 8 Step 5 Saved hi-fi (15 to 18)
 export const savedCopy = {
   title: 'Saved',
+  intro: 'Your guidance, products and boards in one place.',
   loading: 'Loading your saved guidance',
   tabs: [
     { key: 'guidance', label: 'Guidance' },
