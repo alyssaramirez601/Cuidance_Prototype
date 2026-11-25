@@ -12,7 +12,7 @@ cuidance_prototype/
 ├── app/                      Screens (Expo Router: file name = route)
 │   ├── _layout.tsx           Root layout: theme (light/dark), fonts, auth gate, screen stack, animated splash
 │   ├── index.tsx             Welcome (signed out)
-│   ├── start.tsx             Sends signed-in people to the first quiz question
+│   ├── start.tsx             "Welcome, [name]" for brand-new accounts only (made in the last 15 minutes). Everyone else goes straight to Home
 │   ├── (auth)/
 │   │   ├── create-account.tsx
 │   │   └── sign-in.tsx

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, Easing, Image, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
-import { fontFamily, space, type } from '@/constants/tokens';
+import { fontFamily, layout, space, type } from '@/constants/tokens';
 import { useNativeDriver, useReducedMotion } from '@/hooks/useMotion';
 import { makeStyles, useTheme } from '@/hooks/useTheme';
 
@@ -254,10 +254,13 @@ const useStyles = makeStyles((c) =>
       ...WORD,
       marginTop: space[8],
     },
+    // Bigger greeting (Alyssa, Nov 25), set in Newsreader like a heading
     hello: {
-      ...type.body,
+      ...type.heading,
+      fontFamily: fontFamily.display,
       color: c.ink,
       textAlign: 'center',
+      paddingHorizontal: layout.screenEdge,
     },
     name: {
       fontFamily: fontFamily.display,
