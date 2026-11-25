@@ -103,6 +103,14 @@ export const graphic = {
     shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 4px rgba(52, 36, 20, 0.14), 0 14px 28px -10px rgba(52, 36, 20, 0.22)',
     shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(52, 36, 20, 0.14), 0 8px 18px -8px rgba(52, 36, 20, 0.22)',
     shadowShape: '0 6px 12px rgba(52, 36, 20, 0.22), 0 1px 2px rgba(52, 36, 20, 0.14)',
+    // Explore page (Nov 25 design): the paper color its painted art was made on, so the art blends in
+    explorePage: '#F8F0E7',
+    // Floating tab bar (Nov 25 design)
+    nav: '#21332B',
+    navBorder: '#21332B',
+    navInk: '#F4F2EC',
+    navActive: '#F9B48E',
+    navActiveInk: '#111111',
   },
   dark: {
     terracotta: '#83321F',
@@ -119,6 +127,12 @@ export const graphic = {
     shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 4px rgba(0, 0, 0, 0.35), 0 14px 28px -10px rgba(0, 0, 0, 0.5)',
     shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 18px -8px rgba(0, 0, 0, 0.5)',
     shadowShape: '0 6px 12px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3)',
+    explorePage: '#112920',
+    nav: '#1C3B2E',
+    navBorder: '#5B7767',
+    navInk: '#F4F2EC',
+    navActive: '#F9B48E',
+    navActiveInk: '#111111',
   },
 } as const;
 

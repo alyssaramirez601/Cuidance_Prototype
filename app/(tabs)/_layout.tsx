@@ -3,13 +3,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TabBar, type TabId } from '@/components/TabBar';
 
-import { useColors } from '@/hooks/useTheme';
+import { useTheme } from '@/hooks/useTheme';
 
 const tabIds: TabId[] = ['home', 'explore', 'saved', 'shop', 'profile'];
 
 // The five main tabs, in the fixed order from CLAUDE.md. Uses the app's own TabBar component
 export default function TabsLayout() {
-  const c = useColors();
+  const { c, g } = useTheme();
   return (
     <Tabs
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: c.background } }}
@@ -17,7 +17,8 @@ export default function TabsLayout() {
         const active = (state.routes[state.index]?.name ?? 'home') as TabId;
         const keyFor = (tab: TabId) => state.routes.find((route) => route.name === tab)?.key;
         return (
-          <SafeAreaView edges={['bottom']} style={{ backgroundColor: c.surface }}>
+          // Behind the floating bar is the page's own color, so it looks like it hovers over the page
+          <SafeAreaView edges={['bottom']} style={{ backgroundColor: active === 'explore' ? g.explorePage : c.background }}>
             <TabBar
               active={active}
               onSelect={(tab) => {
