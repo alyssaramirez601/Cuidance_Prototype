@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Animated, Easing, Image, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, Image, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 
 import { fontFamily, layout, space, type } from '@/constants/tokens';
 import { useNativeDriver, useReducedMotion } from '@/hooks/useMotion';
@@ -18,6 +18,10 @@ type AppSplashProps = {
 // The art was drawn on a 390 x 844 frame; each layer keeps that frame's position, scaled to the screen width.
 const ART_W = 390;
 const ART_H = 844;
+// The highest point of the art (the tallest leaf) in the 390 x 844 frame
+const ART_TOP = 420;
+// Room the logo, wordmark and greeting need above the art
+const MIN_OPEN_SPACE = 360;
 const LAYERS = [
   { key: 'terracotta', x: 86, y: 432, w: 304, h: 412 },
   { key: 'olive', x: 72, y: 600, w: 318, h: 244 },
@@ -65,9 +69,21 @@ export function AppSplash({ variant, firstName, onDone }: AppSplashProps) {
   const { scheme, c, g } = useTheme();
   const styles = useStyles();
   const reduced = useReducedMotion();
-  const { width } = useWindowDimensions();
+  // The splash measures its own box, which can differ from the browser window on a phone
+  const win = useWindowDimensions();
+  const [box, setBox] = useState({ width: win.width, height: win.height });
+  const onLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    if (width && height && (width !== box.width || height !== box.height)) setBox({ width, height });
+  };
   const art = ART[scheme];
-  const scale = width / ART_W;
+  const scale = box.width / ART_W;
+  const artHeight = ART_H * scale;
+  // The logo and words sit in the middle of the open space above the art, so they never sit on it.
+  // On short phones the art slides down past the bottom edge to keep that space
+  const naturalSpace = box.height - (ART_H - ART_TOP) * scale;
+  const artDrop = Math.max(0, MIN_OPEN_SPACE - naturalSpace);
+  const openSpace = naturalSpace + artDrop;
   const full = variant === 'full' && !reduced;
 
   const layer = useState(() => LAYERS.map(() => new Animated.Value(full ? 1 : 0)))[0];
@@ -85,6 +101,8 @@ export function AppSplash({ variant, firstName, onDone }: AppSplashProps) {
       Animated.timing(fadeOut, { toValue: 0, duration: 220, delay: HOLD_MS[variant], useNativeDriver }).start(() => onDone());
 
     if (reduced) {
+      layer.forEach((v) => v.setValue(0));
+      bowlIn.setValue(1);
       drop.setValue(1);
       tint.setValue(2);
       words.setValue(1);
@@ -147,28 +165,33 @@ export function AppSplash({ variant, firstName, onDone }: AppSplashProps) {
 
   return (
     <Animated.View
+      onLayout={onLayout}
       style={[StyleSheet.absoluteFill, styles.root, { opacity: fadeOut }]}
       accessible
       accessibilityRole="image"
       accessibilityLabel={firstName ? `Cuidance. Welcome back, ${firstName}` : 'Cuidance. Welcome back'}
     >
-      <Image source={GRAIN} style={[styles.grain, { width, height: ART_H * scale }]} resizeMode="stretch" />
-      {LAYERS.map((l, i) => (
-        <Animated.Image
-          key={l.key}
-          source={art[l.key]}
-          style={{
-            position: 'absolute',
-            left: l.x * scale,
-            bottom: (ART_H - (l.y + l.h)) * scale,
-            width: l.w * scale,
-            height: l.h * scale,
-            transform: [{ translateY: layer[i].interpolate({ inputRange: [0, 1], outputRange: [0, 320] }) }],
-          }}
-        />
-      ))}
+      {/* The art keeps its 390 x 844 frame, scaled to the screen width and pinned to the bottom */}
+      <View style={[styles.art, { width: box.width, height: artHeight, bottom: -artDrop }]} pointerEvents="none">
+        <Image source={GRAIN} style={{ position: 'absolute', left: 0, top: 0, width: box.width, height: artHeight }} resizeMode="stretch" />
+        {LAYERS.map((l, i) => (
+          <Animated.Image
+            key={l.key}
+            source={art[l.key]}
+            resizeMode="stretch"
+            style={{
+              position: 'absolute',
+              left: l.x * scale,
+              top: l.y * scale,
+              width: l.w * scale,
+              height: l.h * scale,
+              transform: [{ translateY: layer[i].interpolate({ inputRange: [0, 1], outputRange: [0, 320] }) }],
+            }}
+          />
+        ))}
+      </View>
 
-      <View style={styles.center} pointerEvents="none">
+      <View style={[styles.center, { height: openSpace }]} pointerEvents="none">
         <View style={styles.mark}>
           <Animated.View style={[styles.ring, ringStyle(ring1), { borderColor: c.brand }]} />
           <Animated.View style={[styles.ring, ringStyle(ring2), { borderColor: c.brand }]} />
@@ -213,15 +236,18 @@ const useStyles = makeStyles((c) =>
       overflow: 'hidden',
       zIndex: 10,
     },
-    grain: {
+    art: {
       position: 'absolute',
       left: 0,
       bottom: 0,
     },
     center: {
-      position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
       alignItems: 'center',
-      paddingTop: '30%',
+      justifyContent: 'center',
       gap: space[16],
     },
     mark: {

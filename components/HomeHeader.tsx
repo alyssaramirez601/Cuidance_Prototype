@@ -54,7 +54,7 @@ const useStyles = makeStyles((c, g) =>
       marginTop: -space[24],
       paddingHorizontal: layout.screenEdge,
       paddingTop: space[24],
-      paddingBottom: space[48] + space[32],
+      paddingBottom: space[48],
       gap: space[16],
       backgroundColor: g.terracottaBold,
       borderBottomRightRadius: radius.pill,

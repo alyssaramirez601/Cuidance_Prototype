@@ -249,10 +249,8 @@ function IconTile({ name, tone }: { name: 'saved' | 'help' | 'profile'; tone: 's
 }
 
 const useStyles = makeStyles((c, g) => StyleSheet.create({
-  // Overlaps the bottom of the terracotta header, like the A mockup
-  searchWrap: {
-    marginTop: -(space[48] + space[16]),
-  },
+  // Sits under the terracotta header and above "Pick up where you left off" (Alyssa, Nov 25)
+  searchWrap: {},
   section: {
     gap: space[12],
   },
