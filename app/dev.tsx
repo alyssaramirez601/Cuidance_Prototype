@@ -1,6 +1,18 @@
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { ArtFrame } from '@/components/ArtFrame';
+import { CareAreaTile } from '@/components/CareAreaTile';
+import { ContinuationBand } from '@/components/ContinuationBand';
+import { EditorialProductCard } from '@/components/EditorialProductCard';
+import { EmptyState } from '@/components/EmptyState';
+import { FeatureCard } from '@/components/FeatureCard';
+import { GuideRow } from '@/components/GuideRow';
+import { SectionHeader } from '@/components/SectionHeader';
+import { Skeleton } from '@/components/Skeleton';
+import { products } from '@/data/products';
+import { profileArt } from '@/data/profileCopy';
+import { articleArt } from '@/lib/explore';
 import { AnswerOption, type AnswerOptionIndicator, type AnswerOptionState } from '@/components/AnswerOption';
 import { Button, type ButtonState, type ButtonStyle } from '@/components/Button';
 import { Checkbox, type CheckboxState } from '@/components/Checkbox';
@@ -196,6 +208,39 @@ export default function DevScreen() {
           onClose={noop}
         />
       </Section>
+
+      {/* Home v2 (Nov 25, 2026). Sample text is placeholder copy */}
+      <Section title="SectionHeader">
+        <SectionHeader title="Section title" actionLabel="See all" onAction={noop} />
+        <SectionHeader title="With an eyebrow" eyebrow="Eyebrow" />
+      </Section>
+      <Section title="FeatureCard">
+        <FeatureCard eyebrow="Eyebrow" title="Feature headline" body="A short line of supporting text." actionLabel="Action" onPress={noop} />
+        <FeatureCard title="Arrow only" body="No action label." onPress={noop} />
+      </Section>
+      <Section title="CareAreaTile">
+        <View style={styles.row}>
+          <CareAreaTile label="Short" art={profileArt.areas.hair} onPress={noop} />
+          <CareAreaTile label="A longer two line label" art={profileArt.areas.body} onPress={noop} />
+        </View>
+      </Section>
+      <Section title="ContinuationBand">
+        <ContinuationBand icon="help" title="Unfinished" detail="Detail line" actionLabel="Continue" onPress={noop} secondary={{ label: 'Secondary row', onPress: noop }} />
+        <ContinuationBand icon="profile" title="A place to revisit" detail="Detail line" onPress={noop} />
+      </Section>
+      <Section title="EditorialProductCard">
+        <EditorialProductCard product={products[0]} onPress={noop} />
+      </Section>
+      <Section title="GuideRow">
+        <GuideRow title="Guide title that wraps onto a second line" eyebrow="Kind · 2 min read" art={articleArt('read-a-label')} onPress={noop} divider={false} />
+      </Section>
+      <Section title="EmptyState">
+        <EmptyState title="Title" body="What is missing and what to do next." actionLabel="Action" onAction={noop} />
+      </Section>
+      <Section title="Skeleton and ArtFrame">
+        <Skeleton height={space[48]} />
+        <ArtFrame source={articleArt('new-product')} shape="arch" style={styles.frame} />
+      </Section>
     </Screen>
   );
 }
@@ -269,5 +314,9 @@ const useStyles = makeStyles((c) => StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: space[16],
+  },
+  frame: {
+    width: space[48] * 2,
+    aspectRatio: 1,
   },
 }));

@@ -165,3 +165,21 @@ Bottom sheet. Fill surface, top border `border`, radius `medium` (top corners), 
 - Body in `body`, ink.
 - A secondary Button (full width).
 - "Close" in `label`, accent.
+
+## Home v2 components (Nov 25, 2026, not in Figma yet)
+
+Built for Home v2 "Editorial Care". Esme should add them to Figma under the same names. All use `makeStyles`, follow light and dark, keep targets at 44 x 44 and draw a 2 px `accent` focus outline on the web. Tokens marked PROVISIONAL in `constants/tokens.ts` need Esme's review before main.
+
+| Component | Props | Look |
+| --- | --- | --- |
+| `SectionHeader` | `title`, `eyebrow?`, `actionLabel?`, `onAction?`, `tone` = `page` \| `partnerBand` | `heading` title, optional `eyebrow` caps line in `highlight`, link in `label` + `arrow` (20) in `accent`. Wraps so the link drops under the title at large text |
+| `FeatureCard` | `title`, `onPress`, `eyebrow?`, `body?`, `actionLabel?`, `art?` | Fill `featureSurface`, radius `medium`, padding 24, `shadowPaper`. Eyebrow `featureEyebrow`, title `heading` and body `body` in `onFeature`. Art region 96 wide beside the text, above it at text scale 1.3+. Pill with `onFeature` fill and `featureSurface` text below. The whole card is one button |
+| `CareAreaTile` | `label`, `art`, `onPress` | Fill `surface`, border `border`, radius `medium`, `shadowLift`. Square art, then the label in `caption` semibold, centered, wrapping |
+| `ContinuationBand` | `title`, `icon`, `onPress`, `detail?`, `actionLabel?`, `secondary?` | Fill `continueSurface`, radius `medium`, a `blueBold` wave in the corner. Icon in a 48 circle, title `editorialTitle`. Unfinished items get an `accent` pill; places to revisit get a round `accent` arrow. Optional quieter second row |
+| `EditorialProductCard` | `product`, `onPress` | Fill `surface`, radius `medium`, `shadowLift`. 120 framed art, product type as `eyebrow`, name `editorialTitle`, brand `caption` |
+| `GuideRow` | `title`, `eyebrow`, `art`, `onPress`, `divider?` | A row, not a card: 72 arch-topped `ArtFrame`, `eyebrow` in `highlight`, `editorialTitle` title, 44 round arrow. Line under each row but the last |
+| `EmptyState` | `body`, `title?`, `art?`, `actionLabel?`, `onAction?` | Fill `surfaceWarm`, radius `medium`, padding 16, secondary Button |
+| `Skeleton` | `height`, `width?`, `shape` = `small` \| `medium` \| `pill` | Fill `disabledSurface`. Never animates |
+| `ArtFrame` | `source`, `fit`, `shape` = `rounded` \| `arch`, `style` | Fill `surfaceWarm`, border `border`, radius `medium` (arch: pill top corners). For light-only library art on dark pages |
+
+Restyled: `HomeHeader` (logo, greeting on the page color, bell, profile, temporary code-drawn accent) and `PartnerHighlightCard` (164 wide, `shadowLift`, label on one line). `SwipeRow` has a new optional `header` slot; without it, it looks as before.
