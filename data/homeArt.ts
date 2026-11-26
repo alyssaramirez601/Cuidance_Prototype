@@ -2,13 +2,11 @@
 // Each slot has a fixed shape (the final file's pixel size) so layouts never depend on what a
 // picture contains, and every slot takes a light and a dark file.
 //
-// The seven compositions are approved as concepts (docs/design-system/home-assets.md). The final,
-// production files are still being prepared. Until then the header and feature slots are empty, the
-// care tiles use TEMPORARY library art, and the partner slot shows TEMPORARY shapes drawn in code. To integrate a final file:
-// add it to assets/home/ and point its slot here. Nothing else changes.
+// Approved artwork (Alyssa, Nov 25, 2026): all seven compositions live in assets/home/, listed in
+// docs/design-system/home-assets.md. To replace a file, add it to assets/home/ and point its slot
+// here. Nothing else changes.
 
 import type { QuizSection } from '@/data/quiz';
-import { profileArt } from '@/data/profileCopy';
 
 export type ModeArt = { light: number; dark: number };
 
@@ -20,29 +18,24 @@ export const homeArtRatio = {
   partner: 432 / 432,
 } as const;
 
-// Final: assets/home/header-accent-{light,dark}.png, transparent. null until supplied: the slot stays empty
-export const headerArt: ModeArt | null = null;
+export const headerArt: ModeArt | null = { light: require('@/assets/home/header-accent-light.png'), dark: require('@/assets/home/header-accent-dark.png') };
 
-// Final: assets/home/partner-accent-{light,dark}.png. null until approved files arrive
-export const partnerArt: ModeArt | null = null;
-
-// TEMPORARY: the care-area arches from the art library (light palette, transparent outside the arch).
-// Final: assets/home/care-{hair,skin,makeup,body}-{light,dark}.png
-const careInterim = (area: keyof typeof profileArt.areas): ModeArt => ({ light: profileArt.areas[area], dark: profileArt.areas[area] });
+export const partnerArt: ModeArt | null = { light: require('@/assets/home/partner-accent-light.png'), dark: require('@/assets/home/partner-accent-dark.png') };
 
 // Keyed by the department id in data/categories.ts, which never changes for art
 export const careArt: Record<string, ModeArt> = {
-  hair: careInterim('hair'),
-  skin: careInterim('skin'),
-  makeup: careInterim('makeup'),
-  body: careInterim('body'),
+  hair: { light: require('@/assets/home/care-hair-light.png'), dark: require('@/assets/home/care-hair-dark.png') },
+  skin: { light: require('@/assets/home/care-skin-light.png'), dark: require('@/assets/home/care-skin-dark.png') },
+  makeup: { light: require('@/assets/home/care-makeup-light.png'), dark: require('@/assets/home/care-makeup-dark.png') },
+  body: { light: require('@/assets/home/care-body-light.png'), dark: require('@/assets/home/care-body-dark.png') },
 };
 
-// Final: assets/home/feature-general-{light,dark}.png, transparent (the dark version is not approved
-// yet). null until supplied: the slot stays empty, with no temporary art (Alyssa, Nov 25).
-// Takes the result's first care area so per-area art can be added later without touching Home
-const featureGeneral: ModeArt | null = null;
+// One approved file for both modes: it sits on the feature card, which is deep green in both, and was
+// checked on both card colors. A separate dark version can replace `dark` later
+const featureFile = require('@/assets/home/feature-general.png');
+const featureGeneral: ModeArt | null = { light: featureFile, dark: featureFile };
 
+// Takes the result's first care area so per-area art can be added later without touching Home
 export function featureArt(area: QuizSection | null): ModeArt | null {
   void area;
   return featureGeneral;

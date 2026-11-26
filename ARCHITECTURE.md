@@ -30,7 +30,7 @@ cuidance_prototype/
 ├── components/               Shared UI, one file per Figma component (plus AppSplash and Appear for the Nov 20 redesign)
 ├── constants/tokens.ts       The only source of color, type, spacing, radius
 ├── assets/splash/            Splash art, one image per layer in light and dark, and the logo mark cut into bowl and circle
-├── assets/home/              Final Home v2 artwork (empty until approved; see docs/design-system/home-assets.md)
+├── assets/home/              Approved Home v2 artwork, light and dark (see docs/design-system/home-assets.md)
 ├── data/                     Quiz questions and result content (local, typed); homeArt.ts holds Home v2's artwork slots
 ├── hooks/                    useAuth, useQuizAnswer, useQuizNext, useGuidanceResult, useGoBack, useGoogleSignIn, useProfileData, useDeviceSettings, useTheme (light/dark), useMotion (bounce, reduced motion), useSplash
 ├── lib/                      Supabase client and every database call; homeState.ts decides Home's feature card and continuation band

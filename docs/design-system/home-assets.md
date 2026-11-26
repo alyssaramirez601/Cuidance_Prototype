@@ -2,17 +2,18 @@
 
 Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own slot, separate from the live text, so a final file can replace a temporary one without touching any layout. Slots are wired in `data/homeArt.ts`; swap a slot there.
 
-## Status (Nov 25, 2026, Checkpoint 3)
+## Status (Nov 25, 2026, Checkpoint 4): approved and integrated
 
-- All seven compositions are **approved as concepts** (Alyssa's "Cuidance Home v2 Approved Visuals" package): header accent, feature general (light only), four care tiles, partner accent.
-- The package's PNGs are **opaque, resized reference renders**, not production files. They were tested in each slot locally and fit the slot sizes, but they are **not committed**.
-- **Blockers before integration:**
-  1. Header, feature and partner slots need **transparent** finals. The references' cream or green backgrounds show as visible squares on the page, the feature card and the partner band.
-  2. **Feature general dark** has not been approved yet.
-  3. Colors in the renders are generated approximations; finals should be rebuilt on the approved palette.
-- **Care tiles are the exception:** their art fills its frame edge to edge, so an opaque file works there. The approved references could go in as-is once the team agrees they are final.
-- **Header and feature slots are empty on purpose** (Alyssa, Nov 25): the temporary shapes were removed, and no stand-in is shown until the transparent finals arrive.
-- To integrate a final file: add it to `assets/home/` under the name below and point its slot in `data/homeArt.ts`. No layout changes are needed.
+All required artwork is in `assets/home/` and wired up in `data/homeArt.ts`. Each file was checked for size, real transparency and edge quality on its actual app surface in light and dark mode, and approved by Alyssa after the in-app test.
+
+| File | Slot | Notes |
+| --- | --- | --- |
+| `header-accent-light.png`, `header-accent-dark.png` | Header, beside the greeting (120 x 120, right 24 px cropped by the screen edge) | Repaired raster cutouts with a curved top. Hidden for first names with a word over 11 letters |
+| `feature-general.png` | Feature card, bottom-right corner, cropped by the card | One file for both modes (both card colors are deep green and it was tested on both). Trimmed so the art meets the slot's right and bottom edges; artwork pixels unchanged. A separate dark version can be added later |
+| `care-{hair,skin,makeup,body}-{light,dark}.png` | Care tiles (240 x 276 frame) | Known minor issue: faint marks at the left edge of `care-hair-dark.png` |
+| `partner-accent-light.png`, `partner-accent-dark.png` | Beside the Partner Highlights title (72 x 72) | Light file has a slightly ragged lower edge, not noticeable at 72 px |
+
+These are raster cutouts, not layered source files. Keep the original sources for future edits.
 
 ## Rules for every file
 
@@ -23,7 +24,7 @@ Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own s
 - No people or portraits on Home (non-figurative decision, Week 11).
 - PNG. Sizes below are 3x for a 390 px wide screen.
 
-## Required files (14)
+## Original file brief (14 files)
 
 | File in `assets/home/` | Size (px) | Background | What it shows | Status | Temporary stand-in |
 | --- | --- | --- | --- | --- | --- |
