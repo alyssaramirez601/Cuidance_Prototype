@@ -10,13 +10,16 @@ type SwipeRowProps = {
   // Shown on the right of the title when there is a page with everything
   seeAllLabel?: string;
   onSeeAll?: () => void;
+  // Replaces the default title row, for example with SectionHeader (Home v2). Shop keeps the default
+  header?: ReactNode;
 };
 
 // A titled row of cards you swipe sideways, like the rows on Ulta and Sephora. Used on Home and Shop
-export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowProps) {
+export function SwipeRow({ title, children, seeAllLabel, onSeeAll, header }: SwipeRowProps) {
   const styles = useStyles();
   return (
     <View style={styles.section}>
+      {header ?? (
       <View style={styles.head}>
         <Text style={styles.title} accessibilityRole="header">
           {title}
@@ -27,6 +30,7 @@ export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowPro
           </Pressable>
         ) : null}
       </View>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.content}>
         {children}
       </ScrollView>
