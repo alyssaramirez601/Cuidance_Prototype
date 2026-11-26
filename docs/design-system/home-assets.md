@@ -11,6 +11,7 @@ Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own s
   2. **Feature general dark** has not been approved yet.
   3. Colors in the renders are generated approximations; finals should be rebuilt on the approved palette.
 - **Care tiles are the exception:** their art fills its frame edge to edge, so an opaque file works there. The approved references could go in as-is once the team agrees they are final.
+- **Header and feature slots are empty on purpose** (Alyssa, Nov 25): the temporary shapes were removed, and no stand-in is shown until the transparent finals arrive.
 - To integrate a final file: add it to `assets/home/` under the name below and point its slot in `data/homeArt.ts`. No layout changes are needed.
 
 ## Rules for every file
@@ -26,8 +27,8 @@ Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own s
 
 | File in `assets/home/` | Size (px) | Background | What it shows | Status | Temporary stand-in |
 | --- | --- | --- | --- | --- | --- |
-| `header-accent-light.png`, `header-accent-dark.png` | 288 x 288 | Transparent | Cut-paper waves and shapes in the top-right corner; the lower-left stays empty. Shown at 144 x 144, bleeding off the screen's top-right corner beside the logo row | Concept approved, final needed | Shapes drawn in code (`TemporaryAccent` in `components/HomeHeader.tsx`) |
-| `feature-general-light.png`, `feature-general-dark.png` | 288 x 330 | Transparent | Still life for the guidance feature card, works for any care area. Shown up to 144 wide in the card's bottom-right corner, running to its edges | Light concept approved, dark not yet; finals needed | The result's care-area arch from `assets/art-library/area-*.png`, or shapes drawn in code when there is no result |
+| `header-accent-light.png`, `header-accent-dark.png` | 288 x 288 | Transparent | Flowing cut-paper shapes. Shown 120 x 120 beside the greeting (away from the bell and profile buttons), with the screen's right edge cropping its right 24 px. Fill the canvas: shapes drawn in only one corner will look very small here | Concept approved, final needed | None: the slot is empty until the final file arrives |
+| `feature-general-light.png`, `feature-general-dark.png` | 288 x 330 | Transparent | Still life for the guidance feature card, works for any care area. Shown up to 144 wide in the card's bottom-right corner, running to its edges | Light concept approved, dark not yet; finals needed | None: the slot is empty until the final file arrives (no opaque background, it sits on the green card) |
 | `care-hair-light.png`, `care-hair-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Hair textures, waves or a comb | Concept approved, final needed | `assets/art-library/area-hair.png` |
 | `care-skin-light.png`, `care-skin-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Cream texture or gentle skincare shapes, no jar-and-leaf repeat | Concept approved, final needed | `assets/art-library/area-skin.png` |
 | `care-makeup-light.png`, `care-makeup-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Compact or swatches across deep to light tones | Concept approved, final needed | `assets/art-library/area-makeup.png` |

@@ -16,7 +16,7 @@ type HomeHeaderProps = {
   // Opens notification settings, as Explore's bell does. There is no inbox or unread count
   onNotificationsPress: () => void;
   notificationsLabel: string;
-  // The corner artwork for the current mode (data/homeArt.ts). Leave out to show the temporary shapes
+  // The header artwork for the current mode (data/homeArt.ts). Leave out and the slot stays empty
   accentArt?: number;
 };
 
@@ -32,17 +32,15 @@ const LOGO_RATIO = 1028 / 222;
 const LONG_WORD = 11;
 
 // Home v2 "Editorial Care" header (Nov 25): the real logo, the time-of-day greeting and the person's
-// name in Newsreader on the page color. The artwork lives in the top-right corner beside the logo
-// row, so the greeting always has the full width and never sits on top of art
+// name in Newsreader on the page color. The bell and profile buttons always sit on a clear page.
+// The artwork slot sits beside the greeting, away from the buttons, cropped by the screen's right
+// edge. It is empty until the final transparent artwork is supplied (no temporary shapes, Alyssa Nov 25)
 export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPress, notificationsLabel, accentArt }: HomeHeaderProps) {
   const styles = useStyles();
   const { scheme } = useTheme();
   const longWord = name.split(/\s+/).some((word) => word.length > LONG_WORD);
   return (
     <Appear style={styles.header}>
-      <View style={styles.corner} accessible={false}>
-        {accentArt ? <Image source={accentArt} style={styles.cornerArt} contentFit="cover" accessible={false} /> : <TemporaryAccent />}
-      </View>
       <View style={styles.top}>
         <Image source={logo[scheme]} style={styles.logo} contentFit="contain" accessibilityLabel="Cuidance" />
         <View style={styles.actions}>
@@ -51,12 +49,20 @@ export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPres
         </View>
       </View>
 
-      <View style={styles.greetingText}>
-        <Text style={styles.greetingSmall}>{greeting}</Text>
-        {/* Wraps as far as it needs, so long names are never cut */}
-        <Text style={[styles.greetingName, longWord && styles.greetingLong]} accessibilityRole="header">
-          {name ? `Hi, ${name}` : 'Hi there'}
-        </Text>
+      <View style={styles.greetingRow}>
+        <View style={styles.greetingText}>
+          <Text style={styles.greetingSmall}>{greeting}</Text>
+          {/* Wraps as far as it needs, so long names are never cut */}
+          <Text style={[styles.greetingName, longWord && styles.greetingLong]} accessibilityRole="header">
+            {name ? `Hi, ${name}` : 'Hi there'}
+          </Text>
+        </View>
+        {/* A long name keeps the full width, so the art steps aside rather than squeeze the words */}
+        {accentArt && !longWord ? (
+          <View style={styles.accent} accessible={false}>
+            <Image source={accentArt} style={styles.accentArt} contentFit="cover" accessible={false} />
+          </View>
+        ) : null}
       </View>
     </Appear>
   );
@@ -79,19 +85,6 @@ function RoundButton({ icon, label, onPress }: { icon: IconName; label: string; 
         <Icon name={icon} size={sizes.icon.large} color={c.ink} />
       </Pressable>
     </Animated.View>
-  );
-}
-
-// TEMPORARY until assets/home/header-accent-{light,dark}.png is supplied: the same cut-paper shapes
-// as before, drawn in code inside the corner slot so they follow light and dark mode
-function TemporaryAccent() {
-  const styles = useStyles();
-  return (
-    <>
-      <View style={styles.sun} />
-      <View style={styles.arch} />
-      <View style={styles.leaf} />
-    </>
   );
 }
 
@@ -130,6 +123,7 @@ const useStyles = makeStyles((c, g) =>
       outlineWidth: stroke.strong,
     },
     greetingText: {
+      flex: 1,
       gap: space[4],
     },
     // Care Terracotta on the page: 5.4:1 light, 9.2:1 dark (the old eyebrow on the terracotta block was 4.34:1)
@@ -146,48 +140,25 @@ const useStyles = makeStyles((c, g) =>
     greetingLong: {
       ...type.heading,
     },
-    // The 288 x 288 artwork shown at half size, bleeding off the top-right corner of the screen.
-    // Its shapes sit beside the logo row, above the greeting
-    corner: {
-      position: 'absolute',
-      top: -space[24],
-      right: -space[24],
-      width: space[48] * 3,
-      aspectRatio: homeArtRatio.header,
+    greetingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: space[12],
+    },
+    // The 288 x 288 artwork shown 120 px square; 96 px of it shows, and the screen's right edge
+    // crops the rest
+    accent: {
+      width: space[48] * 2,
+      height: space[48] * 2 + space[24],
+      marginRight: -space[24],
       overflow: 'hidden',
     },
-    cornerArt: {
-      width: '100%',
+    accentArt: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
       height: '100%',
-    },
-    sun: {
-      position: 'absolute',
-      right: -space[24],
-      top: -space[24],
-      width: space[48] * 2,
-      height: space[48] * 2,
-      borderRadius: radius.pill,
-      backgroundColor: g.orange,
-    },
-    arch: {
-      position: 'absolute',
-      right: space[48] + space[24],
-      top: -space[24],
-      width: space[32],
-      height: space[48] + space[24],
-      borderBottomLeftRadius: radius.pill,
-      borderBottomRightRadius: radius.pill,
-      backgroundColor: g.terracottaBold,
-    },
-    leaf: {
-      position: 'absolute',
-      right: space[8],
-      top: space[48] + space[8],
-      width: space[24],
-      height: space[32],
-      borderTopLeftRadius: radius.pill,
-      borderBottomRightRadius: radius.pill,
-      backgroundColor: g.blueBold,
+      aspectRatio: homeArtRatio.header,
     },
   }),
 );

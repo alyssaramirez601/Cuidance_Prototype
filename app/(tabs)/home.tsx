@@ -178,6 +178,7 @@ function SearchEntry() {
 
 function GuidanceFeature({ data }: { data: HomeData }) {
   const router = useRouter();
+  const { scheme } = useTheme();
   const { feature } = homeState(data);
   if (feature.kind === 'result') {
     return (
@@ -187,7 +188,7 @@ function GuidanceFeature({ data }: { data: HomeData }) {
         body={feature.result.subtitle || homeCopy.revisit}
         actionLabel={homeCopy.viewResult}
         onPress={() => router.push(`/saved/${feature.result.id}`)}
-        art={<FeatureArt area={feature.area} />}
+        art={featureArtFor(feature.area, scheme)}
         artRatio={homeArtRatio.feature}
       />
     );
@@ -200,7 +201,7 @@ function GuidanceFeature({ data }: { data: HomeData }) {
         body={homeCopy.questionsLeft(feature.questionsLeft)}
         actionLabel={homeCopy.resumeButton}
         onPress={() => router.push(`/quiz/${feature.nextQuestionId}`)}
-        art={<FeatureArt area={null} />}
+        art={featureArtFor(null, scheme)}
         artRatio={homeArtRatio.feature}
       />
     );
@@ -215,29 +216,22 @@ function GuidanceFeature({ data }: { data: HomeData }) {
       body={homeCopy.getGuidanceDetail}
       actionLabel={homeCopy.startGuidance}
       onPress={() => router.push(`/quiz/${questionId}`)}
-      art={<FeatureArt area={null} />}
+      art={featureArtFor(null, scheme)}
       artRatio={homeArtRatio.feature}
     />
   );
 }
 
-// Fills the feature card's art slot. TEMPORARY content until the approved feature art is supplied
-// (data/homeArt.ts): the result's care-area arch, or a sun and arch drawn in code
-function FeatureArt({ area }: { area: Parameters<typeof featureArt>[0] }) {
-  const styles = useStyles();
-  const { scheme } = useTheme();
+// The feature card's artwork, or nothing: with no approved file yet the slot stays empty, so the
+// card shows no temporary shapes (Alyssa, Nov 25). The final art is transparent, sits in the card's
+// bottom-right corner and is cropped by the card's edges
+function featureArtFor(area: Parameters<typeof featureArt>[0], scheme: 'light' | 'dark') {
   const art = featureArt(area);
-  return (
-    <View style={styles.featureArt} accessible={false}>
-      <View style={styles.featureSun} />
-      {art ? (
-        <Image source={art[scheme]} style={styles.featureImage} contentFit="contain" accessible={false} />
-      ) : (
-        <View style={styles.featureArch} />
-      )}
-    </View>
-  );
+  if (!art) return undefined;
+  return <Image source={art[scheme]} style={featureImageStyle} contentFit="cover" contentPosition="right bottom" accessible={false} />;
 }
+
+const featureImageStyle = { width: '100%', height: '100%' } as const;
 
 function CareAreas() {
   const styles = useStyles();
@@ -426,30 +420,9 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     flex: 1,
     color: c.inkMuted,
   },
-  featureArt: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  featureSun: {
-    position: 'absolute',
-    right: -space[24],
-    top: 0,
-    width: space[48] * 2,
-    height: space[48] * 2,
-    borderRadius: radius.pill,
-    backgroundColor: g.orange,
-  },
   featureImage: {
     width: '100%',
     height: '100%',
-  },
-  featureArch: {
-    alignSelf: 'center',
-    width: '70%',
-    height: '75%',
-    borderTopLeftRadius: radius.pill,
-    borderTopRightRadius: radius.pill,
-    backgroundColor: g.clay,
   },
   careGrid: {
     gap: space[8],

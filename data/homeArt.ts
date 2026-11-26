@@ -3,8 +3,8 @@
 // picture contains, and every slot takes a light and a dark file.
 //
 // The seven compositions are approved as concepts (docs/design-system/home-assets.md). The final,
-// production files are still being prepared, so slots below either point at TEMPORARY library art
-// or are null, in which case Home draws simple TEMPORARY shapes in code. To integrate a final file:
+// production files are still being prepared. Until then the header and feature slots are empty, the
+// care tiles use TEMPORARY library art, and the partner slot shows TEMPORARY shapes drawn in code. To integrate a final file:
 // add it to assets/home/ and point its slot here. Nothing else changes.
 
 import type { QuizSection } from '@/data/quiz';
@@ -20,7 +20,7 @@ export const homeArtRatio = {
   partner: 432 / 432,
 } as const;
 
-// Final: assets/home/header-accent-{light,dark}.png. null until approved files arrive
+// Final: assets/home/header-accent-{light,dark}.png, transparent. null until supplied: the slot stays empty
 export const headerArt: ModeArt | null = null;
 
 // Final: assets/home/partner-accent-{light,dark}.png. null until approved files arrive
@@ -38,11 +38,14 @@ export const careArt: Record<string, ModeArt> = {
   body: careInterim('body'),
 };
 
-// TEMPORARY: the feature card shows the care-area arch of the result's first care area, or code shapes.
-// Final: assets/home/feature-general-{light,dark}.png (the dark version is not approved yet)
+// Final: assets/home/feature-general-{light,dark}.png, transparent (the dark version is not approved
+// yet). null until supplied: the slot stays empty, with no temporary art (Alyssa, Nov 25).
+// Takes the result's first care area so per-area art can be added later without touching Home
+const featureGeneral: ModeArt | null = null;
+
 export function featureArt(area: QuizSection | null): ModeArt | null {
-  if (area === 'skin' || area === 'hair' || area === 'makeup' || area === 'body') return careInterim(area);
-  return null;
+  void area;
+  return featureGeneral;
 }
 
 // The four care areas Home shows, in the approved order. Ids from data/categories.ts
