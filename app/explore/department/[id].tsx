@@ -5,16 +5,16 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, type } from '@/constants/tokens';
+import { layout, radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { findDepartment } from '@/data/categories';
 import { departmentCopy, exploreArt } from '@/data/exploreCopy';
 import { categoryArt, countFor } from '@/lib/explore';
 
-const c = colors.light;
-
 // A department's landing page, like tapping Makeup in the Ulta or Sephora app: each category is a
 // heading with a grid of picture cards for its subcategories (Foundation, Blush, Mascara...)
 export default function DepartmentScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const department = findDepartment(id);
@@ -95,6 +95,7 @@ export default function DepartmentScreen() {
 }
 
 function Tile({ label, art, count, onPress }: { label: string; art: number; count: number; onPress: () => void }) {
+  const styles = useStyles();
   return (
     <Pressable
       onPress={onPress}
@@ -112,7 +113,7 @@ function Tile({ label, art, count, onPress }: { label: string; art: number; coun
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   section: {
     gap: space[12],
   },
@@ -158,4 +159,4 @@ const styles = StyleSheet.create({
     color: c.ink,
     textAlign: 'center',
   },
-});
+}));

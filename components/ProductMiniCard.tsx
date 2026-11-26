@@ -1,7 +1,9 @@
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, space, type } from '@/constants/tokens';
+import { radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
+import { usePressBounce } from '@/hooks/useMotion';
 import type { Product } from '@/data/products';
 import { productImage } from '@/lib/explore';
 
@@ -15,9 +17,12 @@ type ProductMiniCardProps = {
 // The small picture-and-label card in swipeable rows (Explore's and Home's "For you"),
 // like Sephora's "Continue Shopping" row
 export function ProductMiniCard({ product, label, onPress }: ProductMiniCardProps) {
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.96);
+  const styles = useStyles();
   const image = productImage(product);
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${product.brand} ${product.name}`} style={styles.card}>
+    <Animated.View style={bounceStyle}>
+    <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut} accessibilityRole="button" accessibilityLabel={`${product.brand} ${product.name}`} style={styles.card}>
       <View style={styles.art}>
         <Image
           source={image.source}
@@ -30,10 +35,11 @@ export function ProductMiniCard({ product, label, onPress }: ProductMiniCardProp
         {label}
       </Text>
     </Pressable>
+    </Animated.View>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // Wide enough for a two-line product name
   card: {
     width: space[48] * 2 + space[24],
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.medium,
-    backgroundColor: colors.light.surfaceWarm,
+    backgroundColor: c.surfaceWarm,
   },
   arch: {
     width: '75%',
@@ -53,7 +59,7 @@ const styles = StyleSheet.create({
   },
   label: {
     ...type.caption,
-    color: colors.light.ink,
+    color: c.ink,
     textAlign: 'center',
   },
-});
+}));

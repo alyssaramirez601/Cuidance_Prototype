@@ -4,16 +4,30 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { AppSplash } from '@/components/AppSplash';
 import { LoadingState } from '@/components/LoadingState';
 import { WebFrame } from '@/components/WebFrame';
-import { colors, fontFamily } from '@/constants/tokens';
+import { fontFamily } from '@/constants/tokens';
+import { ThemeProvider, useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
+import { useSplash } from '@/hooks/useSplash';
+import { firstNameFrom } from '@/lib/auth';
 
 // Signed-in people start on start, which opens the first quiz question. Without this the web picks the first route by file name (dev), while the phone follows the screen order below
 export const unstable_settings = { anchor: 'start' };
 
 export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootNavigator />
+    </ThemeProvider>
+  );
+}
+
+function RootNavigator() {
+  const { c, scheme } = useTheme();
   const { session, isLoading } = useAuth();
+  const { showSplash, variant, finishSplash } = useSplash(isLoading, !!session);
   // Registered under the fontFamily names in tokens.ts, so screens never name a font file
   const [fontsLoaded, fontError] = useFonts({
     [fontFamily.display]: Newsreader_400Regular,
@@ -32,11 +46,11 @@ export default function RootLayout() {
 
   return (
     <WebFrame>
-      <StatusBar style="dark" />
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: colors.light.background },
+          contentStyle: { backgroundColor: c.background },
         }}
       >
         {/* Signed-out people can only reach these screens */}
@@ -75,6 +89,9 @@ export default function RootLayout() {
           <Stack.Screen name="quiz/result" />
         </Stack.Protected>
       </Stack>
+      {showSplash ? (
+        <AppSplash variant={variant} firstName={firstNameFrom(session?.user.user_metadata)} onDone={finishSplash} />
+      ) : null}
     </WebFrame>
   );
 }

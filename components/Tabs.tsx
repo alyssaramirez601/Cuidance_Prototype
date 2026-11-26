@@ -1,6 +1,7 @@
+import { makeStyles, useColors } from '@/hooks/useTheme';
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { colors, layout, space, stroke, type } from "@/constants/tokens";
+import { layout, space, stroke, type } from "@/constants/tokens";
 
 type Tab = {
   key: string;
@@ -16,8 +17,6 @@ type TabsProps = {
   scrollable?: boolean;
 };
 
-const c = colors.light;
-
 // Underlined tabs at the top of a screen, like Create account | Sign in in the Week 8 design.
 // Not in the Figma design system yet, so Esme should add it there
 export function Tabs({
@@ -26,6 +25,8 @@ export function Tabs({
   onChange,
   scrollable = false,
 }: TabsProps) {
+  const styles = useStyles();
+  const c = useColors();
   const items = tabs.map((tab) => {
     const isActive = tab.key === activeKey;
     return (
@@ -69,7 +70,7 @@ export function Tabs({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   row: {
     flexDirection: "row",
     borderBottomWidth: stroke.default,
@@ -98,8 +99,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: stroke.default,
     borderBottomColor: c.border,
   },
+  // Lines the first tab up with the page edge. The last visible tab is cut off at the screen
+  // edge on purpose, the usual sign that the row scrolls sideways
   scrollContent: {
-    paddingHorizontal: space[12],
+    paddingHorizontal: layout.screenEdge - space[12],
   },
   tabActive: {
     borderBottomColor: c.selected,
@@ -107,4 +110,4 @@ const styles = StyleSheet.create({
   label: {
     ...type.label,
   },
-});
+}));

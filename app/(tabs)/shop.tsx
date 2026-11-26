@@ -3,13 +3,15 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Note } from '@/components/Note';
+import { CollageHeader } from '@/components/CollageHeader';
 import { PartnerOfferCard } from '@/components/PartnerOfferCard';
 import { PartnerTile } from '@/components/PartnerTile';
 import { Screen } from '@/components/Screen';
 import { SwipeRow } from '@/components/SwipeRow';
 import { Tabs } from '@/components/Tabs';
 import { Toast } from '@/components/Toast';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import {
   partnerCollections,
   partnerOffers,
@@ -22,11 +24,10 @@ import { collectionProducts, copyCode } from '@/lib/shop';
 
 type ShopTab = 'all' | 'offers' | 'collections' | 'workshops';
 
-const c = colors.light;
-
 // Shop holds only labeled partner content, kept apart from guidance. No checkout:
 // everything opens on the partner's site
 export default function ShopScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [tab, setTab] = useState<ShopTab>('all');
   const [toast, setToast] = useState('');
@@ -55,9 +56,7 @@ export default function ShopScreen() {
 
   return (
     <Screen>
-      <Text style={styles.title} accessibilityRole="header">
-        {shopCopy.title}
-      </Text>
+      <CollageHeader variant="shop" title={shopCopy.title} />
       <Note text={shopCopy.notice} />
       <Text style={styles.sample}>{shopCopy.sampleNote}</Text>
       <View style={styles.tabs}>
@@ -150,11 +149,7 @@ export default function ShopScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    ...type.heading,
-    color: c.ink,
-  },
+const useStyles = makeStyles((c) => StyleSheet.create({
   sample: {
     ...type.caption,
     color: c.inkMuted,
@@ -167,4 +162,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.inkMuted,
   },
-});
+}));

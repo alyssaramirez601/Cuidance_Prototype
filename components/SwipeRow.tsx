@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type SwipeRowProps = {
   title: string;
@@ -9,14 +10,16 @@ type SwipeRowProps = {
   // Shown on the right of the title when there is a page with everything
   seeAllLabel?: string;
   onSeeAll?: () => void;
+  // Replaces the default title row, for example with SectionHeader (Home v2). Shop keeps the default
+  header?: ReactNode;
 };
 
-const c = colors.light;
-
 // A titled row of cards you swipe sideways, like the rows on Ulta and Sephora. Used on Home and Shop
-export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowProps) {
+export function SwipeRow({ title, children, seeAllLabel, onSeeAll, header }: SwipeRowProps) {
+  const styles = useStyles();
   return (
     <View style={styles.section}>
+      {header ?? (
       <View style={styles.head}>
         <Text style={styles.title} accessibilityRole="header">
           {title}
@@ -27,6 +30,7 @@ export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowPro
           </Pressable>
         ) : null}
       </View>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.content}>
         {children}
       </ScrollView>
@@ -34,7 +38,7 @@ export function SwipeRow({ title, children, seeAllLabel, onSeeAll }: SwipeRowPro
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   section: {
     gap: space[12],
   },
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    ...type.title,
+    ...type.heading,
     color: c.ink,
   },
   seeAll: {
@@ -65,4 +69,4 @@ const styles = StyleSheet.create({
     gap: space[12],
     paddingHorizontal: layout.screenEdge,
   },
-});
+}));

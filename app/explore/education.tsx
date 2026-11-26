@@ -8,18 +8,18 @@ import { ListRow } from '@/components/ListRow';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { areaLabels } from '@/data/appCopy';
 import { articles, type ArticleKind } from '@/data/education';
 import { educationCopy, exploreCopy } from '@/data/exploreCopy';
 import { articleArt, searchArticles } from '@/lib/explore';
 
-const c = colors.light;
-
 const KIND_FOR_CHIP: Record<string, ArticleKind | null> = { All: null, Articles: 'Article', Tips: 'Tip', Explainers: 'Explainer' };
 
 // Prototype screens 12 and 12B in one: search, a type filter, and the article list
 export default function EducationScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [chip, setChip] = useState('All');
@@ -58,7 +58,7 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // A sideways scroll row inside the page's scroll grows to fill the screen unless told not to
   bleed: {
     marginHorizontal: -layout.screenEdge,
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.inkMuted,
   },
-});
+}));

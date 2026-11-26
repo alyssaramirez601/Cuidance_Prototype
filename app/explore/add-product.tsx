@@ -8,12 +8,11 @@ import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { scanCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { submitProduct } from '@/lib/submissions';
-
-const c = colors.light;
 
 // Prototype screen 08D. A form, so it fits one screen with the actions pinned at the bottom
 export default function AddProductScreen() {
@@ -23,6 +22,7 @@ export default function AddProductScreen() {
 }
 
 function AddProductForm({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { code } = useLocalSearchParams<{ code?: string }>();
   const [name, setName] = useState('');
@@ -96,7 +96,7 @@ function AddProductForm({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   fields: {
     gap: space[12],
   },
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

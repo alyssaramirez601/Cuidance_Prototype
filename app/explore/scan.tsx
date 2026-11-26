@@ -7,14 +7,14 @@ import { Button } from '@/components/Button';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { scanCopy } from '@/data/exploreCopy';
 import { isBarcode } from '@/lib/barcode';
 
-const c = colors.light;
-
 // Prototype screen 08B. Product barcodes only (EAN and UPC), and the camera stops after the first read
 export default function ScanScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
   const [typed, setTyped] = useState('');
@@ -88,7 +88,7 @@ export default function ScanScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   cameraBox: {
     aspectRatio: 1,
     borderRadius: radius.medium,
@@ -141,4 +141,4 @@ const styles = StyleSheet.create({
     ...type.title,
     color: c.ink,
   },
-});
+}));

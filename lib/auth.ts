@@ -122,3 +122,13 @@ export function firstNameFrom(metadata: Record<string, unknown> | undefined): st
   }
   return raw.trim().split(/\s+/)[0] ?? '';
 }
+
+// The "Welcome, [name]" start screen is only for someone who just made their account
+// (Alyssa, Nov 25). An account made in the last 15 minutes counts as new, which also covers
+// a new Google account. Everyone else goes straight to Home
+const NEW_ACCOUNT_MINUTES = 15;
+export function isNewAccount(user: { created_at?: string } | null | undefined) {
+  if (!user?.created_at) return false;
+  const age = Date.now() - new Date(user.created_at).getTime();
+  return age >= 0 && age < NEW_ACCOUNT_MINUTES * 60 * 1000;
+}

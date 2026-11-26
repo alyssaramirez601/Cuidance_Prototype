@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 export type DisclosureLabelType = 'partner' | 'sponsored';
 
@@ -15,6 +16,7 @@ const text = {
 
 // Partner and sponsored content is always labeled and kept separate from guidance
 export function DisclosureLabel({ type: labelType }: DisclosureLabelProps) {
+  const styles = useStyles();
   return (
     <View style={styles.label} accessible accessibilityLabel={text[labelType]}>
       <Text style={styles.text}>{text[labelType]}</Text>
@@ -22,7 +24,7 @@ export function DisclosureLabel({ type: labelType }: DisclosureLabelProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   label: {
     minHeight: sizes.disclosureLabelHeight,
     alignSelf: 'flex-start',
@@ -31,11 +33,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: space[8],
     borderRadius: radius.small,
     borderWidth: stroke.default,
-    borderColor: colors.light.partner,
-    backgroundColor: colors.light.partnerSurface,
+    borderColor: c.partner,
+    backgroundColor: c.partnerSurface,
   },
   text: {
     ...type.caption,
-    color: colors.light.partner,
+    color: c.partner,
   },
-});
+}));

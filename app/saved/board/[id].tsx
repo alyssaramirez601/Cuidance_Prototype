@@ -9,15 +9,14 @@ import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
-import { colors, layout, radius, space, type } from '@/constants/tokens';
+import { layout, radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { savedCopy } from '@/data/appCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useBoards } from '@/hooks/useBoards';
 import { useSavedResults } from '@/hooks/useSavedResults';
 import { deleteBoard, removePin, type Pin } from '@/lib/boards';
 import { pinView, type PinView } from '@/lib/explore';
-
-const c = colors.light;
 
 export default function BoardScreen() {
   const { session } = useAuth();
@@ -27,6 +26,7 @@ export default function BoardScreen() {
 
 // One board, Pinterest style: pins in two columns, newest first
 function BoardContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { state, retry, reload } = useBoards(userId);
@@ -129,7 +129,7 @@ function BoardContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   empty: {
     ...type.body,
     color: c.inkMuted,
@@ -168,4 +168,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.accent,
   },
-});
+}));

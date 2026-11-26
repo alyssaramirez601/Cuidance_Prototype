@@ -11,7 +11,8 @@ import { Screen } from '@/components/Screen';
 import { Tabs } from '@/components/Tabs';
 import { TextInput } from '@/components/TextInput';
 import { TopBar } from '@/components/TopBar';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { isGoogleSignInAvailable, useGoogleSignIn } from '@/hooks/useGoogleSignIn';
 import { signUp } from '@/lib/auth';
 
@@ -30,6 +31,7 @@ const authTabs = [
 ];
 
 export default function CreateAccountScreen() {
+  const styles = useStyles();
   const router = useRouter();
   const [artTooShort, setArtTooShort] = useState(false);
   const [name, setName] = useState('');
@@ -177,7 +179,7 @@ export default function CreateAccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // The back button lines up with the screen edge, like the design
   topBar: {
     marginHorizontal: -space[16],
@@ -187,15 +189,15 @@ const styles = StyleSheet.create({
   },
   title: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   subtitle: {
     ...type.body,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   formError: {
     ...type.body,
-    color: colors.light.error,
+    color: c.error,
   },
   link: {
     minHeight: layout.minTouchTarget,
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
   },
   linkLabel: {
     ...type.label,
-    color: colors.light.accent,
+    color: c.accent,
   },
   // Shares any spare height at the bottom, and disappears on short screens so the form still fits
   footerArt: {
@@ -217,4 +219,4 @@ const styles = StyleSheet.create({
   footerArtHidden: {
     opacity: 0,
   },
-});
+}));

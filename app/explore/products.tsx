@@ -8,15 +8,14 @@ import { PageHeader } from '@/components/PageHeader';
 import { ProductThumb } from '@/components/ProductThumb';
 import { Screen } from '@/components/Screen';
 import { Tabs } from '@/components/Tabs';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { departments, findCategory, findDepartment } from '@/data/categories';
 import { productsCopy } from '@/data/exploreCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { productsFor } from '@/lib/explore';
 import { pickedAreas } from '@/lib/quizFlow';
-
-const c = colors.light;
 
 type Params = { department?: string; category?: string; sub?: string; forYou?: string };
 
@@ -29,6 +28,7 @@ export default function ProductsScreen() {
 }
 
 function ProductsContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const router = useRouter();
   const params = useLocalSearchParams<Params>();
   const { state } = useProfileData(userId);
@@ -112,7 +112,7 @@ function ProductsContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // A sideways scroll row inside the page's scroll grows to fill the screen unless told not to
   bleed: {
     marginHorizontal: -layout.screenEdge,
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
     width: space[32] + space[8],
     height: space[48],
   },
-});
+}));

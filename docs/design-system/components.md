@@ -165,3 +165,21 @@ Bottom sheet. Fill surface, top border `border`, radius `medium` (top corners), 
 - Body in `body`, ink.
 - A secondary Button (full width).
 - "Close" in `label`, accent.
+
+## Home v2 components (Nov 25, 2026, not in Figma yet)
+
+Built for Home v2 "Editorial Care". Esme should add them to Figma under the same names. All use `makeStyles`, follow light and dark, keep targets at 44 x 44 and draw a 2 px `accent` focus outline on the web. Tokens marked PROVISIONAL in `constants/tokens.ts` need Esme's review before main.
+
+| Component | Props | Look |
+| --- | --- | --- |
+| `SectionHeader` | `title`, `eyebrow?`, `actionLabel?`, `onAction?`, `tone` = `page` \| `partnerBand` | `heading` title, optional `eyebrow` caps line in `highlight`, link in `label` + `arrow` (20) in `accent`. Wraps so the link drops under the title at large text |
+| `FeatureCard` | `title`, `onPress`, `actionLabel`, `eyebrow?`, `body?`, `art?`, `artRatio?` | Fill `featureSurface`, radius `medium`, padding 24 (top and sides), `shadowPaper`. Eyebrow `featureEyebrow`, title `heading` and body `body` in `onFeature`, full width. Below: pill (`onFeature` fill, `featureSurface` text) on the left, art slot (96 to 144 wide, `artRatio`) running to the card's right and bottom edges; the art moves under the pill only when under 96 px is left. The whole card is one button |
+| `CareAreaTile` | `label`, `art`, `onPress` | Fill `surface`, border `border`, radius `medium`, `shadowLift`. Art fills a 240:276 frame (`surfaceWarm` behind) edge to edge across the top, then the label in `caption` semibold, centered, wrapping to any number of lines; tiles in a row stretch to the tallest |
+| `ContinuationBand` | `title`, `icon`, `onPress`, `detail?`, `actionLabel?`, `secondary?` | Fill `continueSurface`, radius `medium`, a `blueBold` wave in the corner. Icon in a 48 circle, title `editorialTitle`. Unfinished items get an `accent` pill; places to revisit get a round `accent` arrow. Optional quieter second row |
+| `EditorialProductCard` | `product`, `onPress` | Fill `surface`, radius `medium`, `shadowLift`. 120 framed art, product type as `eyebrow`, name `editorialTitle`, brand `caption` |
+| `GuideRow` | `title`, `eyebrow`, `art`, `onPress`, `divider?` | A row, not a card: 72 arch-topped `ArtFrame`, `eyebrow` in `highlight`, `editorialTitle` title, 44 round arrow. Line under each row but the last |
+| `EmptyState` | `body`, `title?`, `art?`, `actionLabel?`, `onAction?` | Fill `surfaceWarm`, radius `medium`, padding 16, secondary Button |
+| `Skeleton` | `height`, `width?`, `shape` = `small` \| `medium` \| `pill` | Fill `disabledSurface`. Never animates |
+| `ArtFrame` | `source`, `fit`, `shape` = `rounded` \| `arch`, `style` | Fill `surfaceWarm`, border `border`, radius `medium` (arch: pill top corners). For light-only library art on dark pages |
+
+Restyled: `HomeHeader` (logo, greeting on the page color, bell and profile on a clear page; a 120 x 120 art slot beside the greeting, cropped by the screen's right edge, empty until the final art arrives and hidden for long names; first names with a word over 11 letters use `heading` instead of `display` so they wrap between words) and `PartnerHighlightCard` (144 wide, `shadowLift`, label on one line). Partner Highlights on Home is an inset `partnerBand` card with padding 16 and a 72 x 72 art slot beside its title. `SwipeRow` has a new optional `header` slot; without it, it looks as before.

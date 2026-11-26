@@ -1,13 +1,14 @@
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Screen } from '@/components/Screen';
-import { colors, layout, space, type } from '@/constants/tokens';
+import { layout, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { quizQuestions } from '@/data/quiz';
 import { useAuth } from '@/hooks/useAuth';
-import { firstNameFrom } from '@/lib/auth';
+import { firstNameFrom, isNewAccount } from '@/lib/auth';
 
 // Artwork cut from the Week 8 hi-fi "02D · Account created" design, not redrawn
 const hero = require('@/assets/images/account-created-hero.png');
@@ -19,9 +20,16 @@ const NAME_SAME_LINE_MAX = 7;
 const HERO_MAX_HEIGHT = 360;
 const FOOTER_MAX_HEIGHT = 88;
 
-// Where signed-in people land, until Home exists: "Welcome, [name]" from the design,
-// then Start guidance opens the first quiz question
+// Where a brand-new account lands: "Welcome, [name]" from the design, then Start guidance opens
+// the first quiz question. Returning people skip it and go straight to Home
 export default function StartScreen() {
+  const { session } = useAuth();
+  if (!isNewAccount(session?.user)) return <Redirect href="/home" />;
+  return <StartContent />;
+}
+
+function StartContent() {
+  const styles = useStyles();
   const router = useRouter();
   const { session } = useAuth();
   const firstName = firstNameFrom(session?.user.user_metadata);
@@ -58,9 +66,7 @@ export default function StartScreen() {
   );
 }
 
-const c = colors.light;
-
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   // The artwork shrinks before any text does, so the screen fits in one view
   heroWrap: {
     flex: 3,
@@ -99,4 +105,4 @@ const styles = StyleSheet.create({
     marginHorizontal: -layout.screenEdge,
     marginBottom: -space[8],
   },
-});
+}));

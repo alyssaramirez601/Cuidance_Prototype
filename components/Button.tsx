@@ -1,6 +1,8 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Animated, Pressable, StyleSheet, Text } from 'react-native';
 
 import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
+import { usePressBounce } from '@/hooks/useMotion';
 
 export type ButtonStyle = 'primary' | 'secondary' | 'ghost';
 export type ButtonState = 'default' | 'hover' | 'pressed' | 'disabled';
@@ -12,14 +14,16 @@ type ButtonProps = {
   // Leave out to follow the real press. Set it to pin a state, for example on the dev screen
   state?: ButtonState;
   loading?: boolean;
+  // Keeps the light-mode colors in dark mode. Only for the Welcome screen, where the design puts
+  // Compass Blue with white text on Grounded Green. The label is 7.8:1 on the blue, and the label
+  // (not the fill) is what marks it as a button, so the fill doesn't need 3:1 against the green
+  lightColors?: boolean;
 };
 
 type Look = { fill: string; border: string | null; text: string };
 
-const c = colors.light;
-
 // One row per Figma Style and State, from docs/design-system/components.md
-const looks: Record<ButtonStyle, Record<ButtonState, Look>> = {
+const looks = (c: Palette): Record<ButtonStyle, Record<ButtonState, Look>> => ({
   primary: {
     default: { fill: c.accent, border: null, text: c.onAccent },
     hover: { fill: c.accentHover, border: null, text: c.onAccent },
@@ -38,19 +42,26 @@ const looks: Record<ButtonStyle, Record<ButtonState, Look>> = {
     pressed: { fill: c.border, border: null, text: c.accent },
     disabled: { fill: 'transparent', border: null, text: c.disabledInk },
   },
-};
+});
 
-export function Button({ label, onPress, style = 'primary', state, loading = false }: ButtonProps) {
+export function Button({ label, onPress, style = 'primary', state, loading = false, lightColors = false }: ButtonProps) {
+  const themed = useColors();
+  const c = lightColors ? colors.light : themed;
+  const styles = useStyles();
   const isDisabled = state === 'disabled' || loading;
+  const { bounceStyle, onPressIn, onPressOut } = usePressBounce();
 
   function lookFor(pressed: boolean): Look {
     const current: ButtonState = isDisabled ? 'disabled' : (state ?? (pressed ? 'pressed' : 'default'));
-    return looks[style][current];
+    return looks(c)[style][current];
   }
 
   return (
+    <Animated.View style={bounceStyle}>
     <Pressable
       onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       disabled={isDisabled}
       accessibilityRole="button"
       accessibilityLabel={label}
@@ -77,10 +88,11 @@ export function Button({ label, onPress, style = 'primary', state, loading = fal
         );
       }}
     </Pressable>
+    </Animated.View>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   base: {
     minHeight: layout.buttonHeight,
     flexDirection: 'row',
@@ -94,4 +106,4 @@ const styles = StyleSheet.create({
   label: {
     ...type.label,
   },
-});
+}));

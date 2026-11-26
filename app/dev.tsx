@@ -1,6 +1,18 @@
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { ArtFrame } from '@/components/ArtFrame';
+import { CareAreaTile } from '@/components/CareAreaTile';
+import { ContinuationBand } from '@/components/ContinuationBand';
+import { EditorialProductCard } from '@/components/EditorialProductCard';
+import { EmptyState } from '@/components/EmptyState';
+import { FeatureCard } from '@/components/FeatureCard';
+import { GuideRow } from '@/components/GuideRow';
+import { SectionHeader } from '@/components/SectionHeader';
+import { Skeleton } from '@/components/Skeleton';
+import { products } from '@/data/products';
+import { profileArt } from '@/data/profileCopy';
+import { articleArt } from '@/lib/explore';
 import { AnswerOption, type AnswerOptionIndicator, type AnswerOptionState } from '@/components/AnswerOption';
 import { Button, type ButtonState, type ButtonStyle } from '@/components/Button';
 import { Checkbox, type CheckboxState } from '@/components/Checkbox';
@@ -18,7 +30,8 @@ import { TabItem } from '@/components/TabItem';
 import { TextInput, type TextInputState } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
 import { TopBar } from '@/components/TopBar';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { useGoBack } from '@/hooks/useGoBack';
 
 // Temporary developer screen. It shows each component in each Figma variant, labeled with the Figma name.
@@ -36,6 +49,7 @@ const checkboxStates: CheckboxState[] = ['unchecked', 'checked', 'error', 'disab
 const typeScale = ['display', 'heading', 'title', 'body', 'label', 'caption'] as const;
 
 export default function DevScreen() {
+  const styles = useStyles();
   const goBack = useGoBack();
   const [tab, setTab] = useState<TabId>('home');
 
@@ -194,6 +208,41 @@ export default function DevScreen() {
           onClose={noop}
         />
       </Section>
+
+      {/* Home v2 (Nov 25, 2026). Sample text is placeholder copy */}
+      <Section title="SectionHeader">
+        <SectionHeader title="Section title" actionLabel="See all" onAction={noop} />
+        <SectionHeader title="With an eyebrow" eyebrow="Eyebrow" />
+      </Section>
+      <Section title="FeatureCard">
+        <FeatureCard eyebrow="Eyebrow" title="Feature headline" body="A short line of supporting text." actionLabel="Action" onPress={noop} />
+        <FeatureCard title="With an art slot" body="A short line of supporting text." actionLabel="Action" onPress={noop} art={<View />} artRatio={288 / 330} />
+      </Section>
+      <Section title="CareAreaTile">
+        <View style={styles.row}>
+          <CareAreaTile label="Short" art={profileArt.areas.hair} onPress={noop} />
+          <CareAreaTile label="A longer two line label" art={profileArt.areas.body} onPress={noop} />
+          <CareAreaTile label="A much longer label that runs to three lines" art={profileArt.areas.skin} onPress={noop} />
+          <CareAreaTile label="Makeup and nails" art={profileArt.areas.makeup} onPress={noop} />
+        </View>
+      </Section>
+      <Section title="ContinuationBand">
+        <ContinuationBand icon="help" title="Unfinished" detail="Detail line" actionLabel="Continue" onPress={noop} secondary={{ label: 'Secondary row', onPress: noop }} />
+        <ContinuationBand icon="profile" title="A place to revisit" detail="Detail line" onPress={noop} />
+      </Section>
+      <Section title="EditorialProductCard">
+        <EditorialProductCard product={products[0]} onPress={noop} />
+      </Section>
+      <Section title="GuideRow">
+        <GuideRow title="Guide title that wraps onto a second line" eyebrow="Kind · 2 min read" art={articleArt('read-a-label')} onPress={noop} divider={false} />
+      </Section>
+      <Section title="EmptyState">
+        <EmptyState title="Title" body="What is missing and what to do next." actionLabel="Action" onAction={noop} />
+      </Section>
+      <Section title="Skeleton and ArtFrame">
+        <Skeleton height={space[48]} />
+        <ArtFrame source={articleArt('new-product')} shape="arch" style={styles.frame} />
+      </Section>
     </Screen>
   );
 }
@@ -204,6 +253,7 @@ type SectionProps = {
 };
 
 function Section({ title, children }: SectionProps) {
+  const styles = useStyles();
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle} accessibilityRole="header">
@@ -221,6 +271,7 @@ type VariantProps = {
 
 // The caption is the Figma variant name, so a screenshot can be checked against Figma
 function Variant({ name, children }: VariantProps) {
+  const styles = useStyles();
   return (
     <View style={styles.variant}>
       <Text style={styles.caption}>{name}</Text>
@@ -229,10 +280,10 @@ function Variant({ name, children }: VariantProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   pageTitle: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   section: {
     gap: space[12],
@@ -240,17 +291,17 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...type.title,
-    color: colors.light.ink,
+    color: c.ink,
   },
   variant: {
     gap: space[4],
   },
   caption: {
     ...type.caption,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
   ink: {
-    color: colors.light.ink,
+    color: c.ink,
   },
   wrap: {
     flexDirection: 'row',
@@ -266,4 +317,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: space[16],
   },
-});
+  frame: {
+    width: space[48] * 2,
+    aspectRatio: 1,
+  },
+}));

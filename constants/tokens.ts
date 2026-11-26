@@ -47,6 +47,14 @@ export const colors = {
     disabledSurface: '#E6E2D9',
     disabledInk: '#8B867C',
     scrim: 'rgba(17, 17, 17, 0.4)', // Guidance Ink at 40%, dims the screen behind a sheet. Added Nov 5, needs Esme's OK
+    // Home v2 (Nov 25, 2026): PROVISIONAL, approved for the preview only. Needs Esme's review before main.
+    // Surfaces that stay dark in both modes, plus the band behind Partner Highlights. Values reuse the palette
+    featureSurface: '#21332B', // Grounded Green, the feature card behind personalized guidance
+    onFeature: '#F4F2EC', // text on featureSurface (11.9:1)
+    featureEyebrow: '#F2A68F', // eyebrow on featureSurface (6.8:1)
+    continueSurface: '#E6EAFB', // same value as selectedSurface, named apart because a band is not "selected" (ink 15.8:1)
+    partnerBand: '#A8432A', // Care Terracotta, the Partner Highlights band
+    onPartnerBand: '#F4F2EC', // text on partnerBand (5.4:1)
   },
   dark: {
     background: '#121714',
@@ -78,6 +86,13 @@ export const colors = {
     disabledSurface: '#252C28',
     disabledInk: '#6F7570',
     scrim: 'rgba(0, 0, 0, 0.6)', // dims the screen behind a sheet. Added Nov 5, needs Esme's OK
+    // Home v2 (Nov 25, 2026): PROVISIONAL, see the light values
+    featureSurface: '#1C3B2E',
+    onFeature: '#F4F2EC', // 10.9:1
+    featureEyebrow: '#F2A68F', // 6.2:1
+    continueSurface: '#1E2650', // ink 13.0:1
+    partnerBand: '#83321F',
+    onPartnerBand: '#F4F2EC', // 7.7:1
   },
 } as const;
 
@@ -98,6 +113,19 @@ export const graphic = {
     blueBold: '#152B91',
     dot: '#A8432A',
     paper: '#FBF6EE',
+    // Depth (Nov 25): cut-paper shadows so cards and shapes lift off the page instead of sitting flat.
+    // A thin light top edge, a tight contact shadow and a soft long one. Never a gradient wash
+    shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 4px rgba(52, 36, 20, 0.14), 0 14px 28px -10px rgba(52, 36, 20, 0.22)',
+    shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(52, 36, 20, 0.14), 0 8px 18px -8px rgba(52, 36, 20, 0.22)',
+    shadowShape: '0 6px 12px rgba(52, 36, 20, 0.22), 0 1px 2px rgba(52, 36, 20, 0.14)',
+    // Explore page (Nov 25 design): the paper color its painted art was made on, so the art blends in
+    explorePage: '#F8F0E7',
+    // Floating tab bar (Nov 25 design)
+    nav: '#21332B',
+    navBorder: '#21332B',
+    navInk: '#F4F2EC',
+    navActive: '#F9B48E',
+    navActiveInk: '#111111',
   },
   dark: {
     terracotta: '#83321F',
@@ -111,6 +139,15 @@ export const graphic = {
     blueBold: '#8396F2',
     dot: '#F2A68F',
     paper: '#1F2622',
+    shadowPaper: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 4px rgba(0, 0, 0, 0.35), 0 14px 28px -10px rgba(0, 0, 0, 0.5)',
+    shadowLift: 'inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 18px -8px rgba(0, 0, 0, 0.5)',
+    shadowShape: '0 6px 12px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3)',
+    explorePage: '#112920',
+    nav: '#1C3B2E',
+    navBorder: '#5B7767',
+    navInk: '#F4F2EC',
+    navActive: '#F9B48E',
+    navActiveInk: '#111111',
   },
 } as const;
 
@@ -151,6 +188,10 @@ export const type = {
   body: { fontFamily: fontFamily.body, fontSize: 16, lineHeight: 24, fontWeight: '400' },
   label: { fontFamily: fontFamily.bodySemiBold, fontSize: 15, lineHeight: 20 },
   caption: { fontFamily: fontFamily.body, fontSize: 13, lineHeight: 18, fontWeight: '400' },
+  // Home v2 (Nov 25, 2026): PROVISIONAL editorial styles, approved for the preview only. Needs Esme's review.
+  // eyebrow: the 12 px minimum, shown in caps with letterSpacing.eyebrow. editorialTitle: Newsreader card titles
+  eyebrow: { fontFamily: fontFamily.bodySemiBold, fontSize: 12, lineHeight: 16 },
+  editorialTitle: { fontFamily: fontFamily.display, fontSize: 22, lineHeight: 28, fontWeight: '400' },
 } as const;
 
 // ---------------------------------------------------------------------------

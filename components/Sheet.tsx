@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 type SheetProps = {
   visible: boolean;
@@ -11,11 +12,11 @@ type SheetProps = {
   children: ReactNode;
 };
 
-const c = colors.light;
-
 // The one bottom sheet for the app (CLAUDE.md: Privacy & Trust, Save confirmation, Routine detail, and result details).
 // Not in the Figma design system yet, so Esme should add it there
 export function Sheet({ visible, title, onClose, children }: SheetProps) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.backdrop}>
@@ -37,7 +38,7 @@ export function Sheet({ visible, title, onClose, children }: SheetProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   backdrop: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -78,4 +79,4 @@ const styles = StyleSheet.create({
     paddingTop: space[16],
     paddingHorizontal: layout.screenEdge,
   },
-});
+}));

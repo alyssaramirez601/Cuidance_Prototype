@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
-import { colors, radius, space, type } from '@/constants/tokens';
+import { radius, space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type LoadErrorProps = {
   message: string;
@@ -10,6 +11,7 @@ type LoadErrorProps = {
 
 // The friendly "couldn't load" box with a retry, as CLAUDE.md asks for every screen
 export function LoadError({ message, onRetry }: LoadErrorProps) {
+  const styles = useStyles();
   return (
     <View style={styles.box} accessibilityLiveRegion="polite">
       <Text style={styles.text}>{message}</Text>
@@ -18,15 +20,15 @@ export function LoadError({ message, onRetry }: LoadErrorProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   box: {
     gap: space[12],
     padding: space[16],
     borderRadius: radius.medium,
-    backgroundColor: colors.light.errorSurface,
+    backgroundColor: c.errorSurface,
   },
   text: {
     ...type.body,
-    color: colors.light.error,
+    color: c.error,
   },
-});
+}));

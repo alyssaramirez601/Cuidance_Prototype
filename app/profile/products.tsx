@@ -6,21 +6,20 @@ import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { type Palette, makeStyles, useColors } from '@/hooks/useTheme';
 import { profileArt, yourProductsCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubmissions } from '@/hooks/useSubmissions';
 import { shortDate } from '@/lib/profile';
 import type { SubmissionStatus } from '@/lib/submissions';
 
-const c = colors.light;
-
 // Each status gets its own words as well as its own color, so color is never the only signal
-const STATUS_STYLE: Record<SubmissionStatus, { ink: string; surface: string }> = {
+const STATUS_STYLE = (c: Palette): Record<SubmissionStatus, { ink: string; surface: string }> => ({
   pending: { ink: c.alert, surface: c.alertSurface },
   approved: { ink: c.success, surface: c.successSurface },
   declined: { ink: c.inkMuted, surface: c.disabledSurface },
-};
+});
 
 // Products this person added by hand from Scan, and where each one is in the Admin Web review
 export default function YourProductsScreen() {
@@ -30,6 +29,8 @@ export default function YourProductsScreen() {
 }
 
 function YourProductsContent({ userId }: { userId: string }) {
+  const c = useColors();
+  const styles = useStyles();
   const router = useRouter();
   const { state, retry } = useSubmissions(userId);
 
@@ -52,7 +53,7 @@ function YourProductsContent({ userId }: { userId: string }) {
       {state.status === 'ready' && state.submissions.length > 0 ? (
         <View style={styles.list}>
           {state.submissions.map((item) => {
-            const look = STATUS_STYLE[item.status];
+            const look = STATUS_STYLE(c)[item.status];
             return (
               <View key={item.id} style={styles.card}>
                 <Text style={styles.name}>{item.productName}</Text>
@@ -71,7 +72,7 @@ function YourProductsContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   empty: {
     gap: space[12],
   },
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
   statusText: {
     ...type.caption,
   },
-});
+}));

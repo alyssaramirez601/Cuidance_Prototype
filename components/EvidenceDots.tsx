@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors, radius, space, stroke } from '@/constants/tokens';
+import { radius, space, stroke } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import type { Evidence } from '@/data/outcomeTypes';
 import { evidenceKey } from '@/data/appCopy';
 
@@ -8,10 +9,9 @@ import { evidenceKey } from '@/data/appCopy';
 const filled: Record<Evidence, number> = { Strong: 3, Moderate: 2, Limited: 1, Assumption: 0 };
 const DOT = space[8];
 
-const c = colors.light;
-
 // A small marker, like a menu's "vegetarian" icon. The key in "Evidence and sources" explains it
 export function EvidenceDots({ evidence }: { evidence: Evidence }) {
+  const styles = useStyles();
   return (
     <View style={styles.row} accessible accessibilityLabel={`Evidence: ${evidenceKey[evidence].title}`}>
       {[0, 1, 2].map((index) => (
@@ -21,7 +21,7 @@ export function EvidenceDots({ evidence }: { evidence: Evidence }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: space[4],
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   off: {
     backgroundColor: c.surface,
   },
-});
+}));

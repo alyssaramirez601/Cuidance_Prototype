@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { DisclosureLabel } from '@/components/DisclosureLabel';
-import { colors, layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, letterSpacing, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type PartnerOfferCardProps = {
   eyebrow: string;
@@ -17,11 +18,10 @@ type PartnerOfferCardProps = {
   codeLabel?: string;
 };
 
-const c = colors.light;
-
 // The big offer banner from the prototype's Shop, laid out like Ulta Deals: art on top, then the offer.
 // Always labeled Partner content
 export function PartnerOfferCard({ eyebrow, title, meta, image, actionLabel, onAction, code, codeLabel }: PartnerOfferCardProps) {
+  const styles = useStyles();
   return (
     <View style={styles.card}>
       <Image source={image} style={styles.art} contentFit="cover" accessible={false} />
@@ -46,7 +46,7 @@ export function PartnerOfferCard({ eyebrow, title, meta, image, actionLabel, onA
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   card: {
     overflow: 'hidden',
     borderRadius: radius.medium,
@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
     color: c.ink,
     letterSpacing: letterSpacing.eyebrow,
   },
-});
+}));

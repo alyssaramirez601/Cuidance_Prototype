@@ -1,17 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
-import { colors, layout, radius, sizes, space, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, type } from '@/constants/tokens';
+import { makeStyles, useColors } from '@/hooks/useTheme';
 
 type NoteProps = {
   text: string;
 };
 
-const c = colors.light;
-
 // A calm supporting note in Warm Care, like "Pick as many as you like" on the quiz.
 // CuiNote in the Week 8 component kit. Not in docs/design-system/components.md yet, so Esme should add it
 export function Note({ text }: NoteProps) {
+  const styles = useStyles();
+  const c = useColors();
   return (
     <View style={styles.note}>
       <Icon name="info" size={sizes.icon.large} color={c.ink} />
@@ -20,7 +21,7 @@ export function Note({ text }: NoteProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   note: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -34,4 +35,4 @@ const styles = StyleSheet.create({
     flex: 1,
     color: c.ink,
   },
-});
+}));

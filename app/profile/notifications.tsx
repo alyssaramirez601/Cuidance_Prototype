@@ -6,12 +6,11 @@ import { LoadingState } from '@/components/LoadingState';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
-import { colors, layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, sizes, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { notificationsCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useDeviceSettings } from '@/hooks/useDeviceSettings';
-
-const c = colors.light;
 
 // Prototype screen 24. Nothing sends notifications in the beta yet; this records the choice
 export default function NotificationsScreen() {
@@ -21,6 +20,7 @@ export default function NotificationsScreen() {
 }
 
 function NotificationsContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const { values, toggle, persist, save } = useDeviceSettings('notifications', userId);
 
   if (!values) return <LoadingState label={profileCopy.loading} />;
@@ -51,7 +51,7 @@ function NotificationsContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   card: {
     gap: space[16],
     padding: layout.insideComponent,
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

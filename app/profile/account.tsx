@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
+import { Chip } from '@/components/Chip';
 import { ListRow } from '@/components/ListRow';
 import { LoadError } from '@/components/LoadError';
 import { LoadingState } from '@/components/LoadingState';
@@ -9,13 +10,12 @@ import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { TextInput } from '@/components/TextInput';
 import { Toast } from '@/components/Toast';
-import { colors, letterSpacing, space, type } from '@/constants/tokens';
+import { letterSpacing, space, type } from '@/constants/tokens';
+import { type AppearancePreference, makeStyles, useTheme } from '@/hooks/useTheme';
 import { accountCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { sendPasswordReset, updateDisplayName } from '@/lib/profile';
-
-const c = colors.light;
 
 type Notice = { type: 'success' | 'error'; message: string } | null;
 
@@ -27,6 +27,8 @@ export default function AccountScreen() {
 }
 
 function AccountContent({ userId, email }: { userId: string; email: string }) {
+  const styles = useStyles();
+  const { preference, setPreference } = useTheme();
   const { state, retry } = useProfileData(userId);
   // null until the person types, so the field shows the saved name without copying it into state
   const [typed, setTyped] = useState<string | null>(null);
@@ -99,6 +101,23 @@ function AccountContent({ userId, email }: { userId: string; email: string }) {
 
           <View style={styles.section}>
             <Text style={styles.eyebrow} accessibilityRole="header">
+              {accountCopy.appearanceTitle}
+            </Text>
+            <View style={styles.chips} accessibilityRole="radiogroup">
+              {APPEARANCE.map((option) => (
+                <Chip
+                  key={option.value}
+                  label={option.label}
+                  state={preference === option.value ? 'selected' : 'default'}
+                  onPress={() => setPreference(option.value)}
+                />
+              ))}
+            </View>
+            <Text style={styles.detail}>{accountCopy.appearanceDetail}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.eyebrow} accessibilityRole="header">
               {accountCopy.securityTitle}
             </Text>
             <ListRow label={isSending ? `${accountCopy.changePassword}…` : accountCopy.changePassword} onPress={resetPassword} />
@@ -118,7 +137,18 @@ function AccountContent({ userId, email }: { userId: string; email: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const APPEARANCE: { value: AppearancePreference; label: string }[] = [
+  { value: 'system', label: accountCopy.appearanceSystem },
+  { value: 'light', label: accountCopy.appearanceLight },
+  { value: 'dark', label: accountCopy.appearanceDark },
+];
+
+const useStyles = makeStyles((c) => StyleSheet.create({
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space[8],
+  },
   section: {
     gap: space[12],
   },
@@ -133,4 +163,4 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: c.inkMuted,
   },
-});
+}));

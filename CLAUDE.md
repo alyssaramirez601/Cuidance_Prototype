@@ -10,7 +10,7 @@
 
 Rules for any Claude agent working in this repo. Follow them on every task. If something here conflicts with a request, ask before going ahead.
 
-_Last updated: Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts`; before that, end of Week 7: logo picked, accessible palette, peer validation results, quiz outcome library)._
+_Last updated: Nov 20, 2026 (app redesign: light and dark mode, bounce motion, animated splash). Before that, Oct 23, 2026 (Week 8: design tokens added in `constants/tokens.ts`; before that, end of Week 7: logo picked, accessible palette, peer validation results, quiz outcome library)._
 
 ## Project context
 
@@ -101,7 +101,7 @@ supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 ## Styling and design system
 
 - Style with `StyleSheet.create` and tokens from `constants/tokens.ts`, which is the only place colors, type, spacing and radius come from. Never hard-code a color, size, spacing or radius value in a screen.
-- **Colors:** Esme's accessible palette, as color roles in `colors` (names mirror the Figma variables). v1 ships Light mode (`colors.light`). Dark values stay in the file to match Figma, but dark screens are not built in v1. If a value changes, change it in Figma first, then in `tokens.ts`. If this table and `tokens.ts` ever differ, `tokens.ts` wins. Check with Esme before changing roles.
+- **Colors:** Esme's accessible palette, as color roles in `colors` (names mirror the Figma variables). The app has Light and Dark mode (Nov 20, 2026). People choose Match my phone, Light or Dark in Profile › Account settings. Screens never read `colors.light` or `colors.dark` directly: use `makeStyles((c, g) => ...)` and `useColors()` from `hooks/useTheme.tsx`, so every color follows the current mode. Every screen, component, illustration and mockup must ship in both Light and Dark; nothing is light only. Check both modes before opening a PR, and keep every text pair at 4.5:1 in both. If a value changes, change it in Figma first, then in `tokens.ts`. If this table and `tokens.ts` ever differ, `tokens.ts` wins. Check with Esme before changing roles.
 
 | Role | Name | Light value | Use |
 |---|---|---|---|
@@ -124,7 +124,7 @@ supabase/migrations/ # SQL for the database, run in the Supabase SQL Editor
 - Illustration and collage colors live in `graphic` and are never used for meaning or for text.
 - Contrast on Quiet Paper: Ink 16.87:1, Green 11.92:1, Blue 6.97:1, Terracotta 5.36:1. **Never use `surfaceWarm` or any `graphic` color for text**, and never use any color as the only signal. Pair it with a label, icon or shape.
 - **Type:** use the `type` styles (display 40/46, heading 28/34, title 20/26, body 16/24, label 15/20, caption 13/18). Newsreader (`fontFamily.display`) for display and headings only, Archivo (`fontFamily.body`) for everything else. The custom "Cuidance" lettering is for the logo only and is never typed as text. Use sentence case, never all caps, except partner labels and short eyebrow labels. An eyebrow is written in normal case in the code and shown in caps with `textTransform: 'uppercase'` and `letterSpacing.eyebrow` from `tokens.ts`. Never type it in capitals.
-- **Logo:** Logo version 4: the circle-over-bowl mark (Logo Mark B) with Wordmark Style B. Use the files in `assets/logo/` only. Never redraw, recolor outside the palette, stretch or rotate it.
+- **Logo:** Logo version 4: the circle-over-bowl mark (Logo Mark B) with Wordmark Style B. Use the files in `assets/logo/` only. Never redraw, recolor outside the palette, stretch or rotate it. The one approved exception (Alyssa, Nov 20, 2026) is the splash screen (`components/AppSplash.tsx`): the mark's bowl and circle, cut from the logo file into `assets/splash/`, move separately, and the circle passes through Care Terracotta and Compass Blue before it lands as the real logo.
   - Clear space around the logo equals the height of the circle in the mark.
   - Minimum sizes: full lockup 160 px wide, stacked lockup 96 px, symbol only 24 px.
 - **Illustrations and textures:** use the brand elements sheet (v03): flat screen-print shapes, one curved cut per shape, no outlines or gradients. Textures are accents only and **never sit behind body text, forms or warnings.**
@@ -201,8 +201,9 @@ Follow the Quiz Outcomes Board. In short:
 
 - When building a screen, match the prototype, Esme's Figma designs and the "Validated changes" section: spacing, typography, hierarchy, alignment and colors.
 - **One screen or scroll:** screens where someone answers or fills something in (quiz questions, sign in, create account, guest preview) fit in one view on a phone, with no scrolling. Pin the actions in the `Screen` footer and let artwork shrink before text does. Browse screens (Welcome, Home, Explore, Saved, Profile, the result) can scroll, and their artwork shows in full. Check both iPhone and Android sizes.
-- Avoid extra gradients, heavy shadows, decorative icons and flashy animation.
-- Animations: only simple ones, like fades, slides for sheets and the progress bar. Use `react-native-reanimated` only if it's truly needed.
+- Avoid extra gradients, heavy shadows and decorative icons.
+- **Motion (updated Nov 20, 2026):** the app should feel alive. Use the shared pieces, never one-off animations: `usePressBounce` (a soft squish on press and a springy release) for anything tappable, `usePop` for something being picked, and the `Appear` component for content arriving on a screen (rise, small overshoot, settle, one after another). They all live in `hooks/useMotion.ts` and `components/Appear.tsx`, use React Native's built-in `Animated`, and switch themselves off when the phone's Reduce Motion setting is on. Motion is never the only way to understand something, and nothing flashes more than 3 times a second. Use `react-native-reanimated` only if it's truly needed.
+- **Splash (Nov 20, 2026):** people who are already signed in see `components/AppSplash.tsx` when the app opens: the full version (about 1.5 seconds) on the first open of the day, the quick version (about half a second) after that. Its background is Warm Care (`surfaceWarm`), and the phone's own launch screen in `app.json` matches it.
 
 ## Code comments
 

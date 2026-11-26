@@ -9,12 +9,11 @@ import { PrivacySheet } from '@/components/PrivacySheet';
 import { PageHeader } from '@/components/PageHeader';
 import { Screen } from '@/components/Screen';
 import { Toast } from '@/components/Toast';
-import { colors, layout, radius, space, stroke, type } from '@/constants/tokens';
+import { layout, radius, space, stroke, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 import { privacyCopy, profileArt, profileCopy } from '@/data/profileCopy';
 import { useAuth } from '@/hooks/useAuth';
 import { useDeviceSettings } from '@/hooks/useDeviceSettings';
-
-const c = colors.light;
 
 // Prototype screen 23
 export default function PrivacyScreen() {
@@ -24,6 +23,7 @@ export default function PrivacyScreen() {
 }
 
 function PrivacyContent({ userId }: { userId: string }) {
+  const styles = useStyles();
   const { values, toggle, persist, save } = useDeviceSettings('privacy', userId);
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -57,7 +57,7 @@ function PrivacyContent({ userId }: { userId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   card: {
     gap: space[16],
     padding: layout.insideComponent,
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
     ...type.title,
     color: c.ink,
   },
-});
+}));

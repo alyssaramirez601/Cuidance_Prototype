@@ -2,7 +2,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Sheet } from '@/components/Sheet';
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type PrivacySheetProps = {
   visible: boolean;
@@ -38,6 +39,7 @@ const points = [
 ];
 
 export function PrivacySheet({ visible, onClose, onUnderstand }: PrivacySheetProps) {
+  const styles = useStyles();
   return (
     <Sheet visible={visible} title="Privacy & Trust" onClose={onClose}>
       <View style={styles.content}>
@@ -54,9 +56,7 @@ export function PrivacySheet({ visible, onClose, onUnderstand }: PrivacySheetPro
   );
 }
 
-const c = colors.light;
-
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   content: {
     gap: space[16],
   },
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
     ...type.body,
     color: c.inkMuted,
   },
-});
+}));

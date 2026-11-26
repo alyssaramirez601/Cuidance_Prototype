@@ -3,6 +3,11 @@
 
 export const exploreCopy = {
   title: 'Explore',
+  intro: 'Products, ingredients, and guides, explained.',
+  eyebrow: 'Hair care · Skin care · Makeup · Body care',
+  notifications: 'Notifications',
+  forYouEyebrow: 'For you',
+  forYouPrompt: 'Take the quiz to explore guidance that starts from what you selected.',
   searchLabel: 'Search',
   searchPlaceholder: 'Search products, ingredients, topics',
   shortcuts: { guidance: 'Guidance', products: 'Products', ingredients: 'Ingredients', education: 'Education' },

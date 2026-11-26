@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, space, type } from '@/constants/tokens';
+import { space, type } from '@/constants/tokens';
+import { makeStyles } from '@/hooks/useTheme';
 
 type ComingNextProps = {
   title: string;
@@ -9,6 +10,7 @@ type ComingNextProps = {
 
 // Temporary stand-in for a tab that's being built next, so the tab bar has no dead ends
 export function ComingNext({ title, body }: ComingNextProps) {
+  const styles = useStyles();
   return (
     <View style={styles.wrap}>
       <Text style={styles.title} accessibilityRole="header">
@@ -19,16 +21,16 @@ export function ComingNext({ title, body }: ComingNextProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((c) => StyleSheet.create({
   wrap: {
     gap: space[8],
   },
   title: {
     ...type.heading,
-    color: colors.light.ink,
+    color: c.ink,
   },
   body: {
     ...type.body,
-    color: colors.light.inkMuted,
+    color: c.inkMuted,
   },
-});
+}));
