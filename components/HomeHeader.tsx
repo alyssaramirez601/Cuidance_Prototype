@@ -24,8 +24,9 @@ const logo = {
 // The logo file is 1028 x 222; 160 wide is the brand's minimum for the full lockup
 const LOGO_WIDTH = 160;
 const LOGO_RATIO = 1028 / 222;
-// Above this text size the collage accent steps aside so the greeting keeps its width
+// Above this text size, or for a long first name, the collage accent steps aside so the greeting keeps its width
 const HIDE_ART_AT_FONT_SCALE = 1.3;
+const HIDE_ART_FOR_NAME_LENGTH = 12;
 
 // Home v2 "Editorial Care" header (Nov 25): the real logo, the time-of-day greeting and the person's
 // name in Newsreader on the page color, and a small cut-paper accent to the side, never behind text
@@ -51,7 +52,7 @@ export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPres
             {name ? `Hi, ${name}` : 'Hi there'}
           </Text>
         </View>
-        {fontScale < HIDE_ART_AT_FONT_SCALE ? <HeaderAccent /> : null}
+        {fontScale < HIDE_ART_AT_FONT_SCALE && name.length <= HIDE_ART_FOR_NAME_LENGTH ? <HeaderAccent /> : null}
       </View>
     </Appear>
   );
