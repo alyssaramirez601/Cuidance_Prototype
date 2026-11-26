@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/Icon';
 import { layout, letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
@@ -10,25 +10,22 @@ import { isFocused } from '@/lib/focus';
 type FeatureCardProps = {
   title: string;
   onPress: () => void;
+  actionLabel: string;
   eyebrow?: string;
   body?: string;
-  // The words on the pill. Leave out for an arrow only
-  actionLabel?: string;
-  // The picture region. Sits beside the text (or above it at large text sizes), never under it
+  // The picture slot. It sits in the bottom-right corner beside the action, never under text
   art?: ReactNode;
+  // Width / height of the art slot, from data/homeArt.ts
+  artRatio?: number;
 };
 
-// Text size where the art moves above the text so the words keep their width
-const STACK_AT_FONT_SCALE = 1.3;
-
-// The large editorial feature (Home v2, Nov 25): a surface that stays deep green in both modes,
-// a Newsreader headline and one clear action. The whole card is one button, so screen readers hear
-// the headline and the action together. Built to be reused by the result and Saved later
-export function FeatureCard({ title, onPress, eyebrow, body, actionLabel, art }: FeatureCardProps) {
+// The large editorial feature (Home v2, refined Nov 25): a surface that stays deep green in both
+// modes. The headline and description use the card's full width so they stay easy to read; the
+// artwork gets its own corner beside the action and runs to the card's edges. The whole card is one
+// button, so screen readers hear the headline and the action together. Built to be reused later
+export function FeatureCard({ title, onPress, actionLabel, eyebrow, body, art, artRatio = 1 }: FeatureCardProps) {
   const styles = useStyles();
   const c = useColors();
-  const { fontScale } = useWindowDimensions();
-  const stacked = fontScale >= STACK_AT_FONT_SCALE;
   const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.98);
   const label = [eyebrow, title, body, actionLabel].filter(Boolean).join('. ');
   return (
@@ -41,18 +38,18 @@ export function FeatureCard({ title, onPress, eyebrow, body, actionLabel, art }:
         accessibilityLabel={label}
         style={(state) => [styles.card, isFocused(state) && styles.focused]}
       >
-        <View style={[styles.top, stacked && styles.stacked]}>
-          {art ? <View style={[styles.art, stacked && styles.artStacked]}>{art}</View> : null}
-          <View style={styles.text}>
-            {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
-            <Text style={styles.title}>{title}</Text>
-            {body ? <Text style={styles.body}>{body}</Text> : null}
-          </View>
+        <View style={styles.text}>
+          {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
+          <Text style={styles.title}>{title}</Text>
+          {body ? <Text style={styles.body}>{body}</Text> : null}
         </View>
-        {/* Below both columns, so the label always has the card's full width */}
-        <View style={[styles.action, !actionLabel && styles.actionRound]}>
-          {actionLabel ? <Text style={styles.actionText}>{actionLabel}</Text> : null}
-          <Icon name="arrow" size={sizes.icon.medium} color={c.featureSurface} />
+        {/* Wraps, so at large text sizes the art moves under the action instead of squeezing it */}
+        <View style={styles.bottom}>
+          <View style={styles.action}>
+            <Text style={styles.actionText}>{actionLabel}</Text>
+            <Icon name="arrow" size={sizes.icon.medium} color={c.featureSurface} />
+          </View>
+          {art ? <View style={[styles.art, { aspectRatio: artRatio }]}>{art}</View> : null}
         </View>
       </Pressable>
     </Animated.View>
@@ -62,19 +59,12 @@ export function FeatureCard({ title, onPress, eyebrow, body, actionLabel, art }:
 const useStyles = makeStyles((c, g) => StyleSheet.create({
   card: {
     gap: space[16],
-    padding: space[24],
+    paddingTop: space[24],
+    paddingHorizontal: space[24],
     overflow: 'hidden',
     borderRadius: radius.medium,
     backgroundColor: c.featureSurface,
     boxShadow: g.shadowPaper,
-  },
-  // Art first in the markup so it can sit above the text when stacked; row-reverse keeps it on the right
-  top: {
-    flexDirection: 'row-reverse',
-    gap: space[16],
-  },
-  stacked: {
-    flexDirection: 'column',
   },
   focused: {
     outlineColor: c.accent,
@@ -83,16 +73,7 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     outlineOffset: stroke.strong,
   },
   text: {
-    flex: 1,
     gap: space[8],
-  },
-  art: {
-    width: space[48] * 2,
-    justifyContent: 'center',
-  },
-  artStacked: {
-    width: '100%',
-    alignItems: 'flex-start',
   },
   eyebrow: {
     ...type.eyebrow,
@@ -108,24 +89,36 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     ...type.body,
     color: c.onFeature,
   },
+  // The action sits right under the text; the art fills the rest of the row down to the card's corner
+  bottom: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    columnGap: space[16],
+  },
   // Looks like a pill button; the whole card is the real button
   action: {
     minHeight: layout.minTouchTarget,
-    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[8],
+    marginBottom: space[24],
     paddingHorizontal: space[16],
     borderRadius: radius.pill,
     backgroundColor: c.onFeature,
   },
-  actionRound: {
-    width: layout.minTouchTarget,
-    paddingHorizontal: 0,
-    justifyContent: 'center',
-  },
   actionText: {
     ...type.label,
     color: c.featureSurface,
+  },
+  // 288 x 330 art at up to half size, running to the card's right and bottom edges. It shrinks to fit
+  // beside the action, and only moves under it when less than 96 px is left (large text sizes)
+  art: {
+    flexGrow: 1,
+    flexBasis: space[48] * 2,
+    maxWidth: space[48] * 3,
+    marginLeft: 'auto',
+    marginRight: -space[24],
   },
 }));

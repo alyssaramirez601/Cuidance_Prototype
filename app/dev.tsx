@@ -216,12 +216,14 @@ export default function DevScreen() {
       </Section>
       <Section title="FeatureCard">
         <FeatureCard eyebrow="Eyebrow" title="Feature headline" body="A short line of supporting text." actionLabel="Action" onPress={noop} />
-        <FeatureCard title="Arrow only" body="No action label." onPress={noop} />
+        <FeatureCard title="With an art slot" body="A short line of supporting text." actionLabel="Action" onPress={noop} art={<View />} artRatio={288 / 330} />
       </Section>
       <Section title="CareAreaTile">
         <View style={styles.row}>
           <CareAreaTile label="Short" art={profileArt.areas.hair} onPress={noop} />
           <CareAreaTile label="A longer two line label" art={profileArt.areas.body} onPress={noop} />
+          <CareAreaTile label="A much longer label that runs to three lines" art={profileArt.areas.skin} onPress={noop} />
+          <CareAreaTile label="Makeup and nails" art={profileArt.areas.makeup} onPress={noop} />
         </View>
       </Section>
       <Section title="ContinuationBand">

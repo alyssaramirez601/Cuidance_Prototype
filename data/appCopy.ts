@@ -139,6 +139,10 @@ export const homeCopy = {
   careTitle: 'Your care, at a glance',
   viewAll: 'View all',
   viewResult: 'View your result',
+  // Feature card eyebrows and the new-user action (Alyssa, Nov 25, Checkpoint 3)
+  continueEyebrow: 'Continue your guidance',
+  startEyebrow: 'Get started',
+  startGuidance: 'Start guidance',
 };
 
 // Partner Highlights copy from the Week 8 Home hi-fi. The products come from data/partnerContent.ts.

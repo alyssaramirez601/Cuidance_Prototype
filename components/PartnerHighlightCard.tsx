@@ -51,7 +51,8 @@ export function PartnerHighlightCard({ brand, name, image, onPress }: PartnerHig
 
 const useStyles = makeStyles((c, g) => StyleSheet.create({
   card: {
-    width: sizes.productCardWidth,
+    // Slightly smaller than a product card, so partner content stays lighter than guidance
+    width: space[48] * 3,
     minHeight: layout.minTouchTarget,
     gap: space[4],
     padding: space[8],

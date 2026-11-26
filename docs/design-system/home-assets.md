@@ -2,6 +2,17 @@
 
 Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own slot, separate from the live text, so a final file can replace a temporary one without touching any layout. Slots are wired in `data/homeArt.ts`; swap a slot there.
 
+## Status (Nov 25, 2026, Checkpoint 3)
+
+- All seven compositions are **approved as concepts** (Alyssa's "Cuidance Home v2 Approved Visuals" package): header accent, feature general (light only), four care tiles, partner accent.
+- The package's PNGs are **opaque, resized reference renders**, not production files. They were tested in each slot locally and fit the slot sizes, but they are **not committed**.
+- **Blockers before integration:**
+  1. Header, feature and partner slots need **transparent** finals. The references' cream or green backgrounds show as visible squares on the page, the feature card and the partner band.
+  2. **Feature general dark** has not been approved yet.
+  3. Colors in the renders are generated approximations; finals should be rebuilt on the approved palette.
+- **Care tiles are the exception:** their art fills its frame edge to edge, so an opaque file works there. The approved references could go in as-is once the team agrees they are final.
+- To integrate a final file: add it to `assets/home/` under the name below and point its slot in `data/homeArt.ts`. No layout changes are needed.
+
 ## Rules for every file
 
 - Flat screen-print, cut-paper style, matching the brand elements sheet (v03). No outlines, no gradients.
@@ -15,13 +26,13 @@ Home v2 "Editorial Care" (Nov 25, 2026). Every picture on Home sits in its own s
 
 | File in `assets/home/` | Size (px) | Background | What it shows | Status | Temporary stand-in |
 | --- | --- | --- | --- | --- | --- |
-| `header-accent-light.png`, `header-accent-dark.png` | 288 x 288 | Transparent | Small cut-paper cluster: sun, arch, one complementary shape. No products | Missing | Shapes drawn in code (`HeaderAccent` in `components/HomeHeader.tsx`) |
-| `feature-general-light.png`, `feature-general-dark.png` | 288 x 330 | Transparent | Still life for the guidance feature card, works for any care area | Missing | The result's care-area arch from `assets/art-library/area-*.png`, or shapes drawn in code when there is no result |
-| `care-hair-light.png`, `care-hair-dark.png` | 240 x 276 | Transparent, arch-topped | Hair textures, waves or a comb | Missing | `assets/art-library/area-hair.png` |
-| `care-skin-light.png`, `care-skin-dark.png` | 240 x 276 | Transparent, arch-topped | Cream texture or gentle skincare shapes, no jar-and-leaf repeat | Missing | `assets/art-library/area-skin.png` |
-| `care-makeup-light.png`, `care-makeup-dark.png` | 240 x 276 | Transparent, arch-topped | Compact or swatches across deep to light tones | Missing | `assets/art-library/area-makeup.png` |
-| `care-body-light.png`, `care-body-dark.png` | 240 x 276 | Transparent, arch-topped | Folded linen or body-care objects | Missing | `assets/art-library/area-body.png` |
-| `partner-accent-light.png`, `partner-accent-dark.png` | 432 x 432 | Transparent | Commercial still life, clearly different from guidance art | Missing | One circle drawn in code (`partnerShape` in `app/(tabs)/home.tsx`) |
+| `header-accent-light.png`, `header-accent-dark.png` | 288 x 288 | Transparent | Cut-paper waves and shapes in the top-right corner; the lower-left stays empty. Shown at 144 x 144, bleeding off the screen's top-right corner beside the logo row | Concept approved, final needed | Shapes drawn in code (`TemporaryAccent` in `components/HomeHeader.tsx`) |
+| `feature-general-light.png`, `feature-general-dark.png` | 288 x 330 | Transparent | Still life for the guidance feature card, works for any care area. Shown up to 144 wide in the card's bottom-right corner, running to its edges | Light concept approved, dark not yet; finals needed | The result's care-area arch from `assets/art-library/area-*.png`, or shapes drawn in code when there is no result |
+| `care-hair-light.png`, `care-hair-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Hair textures, waves or a comb | Concept approved, final needed | `assets/art-library/area-hair.png` |
+| `care-skin-light.png`, `care-skin-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Cream texture or gentle skincare shapes, no jar-and-leaf repeat | Concept approved, final needed | `assets/art-library/area-skin.png` |
+| `care-makeup-light.png`, `care-makeup-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Compact or swatches across deep to light tones | Concept approved, final needed | `assets/art-library/area-makeup.png` |
+| `care-body-light.png`, `care-body-dark.png` | 240 x 276 | Fills the frame (opaque is fine) | Folded linen or body-care objects | Concept approved, final needed | `assets/art-library/area-body.png` |
+| `partner-accent-light.png`, `partner-accent-dark.png` | 432 x 432 | Transparent | Commercial still life, clearly different from guidance art. Shown at 72 x 72 beside the Partner Highlights title | Concept approved, final needed | A circle and arch drawn in code (`partnerSun`, `partnerArch` in `app/(tabs)/home.tsx`) |
 
 ## Later (nice to have)
 

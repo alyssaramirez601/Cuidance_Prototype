@@ -4,6 +4,7 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { layout, radius, space, stroke, type } from '@/constants/tokens';
 import { usePressBounce } from '@/hooks/useMotion';
 import { makeStyles } from '@/hooks/useTheme';
+import { homeArtRatio } from '@/data/homeArt';
 import { isFocused } from '@/lib/focus';
 
 type CareAreaTileProps = {
@@ -14,7 +15,8 @@ type CareAreaTileProps = {
 };
 
 // A compact illustrated category card (Home v2, Nov 25): art on top, the real category name under it.
-// The label may wrap to more lines rather than be cut. Fills whatever width its grid gives it
+// (refined Nov 25) The art fills a fixed 240 x 276 frame so all four tiles match. The label wraps
+// to as many lines as it needs; tiles in a row stretch to the tallest one
 export function CareAreaTile({ label, art, onPress }: CareAreaTileProps) {
   const styles = useStyles();
   const { bounceStyle, onPressIn, onPressOut } = usePressBounce(0.95);
@@ -29,7 +31,7 @@ export function CareAreaTile({ label, art, onPress }: CareAreaTileProps) {
         style={(state) => [styles.tile, isFocused(state) && styles.focused]}
       >
         <View style={styles.art}>
-          <Image source={art} style={StyleSheet.absoluteFill} contentFit="contain" accessible={false} />
+          <Image source={art} style={StyleSheet.absoluteFill} contentFit="cover" accessible={false} />
         </View>
         <Text style={styles.label}>{label}</Text>
       </Pressable>
@@ -44,9 +46,7 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
   tile: {
     flex: 1,
     minHeight: layout.minTouchTarget,
-    gap: space[8],
-    padding: space[4],
-    paddingBottom: space[12],
+    overflow: 'hidden',
     borderRadius: radius.medium,
     borderWidth: stroke.default,
     borderColor: c.border,
@@ -60,12 +60,16 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
   },
   art: {
     width: '100%',
-    aspectRatio: 1,
+    aspectRatio: homeArtRatio.care,
+    backgroundColor: c.surfaceWarm,
   },
   label: {
     ...type.caption,
     fontFamily: type.label.fontFamily,
     color: c.ink,
     textAlign: 'center',
+    paddingHorizontal: space[4],
+    paddingTop: space[8],
+    paddingBottom: space[12],
   },
 }));

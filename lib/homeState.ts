@@ -18,7 +18,8 @@ export type HomeData = {
 
 export type FeatureSlot =
   | { kind: 'result'; result: SavedResult; area: QuizSection | null }
-  | { kind: 'quiz'; questionsLeft: number; nextQuestionId: string }
+  // `started` is false for someone with no answers yet, so Home can say "Get started" instead of "Continue"
+  | { kind: 'quiz'; questionsLeft: number; nextQuestionId: string; started: boolean }
   | { kind: 'start'; questionId: string };
 
 export type ContinueSlot =
@@ -48,7 +49,7 @@ export function homeState(data: HomeData): HomeState {
     };
   }
   if (unfinished) {
-    return { feature: unfinished, continueSlot: { kind: 'attributes' } };
+    return { feature: { ...unfinished, started: Object.keys(data.answers).length > 0 }, continueSlot: { kind: 'attributes' } };
   }
   return { feature: { kind: 'start', questionId: data.nextQuestionId ?? 'q1_areas' }, continueSlot: { kind: 'attributes' } };
 }

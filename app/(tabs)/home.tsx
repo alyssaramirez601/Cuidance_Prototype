@@ -29,7 +29,7 @@ import { homeCopy, partnerPlaceholders } from '@/data/appCopy';
 import { departments } from '@/data/categories';
 import { articles } from '@/data/education';
 import { exploreCopy, productsCopy } from '@/data/exploreCopy';
-import { careArt, featureArt, homeCareDepartments } from '@/data/homeArt';
+import { careArt, featureArt, headerArt, homeArtRatio, homeCareDepartments, partnerArt } from '@/data/homeArt';
 import { partnerProducts } from '@/data/partnerContent';
 import { useAuth } from '@/hooks/useAuth';
 import { firstNameFrom } from '@/lib/auth';
@@ -67,6 +67,7 @@ export default function HomeScreen() {
 function HomeContent({ userId, name }: { userId: string; name: string }) {
   const styles = useStyles();
   const router = useRouter();
+  const { scheme } = useTheme();
   const [state, setState] = useState<State>({ status: 'loading' });
 
   const load = useCallback(async () => {
@@ -93,6 +94,7 @@ function HomeContent({ userId, name }: { userId: string; name: string }) {
         onProfilePress={() => router.navigate('/profile')}
         onNotificationsPress={() => router.push('/profile/notifications')}
         notificationsLabel={exploreCopy.notifications}
+        accentArt={headerArt?.[scheme]}
       />
       <SearchEntry />
     </>
@@ -186,31 +188,41 @@ function GuidanceFeature({ data }: { data: HomeData }) {
         actionLabel={homeCopy.viewResult}
         onPress={() => router.push(`/saved/${feature.result.id}`)}
         art={<FeatureArt area={feature.area} />}
+        artRatio={homeArtRatio.feature}
       />
     );
   }
-  if (feature.kind === 'quiz') {
+  if (feature.kind === 'quiz' && feature.started) {
     return (
       <FeatureCard
+        eyebrow={homeCopy.continueEyebrow}
         title={homeCopy.resumeTitle}
         body={homeCopy.questionsLeft(feature.questionsLeft)}
         actionLabel={homeCopy.resumeButton}
         onPress={() => router.push(`/quiz/${feature.nextQuestionId}`)}
         art={<FeatureArt area={null} />}
+        artRatio={homeArtRatio.feature}
       />
     );
   }
+  // Someone who hasn't answered anything yet, or has no question left and no saved result.
+  // Same destinations as before: the next question, or the first
+  const questionId = feature.kind === 'quiz' ? feature.nextQuestionId : feature.questionId;
   return (
     <FeatureCard
+      eyebrow={homeCopy.startEyebrow}
       title={homeCopy.getGuidance}
       body={homeCopy.getGuidanceDetail}
-      onPress={() => router.push(`/quiz/${feature.questionId}`)}
+      actionLabel={homeCopy.startGuidance}
+      onPress={() => router.push(`/quiz/${questionId}`)}
       art={<FeatureArt area={null} />}
+      artRatio={homeArtRatio.feature}
     />
   );
 }
 
-// TEMPORARY art for the feature card until the approved feature illustrations arrive (data/homeArt.ts)
+// Fills the feature card's art slot. TEMPORARY content until the approved feature art is supplied
+// (data/homeArt.ts): the result's care-area arch, or a sun and arch drawn in code
 function FeatureArt({ area }: { area: Parameters<typeof featureArt>[0] }) {
   const styles = useStyles();
   const { scheme } = useTheme();
@@ -319,17 +331,31 @@ function ForYou({ data }: { data: HomeData }) {
 
 // Sample partner content until real partners sign on. Always labeled Partner content.
 // The chips change selection only, as before v2; filtering is a separate team decision
+// Sample partner content until real partners sign on. Always labeled Partner content.
+// The chips change selection only, as before v2; filtering is a separate team decision
 function PartnerHighlights() {
   const styles = useStyles();
   const router = useRouter();
+  const { scheme } = useTheme();
   const [partnerFilter, setPartnerFilter] = useState(partnerPlaceholders.filters[1]);
   return (
     <>
-      {/* TEMPORARY until assets/home/partner-accent-{light,dark}.png: a cut-paper circle drawn in code */}
-      <View style={styles.partnerShape} accessible={false} />
       <View style={styles.partnerHead}>
-        <SectionHeader title={partnerPlaceholders.title} tone="partnerBand" />
-        <DisclosureLabel type="partner" />
+        <View style={styles.partnerTitle}>
+          <SectionHeader title={partnerPlaceholders.title} tone="partnerBand" />
+          <DisclosureLabel type="partner" />
+        </View>
+        {/* Its own slot beside the title, never behind text. Shapes are TEMPORARY until partner-accent art arrives */}
+        <View style={styles.partnerArt} accessible={false}>
+          {partnerArt ? (
+            <Image source={partnerArt[scheme]} style={styles.featureImage} contentFit="cover" accessible={false} />
+          ) : (
+            <>
+              <View style={styles.partnerSun} />
+              <View style={styles.partnerArch} />
+            </>
+          )}
+        </View>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bleed} contentContainerStyle={styles.rowContent}>
         {partnerPlaceholders.filters.map((filter) => (
@@ -401,14 +427,13 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     color: c.inkMuted,
   },
   featureArt: {
-    width: '100%',
-    aspectRatio: 240 / 276,
+    flex: 1,
     justifyContent: 'flex-end',
   },
   featureSun: {
     position: 'absolute',
     right: -space[24],
-    top: -space[12],
+    top: 0,
     width: space[48] * 2,
     height: space[48] * 2,
     borderRadius: radius.pill,
@@ -433,46 +458,62 @@ const useStyles = makeStyles((c, g) => StyleSheet.create({
     flexDirection: 'row',
     gap: space[8],
   },
-  // Runs edge to edge as its own band, so partner content reads as a separate, commercial section
+  // A smaller inset card (refined Nov 25), so commerce reads as its own section without outweighing
+  // the guidance above it. Its rows still scroll to the screen edges
   partners: {
     gap: space[12],
     overflow: 'hidden',
     marginTop: space[16],
-    marginHorizontal: -layout.screenEdge,
-    // Runs to the bottom of the page too, instead of stopping above the screen's bottom padding
-    marginBottom: -space[24],
-    paddingHorizontal: layout.screenEdge,
-    paddingVertical: space[32],
-    borderTopLeftRadius: radius.medium,
-    borderTopRightRadius: radius.medium,
+    padding: layout.insideComponent,
+    borderRadius: radius.medium,
     backgroundColor: c.partnerBand,
   },
-  partnerShape: {
+  partnerHead: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space[12],
+  },
+  partnerTitle: {
+    flex: 1,
+    gap: space[8],
+  },
+  // 432 x 432 art at a third of its size
+  partnerArt: {
+    width: space[48] + space[24],
+    aspectRatio: homeArtRatio.partner,
+  },
+  partnerSun: {
     position: 'absolute',
-    right: -space[48],
-    top: -space[48],
-    width: space[48] * 3,
-    height: space[48] * 3,
+    right: 0,
+    top: 0,
+    width: space[48],
+    height: space[48],
     borderRadius: radius.pill,
     backgroundColor: g.orange,
-    opacity: 0.5,
+    opacity: 0.6,
   },
-  partnerHead: {
-    gap: space[8],
-    paddingRight: space[48],
+  partnerArch: {
+    position: 'absolute',
+    left: space[8],
+    bottom: 0,
+    width: space[32],
+    height: space[48],
+    borderTopLeftRadius: radius.pill,
+    borderTopRightRadius: radius.pill,
+    backgroundColor: g.clay,
   },
   bleed: {
-    marginHorizontal: -layout.screenEdge,
+    marginHorizontal: -layout.insideComponent,
     flexGrow: 0,
     flexShrink: 0,
   },
   rowContent: {
     gap: space[8],
-    paddingHorizontal: layout.screenEdge,
+    paddingHorizontal: layout.insideComponent,
   },
   cardRow: {
     gap: space[12],
-    paddingHorizontal: layout.screenEdge,
+    paddingHorizontal: layout.insideComponent,
     paddingVertical: space[4],
   },
   placeholderNote: {

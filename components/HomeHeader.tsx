@@ -1,11 +1,12 @@
 import { Image } from 'expo-image';
-import { Animated, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Appear } from '@/components/Appear';
 import { Icon, type IconName } from '@/components/Icon';
 import { letterSpacing, radius, sizes, space, stroke, type } from '@/constants/tokens';
 import { usePressBounce } from '@/hooks/useMotion';
 import { makeStyles, useColors, useTheme } from '@/hooks/useTheme';
+import { homeArtRatio } from '@/data/homeArt';
 import { isFocused } from '@/lib/focus';
 
 type HomeHeaderProps = {
@@ -15,6 +16,8 @@ type HomeHeaderProps = {
   // Opens notification settings, as Explore's bell does. There is no inbox or unread count
   onNotificationsPress: () => void;
   notificationsLabel: string;
+  // The corner artwork for the current mode (data/homeArt.ts). Leave out to show the temporary shapes
+  accentArt?: number;
 };
 
 const logo = {
@@ -24,18 +27,22 @@ const logo = {
 // The logo file is 1028 x 222; 160 wide is the brand's minimum for the full lockup
 const LOGO_WIDTH = 160;
 const LOGO_RATIO = 1028 / 222;
-// Above this text size, or for a long first name, the collage accent steps aside so the greeting keeps its width
-const HIDE_ART_AT_FONT_SCALE = 1.3;
-const HIDE_ART_FOR_NAME_LENGTH = 12;
+// A first name with a word longer than this uses the smaller heading size, so it wraps between words
+// instead of breaking inside one (fits a 21-letter word at 360 px)
+const LONG_WORD = 11;
 
 // Home v2 "Editorial Care" header (Nov 25): the real logo, the time-of-day greeting and the person's
-// name in Newsreader on the page color, and a small cut-paper accent to the side, never behind text
-export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPress, notificationsLabel }: HomeHeaderProps) {
+// name in Newsreader on the page color. The artwork lives in the top-right corner beside the logo
+// row, so the greeting always has the full width and never sits on top of art
+export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPress, notificationsLabel, accentArt }: HomeHeaderProps) {
   const styles = useStyles();
   const { scheme } = useTheme();
-  const { fontScale } = useWindowDimensions();
+  const longWord = name.split(/\s+/).some((word) => word.length > LONG_WORD);
   return (
     <Appear style={styles.header}>
+      <View style={styles.corner} accessible={false}>
+        {accentArt ? <Image source={accentArt} style={styles.cornerArt} contentFit="cover" accessible={false} /> : <TemporaryAccent />}
+      </View>
       <View style={styles.top}>
         <Image source={logo[scheme]} style={styles.logo} contentFit="contain" accessibilityLabel="Cuidance" />
         <View style={styles.actions}>
@@ -44,15 +51,12 @@ export function HomeHeader({ greeting, name, onProfilePress, onNotificationsPres
         </View>
       </View>
 
-      <View style={styles.greetingRow}>
-        <View style={styles.greetingText}>
-          <Text style={styles.greetingSmall}>{greeting}</Text>
-          {/* Wraps as far as it needs, so long names are never cut */}
-          <Text style={styles.greetingName} accessibilityRole="header">
-            {name ? `Hi, ${name}` : 'Hi there'}
-          </Text>
-        </View>
-        {fontScale < HIDE_ART_AT_FONT_SCALE && name.length <= HIDE_ART_FOR_NAME_LENGTH ? <HeaderAccent /> : null}
+      <View style={styles.greetingText}>
+        <Text style={styles.greetingSmall}>{greeting}</Text>
+        {/* Wraps as far as it needs, so long names are never cut */}
+        <Text style={[styles.greetingName, longWord && styles.greetingLong]} accessibilityRole="header">
+          {name ? `Hi, ${name}` : 'Hi there'}
+        </Text>
       </View>
     </Appear>
   );
@@ -78,16 +82,16 @@ function RoundButton({ icon, label, onPress }: { icon: IconName; label: string; 
   );
 }
 
-// TEMPORARY until assets/home/header-accent-{light,dark}.png is approved: the same cut-paper shapes
-// drawn in code (sun, arch, a blue leaf), so they follow light and dark mode
-function HeaderAccent() {
+// TEMPORARY until assets/home/header-accent-{light,dark}.png is supplied: the same cut-paper shapes
+// as before, drawn in code inside the corner slot so they follow light and dark mode
+function TemporaryAccent() {
   const styles = useStyles();
   return (
-    <View style={styles.accent} accessible={false}>
+    <>
       <View style={styles.sun} />
       <View style={styles.arch} />
       <View style={styles.leaf} />
-    </View>
+    </>
   );
 }
 
@@ -125,13 +129,7 @@ const useStyles = makeStyles((c, g) =>
       outlineStyle: 'solid',
       outlineWidth: stroke.strong,
     },
-    greetingRow: {
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      gap: space[12],
-    },
     greetingText: {
-      flex: 1,
       gap: space[4],
     },
     // Care Terracotta on the page: 5.4:1 light, 9.2:1 dark (the old eyebrow on the terracotta block was 4.34:1)
@@ -145,35 +143,48 @@ const useStyles = makeStyles((c, g) =>
       ...type.display,
       color: c.ink,
     },
-    accent: {
-      width: space[48] * 2,
-      height: space[48] * 2,
+    greetingLong: {
+      ...type.heading,
+    },
+    // The 288 x 288 artwork shown at half size, bleeding off the top-right corner of the screen.
+    // Its shapes sit beside the logo row, above the greeting
+    corner: {
+      position: 'absolute',
+      top: -space[24],
+      right: -space[24],
+      width: space[48] * 3,
+      aspectRatio: homeArtRatio.header,
+      overflow: 'hidden',
+    },
+    cornerArt: {
+      width: '100%',
+      height: '100%',
     },
     sun: {
       position: 'absolute',
-      right: 0,
-      top: 0,
-      width: space[48] + space[24],
-      height: space[48] + space[24],
+      right: -space[24],
+      top: -space[24],
+      width: space[48] * 2,
+      height: space[48] * 2,
       borderRadius: radius.pill,
       backgroundColor: g.orange,
     },
     arch: {
       position: 'absolute',
-      left: space[8],
-      bottom: 0,
-      width: space[48],
-      height: space[48] + space[16],
-      borderTopLeftRadius: radius.pill,
-      borderTopRightRadius: radius.pill,
+      right: space[48] + space[24],
+      top: -space[24],
+      width: space[32],
+      height: space[48] + space[24],
+      borderBottomLeftRadius: radius.pill,
+      borderBottomRightRadius: radius.pill,
       backgroundColor: g.terracottaBold,
     },
     leaf: {
       position: 'absolute',
       right: space[8],
-      bottom: 0,
-      width: space[32],
-      height: space[48],
+      top: space[48] + space[8],
+      width: space[24],
+      height: space[32],
       borderTopLeftRadius: radius.pill,
       borderBottomRightRadius: radius.pill,
       backgroundColor: g.blueBold,
