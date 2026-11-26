@@ -135,6 +135,10 @@ export const homeCopy = {
   guidesTitle: 'Guides and tips',
   seeAll: 'See all',
   readTime: (minutes: number) => `${minutes} min read`,
+  // Home v2 (Alyssa, Nov 25, 2026)
+  careTitle: 'Your care, at a glance',
+  viewAll: 'View all',
+  viewResult: 'View your result',
 };
 
 // Partner Highlights copy from the Week 8 Home hi-fi. The products come from data/partnerContent.ts.

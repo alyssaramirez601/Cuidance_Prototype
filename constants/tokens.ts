@@ -47,6 +47,14 @@ export const colors = {
     disabledSurface: '#E6E2D9',
     disabledInk: '#8B867C',
     scrim: 'rgba(17, 17, 17, 0.4)', // Guidance Ink at 40%, dims the screen behind a sheet. Added Nov 5, needs Esme's OK
+    // Home v2 (Nov 25, 2026): PROVISIONAL, approved for the preview only. Needs Esme's review before main.
+    // Surfaces that stay dark in both modes, plus the band behind Partner Highlights. Values reuse the palette
+    featureSurface: '#21332B', // Grounded Green, the feature card behind personalized guidance
+    onFeature: '#F4F2EC', // text on featureSurface (11.9:1)
+    featureEyebrow: '#F2A68F', // eyebrow on featureSurface (6.8:1)
+    continueSurface: '#E6EAFB', // same value as selectedSurface, named apart because a band is not "selected" (ink 15.8:1)
+    partnerBand: '#A8432A', // Care Terracotta, the Partner Highlights band
+    onPartnerBand: '#F4F2EC', // text on partnerBand (5.4:1)
   },
   dark: {
     background: '#121714',
@@ -78,6 +86,13 @@ export const colors = {
     disabledSurface: '#252C28',
     disabledInk: '#6F7570',
     scrim: 'rgba(0, 0, 0, 0.6)', // dims the screen behind a sheet. Added Nov 5, needs Esme's OK
+    // Home v2 (Nov 25, 2026): PROVISIONAL, see the light values
+    featureSurface: '#1C3B2E',
+    onFeature: '#F4F2EC', // 10.9:1
+    featureEyebrow: '#F2A68F', // 6.2:1
+    continueSurface: '#1E2650', // ink 13.0:1
+    partnerBand: '#83321F',
+    onPartnerBand: '#F4F2EC', // 7.7:1
   },
 } as const;
 
@@ -173,6 +188,10 @@ export const type = {
   body: { fontFamily: fontFamily.body, fontSize: 16, lineHeight: 24, fontWeight: '400' },
   label: { fontFamily: fontFamily.bodySemiBold, fontSize: 15, lineHeight: 20 },
   caption: { fontFamily: fontFamily.body, fontSize: 13, lineHeight: 18, fontWeight: '400' },
+  // Home v2 (Nov 25, 2026): PROVISIONAL editorial styles, approved for the preview only. Needs Esme's review.
+  // eyebrow: the 12 px minimum, shown in caps with letterSpacing.eyebrow. editorialTitle: Newsreader card titles
+  eyebrow: { fontFamily: fontFamily.bodySemiBold, fontSize: 12, lineHeight: 16 },
+  editorialTitle: { fontFamily: fontFamily.display, fontSize: 22, lineHeight: 28, fontWeight: '400' },
 } as const;
 
 // ---------------------------------------------------------------------------
